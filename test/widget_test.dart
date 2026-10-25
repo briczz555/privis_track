@@ -1,30 +1,78 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:privis_track/core/theme/app_theme.dart';
+import 'package:privis_track/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:privis_track/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('DashboardScreen menampilkan data dummy dari data source', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.light,
+          home: const DashboardScreen(),
+        ),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Memuat dashboard...'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Dashboard'), findsOneWidget);
+    expect(find.text('Portofolio Proyek'), findsOneWidget);
+    expect(find.text('E-Commerce App'), findsOneWidget);
+    expect(find.byType(LinearProgressIndicator), findsWidgets);
+
+    // Section aktivitas berada di bawah viewport, jadi perlu di-scroll dulu.
+    await tester.scrollUntilVisible(find.text('Aktivitas Tim'), 250);
+    expect(find.text('Aktivitas Tim'), findsOneWidget);
+  });
+
+  testWidgets('PriVisApp membuka dashboard lewat GoRouter di path /', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const ProviderScope(child: PriVisApp()));
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
+    expect(find.text('Dashboard'), findsOneWidget);
+  });
+
+  testWidgets('tap proyek di dashboard membuka project tracking', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const ProviderScope(child: PriVisApp()));
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
+    await tester.tap(find.text('E-Commerce App').first);
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
+    expect(find.text('Project Tracking'), findsOneWidget);
+    expect(find.text('Timeline SDLC'), findsOneWidget);
+    expect(find.text('Discovery & Brief'), findsOneWidget);
+  });
+
+  testWidgets('layout dashboard aman di layar sempit 320dp', (tester) async {
+    tester.view.physicalSize = const Size(320, 640);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          theme: AppTheme.light,
+          home: const DashboardScreen(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle(const Duration(milliseconds: 100));
+
+    expect(find.text('Portofolio Proyek'), findsOneWidget);
+
+    await tester.scrollUntilVisible(find.text('Aktivitas Tim'), 250);
+    expect(tester.takeException(), isNull);
   });
 }

@@ -10,6 +10,7 @@ import '../../../../core/widgets/section_header.dart';
 import '../../domain/entities/project_stage_entity.dart';
 import '../../domain/entities/project_tracking_entity.dart';
 import '../providers/project_tracking_provider.dart';
+import '../widgets/client_contact_card.dart';
 import '../widgets/document_vault_sheet.dart';
 import '../widgets/project_summary_card.dart';
 import '../widgets/stage_timeline_tile.dart';
@@ -107,6 +108,17 @@ class _ProjectTrackingContent extends StatelessWidget {
               0,
             ),
             child: ProjectSummaryCard(project: project),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.md,
+              AppSpacing.md,
+              AppSpacing.md,
+              0,
+            ),
+            child: ClientContactCard(client: project.client),
           ),
         ),
         SliverToBoxAdapter(

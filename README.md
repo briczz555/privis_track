@@ -10,9 +10,9 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
   dengan progress bar, dan feed aktivitas tim.
 - ✅ Halaman **Semua Proyek** (`/projects`): daftar seluruh proyek dengan filter status
   (Berjalan, Ditunda, Belum Mulai, Selesai), sehingga proyek non-aktif tetap bisa dibuka.
-- ✅ Fitur **Project Tracking**: timeline vertikal 8 tahap SDLC (semua tahap bisa dibuka
-  tanpa validasi urutan), ringkasan progres, dan document vault bottom sheet dengan
-  mock upload. Dibuka lewat route `/projects/:projectId`.
+- ✅ Fitur **Project Tracking**: timeline vertikal 8 tahap SDLC, kartu **Kontak Klien**
+  (alamat perusahaan, PIC, nomor WhatsApp yang bisa disalin), ringkasan progres, dan
+  document vault bottom sheet dengan mock upload. Dibuka lewat route `/projects/:projectId`.
 
 Data masih dummy dari layer data source (`Future.delayed` + JSON statis), belum ada
 backend. Detail requirement ada di [`docs/privis_track.md`](docs/privis_track.md).

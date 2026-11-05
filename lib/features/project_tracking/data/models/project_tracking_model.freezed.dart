@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProjectTrackingModel {
 
- String get id; String get name; String get client; ProjectStatus get status; int get currentStage; List<ProjectStageModel> get stages;
+ String get id; String get name; ClientInfoModel get client; ProjectStatus get status; int get currentStage; List<ProjectStageModel> get stages;
 /// Create a copy of ProjectTrackingModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,11 +51,11 @@ abstract mixin class $ProjectTrackingModelCopyWith<$Res>  {
   factory $ProjectTrackingModelCopyWith(ProjectTrackingModel value, $Res Function(ProjectTrackingModel) _then) = _$ProjectTrackingModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String client, ProjectStatus status, int currentStage, List<ProjectStageModel> stages
+ String id, String name, ClientInfoModel client, ProjectStatus status, int currentStage, List<ProjectStageModel> stages
 });
 
 
-
+$ClientInfoModelCopyWith<$Res> get client;
 
 }
 /// @nodoc
@@ -73,13 +73,22 @@ class _$ProjectTrackingModelCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,client: null == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as ClientInfoModel,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ProjectStatus,currentStage: null == currentStage ? _self.currentStage : currentStage // ignore: cast_nullable_to_non_nullable
 as int,stages: null == stages ? _self.stages : stages // ignore: cast_nullable_to_non_nullable
 as List<ProjectStageModel>,
   ));
 }
-
+/// Create a copy of ProjectTrackingModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ClientInfoModelCopyWith<$Res> get client {
+  
+  return $ClientInfoModelCopyWith<$Res>(_self.client, (value) {
+    return _then(_self.copyWith(client: value));
+  });
+}
 }
 
 
@@ -158,7 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String client,  ProjectStatus status,  int currentStage,  List<ProjectStageModel> stages)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  ClientInfoModel client,  ProjectStatus status,  int currentStage,  List<ProjectStageModel> stages)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProjectTrackingModel() when $default != null:
 return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.stages);case _:
@@ -179,7 +188,7 @@ return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String client,  ProjectStatus status,  int currentStage,  List<ProjectStageModel> stages)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  ClientInfoModel client,  ProjectStatus status,  int currentStage,  List<ProjectStageModel> stages)  $default,) {final _that = this;
 switch (_that) {
 case _ProjectTrackingModel():
 return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.stages);}
@@ -196,7 +205,7 @@ return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String client,  ProjectStatus status,  int currentStage,  List<ProjectStageModel> stages)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  ClientInfoModel client,  ProjectStatus status,  int currentStage,  List<ProjectStageModel> stages)?  $default,) {final _that = this;
 switch (_that) {
 case _ProjectTrackingModel() when $default != null:
 return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.stages);case _:
@@ -216,7 +225,7 @@ class _ProjectTrackingModel extends ProjectTrackingModel {
 
 @override final  String id;
 @override final  String name;
-@override final  String client;
+@override final  ClientInfoModel client;
 @override final  ProjectStatus status;
 @override final  int currentStage;
  final  List<ProjectStageModel> _stages;
@@ -259,11 +268,11 @@ abstract mixin class _$ProjectTrackingModelCopyWith<$Res> implements $ProjectTra
   factory _$ProjectTrackingModelCopyWith(_ProjectTrackingModel value, $Res Function(_ProjectTrackingModel) _then) = __$ProjectTrackingModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String client, ProjectStatus status, int currentStage, List<ProjectStageModel> stages
+ String id, String name, ClientInfoModel client, ProjectStatus status, int currentStage, List<ProjectStageModel> stages
 });
 
 
-
+@override $ClientInfoModelCopyWith<$Res> get client;
 
 }
 /// @nodoc
@@ -281,14 +290,23 @@ class __$ProjectTrackingModelCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,client: null == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as ClientInfoModel,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ProjectStatus,currentStage: null == currentStage ? _self.currentStage : currentStage // ignore: cast_nullable_to_non_nullable
 as int,stages: null == stages ? _self._stages : stages // ignore: cast_nullable_to_non_nullable
 as List<ProjectStageModel>,
   ));
 }
 
-
+/// Create a copy of ProjectTrackingModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ClientInfoModelCopyWith<$Res> get client {
+  
+  return $ClientInfoModelCopyWith<$Res>(_self.client, (value) {
+    return _then(_self.copyWith(client: value));
+  });
+}
 }
 
 // dart format on

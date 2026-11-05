@@ -48,7 +48,7 @@ class ProjectSummaryCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        project.client,
+                        project.client.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodySmall?.copyWith(

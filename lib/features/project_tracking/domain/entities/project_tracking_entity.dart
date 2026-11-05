@@ -1,7 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../core/constants/sdlc_stages.dart';
 import '../../../../core/constants/project_status.dart';
+import '../../../../core/constants/sdlc_stages.dart';
+import 'client_info_entity.dart';
 import 'project_stage_entity.dart';
 import 'stage_document_entity.dart';
 
@@ -15,7 +16,7 @@ sealed class ProjectTrackingEntity with _$ProjectTrackingEntity {
   const factory ProjectTrackingEntity({
     required String id,
     required String name,
-    required String client,
+    required ClientInfoEntity client,
     required ProjectStatus status,
     required int currentStage,
     required List<ProjectStageEntity> stages,

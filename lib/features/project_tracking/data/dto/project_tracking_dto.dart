@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'client_info_dto.dart';
 import 'project_stage_dto.dart';
 
 part 'project_tracking_dto.freezed.dart';
@@ -10,7 +11,7 @@ sealed class ProjectTrackingDto with _$ProjectTrackingDto {
   const factory ProjectTrackingDto({
     required String id,
     required String name,
-    required String client,
+    required ClientInfoDto client,
     required String status,
     @JsonKey(name: 'current_stage') required int currentStage,
     required List<ProjectStageDto> stages,

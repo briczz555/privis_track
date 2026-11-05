@@ -50,7 +50,8 @@ Fase 2: ganti isi data source dengan pemanggilan Dio, lalu hapus payload dummy-n
   aktivitas tim, dan halaman **Semua Proyek** (`/projects`) dengan filter status.
   Proyek Selesai/Ditunda/Belum Mulai bisa dibuka ke project tracking dari sini.
 - `features/project_tracking/` — selesai: timeline vertikal 8 tahap (semua tahap clickable,
-  tanpa step-lock), ringkasan progres, document vault bottom sheet + mock upload.
+  tanpa step-lock), ringkasan progres, kartu kontak klien (alamat, PIC, WhatsApp + salin
+  nomor), document vault bottom sheet + mock upload.
   Route: `/projects/:projectId` (dibuka dari kartu proyek dashboard atau Semua Proyek).
 
 Helper lintas fitur ada di `core/`: `constants/project_status.dart`,

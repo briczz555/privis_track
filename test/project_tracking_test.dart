@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:privis_track/core/theme/app_theme.dart';
@@ -26,7 +27,11 @@ void main() {
       final project = await repository.getProject('PRJ-001');
 
       expect(project.name, 'E-Commerce App');
-      expect(project.client, 'PT. ABC Retail');
+      expect(project.client.name, 'PT. ABC Retail');
+      expect(project.client.address, contains('Sudirman'));
+      expect(project.client.contactName, 'Dewi Lestari');
+      expect(project.client.contactRole, 'IT Manager');
+      expect(project.client.phone, '+62 812-3456-7890');
       expect(project.stages, hasLength(8));
       expect(project.totalDocuments, 7);
 
@@ -81,8 +86,8 @@ void main() {
       WidgetTester tester, {
       String projectId = 'PRJ-001',
     }) async {
-      // Viewport tinggi supaya seluruh 8 tahap terlihat tanpa scroll.
-      tester.view.physicalSize = const Size(420, 1200);
+      // Viewport tinggi supaya seluruh 8 tahap + kartu kontak terlihat tanpa scroll.
+      tester.view.physicalSize = const Size(420, 1700);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
 
@@ -113,6 +118,42 @@ void main() {
       ]) {
         expect(find.text(title), findsOneWidget);
       }
+    });
+
+    testWidgets('menampilkan kontak klien dan menyalin nomor WhatsApp', (
+      tester,
+    ) async {
+      final calls = <MethodCall>[];
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          calls.add(call);
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+
+      await pumpScreen(tester);
+
+      expect(find.text('KONTAK KLIEN'), findsOneWidget);
+      expect(find.text('PT. ABC Retail'), findsWidgets);
+      expect(
+        find.text('Jl. Jenderal Sudirman Kav. 52-53, Jakarta Selatan 12190'),
+        findsOneWidget,
+      );
+      expect(find.text('Dewi Lestari · IT Manager'), findsOneWidget);
+      expect(find.text('+62 812-3456-7890'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Salin nomor WhatsApp'));
+      await tester.pumpAndSettle();
+
+      expect(calls.any((call) => call.method == 'Clipboard.setData'), isTrue);
+      expect(find.text('Nomor WhatsApp Dewi Lestari disalin'), findsOneWidget);
     });
 
     testWidgets('tahap yang belum berjalan tetap bisa dibuka (no step-lock)', (

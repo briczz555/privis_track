@@ -10,7 +10,7 @@ _ProjectTrackingDto _$ProjectTrackingDtoFromJson(Map<String, dynamic> json) =>
     _ProjectTrackingDto(
       id: json['id'] as String,
       name: json['name'] as String,
-      client: json['client'] as String,
+      client: ClientInfoDto.fromJson(json['client'] as Map<String, dynamic>),
       status: json['status'] as String,
       currentStage: (json['current_stage'] as num).toInt(),
       stages: (json['stages'] as List<dynamic>)

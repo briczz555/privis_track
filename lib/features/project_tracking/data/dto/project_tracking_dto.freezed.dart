@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProjectTrackingDto {
 
- String get id; String get name; String get client; String get status;@JsonKey(name: 'current_stage') int get currentStage; List<ProjectStageDto> get stages;
+ String get id; String get name; ClientInfoDto get client; String get status;@JsonKey(name: 'current_stage') int get currentStage; List<ProjectStageDto> get stages;
 /// Create a copy of ProjectTrackingDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -54,11 +54,11 @@ abstract mixin class $ProjectTrackingDtoCopyWith<$Res>  {
   factory $ProjectTrackingDtoCopyWith(ProjectTrackingDto value, $Res Function(ProjectTrackingDto) _then) = _$ProjectTrackingDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String client, String status,@JsonKey(name: 'current_stage') int currentStage, List<ProjectStageDto> stages
+ String id, String name, ClientInfoDto client, String status,@JsonKey(name: 'current_stage') int currentStage, List<ProjectStageDto> stages
 });
 
 
-
+$ClientInfoDtoCopyWith<$Res> get client;
 
 }
 /// @nodoc
@@ -76,13 +76,22 @@ class _$ProjectTrackingDtoCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,client: null == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as ClientInfoDto,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,currentStage: null == currentStage ? _self.currentStage : currentStage // ignore: cast_nullable_to_non_nullable
 as int,stages: null == stages ? _self.stages : stages // ignore: cast_nullable_to_non_nullable
 as List<ProjectStageDto>,
   ));
 }
-
+/// Create a copy of ProjectTrackingDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ClientInfoDtoCopyWith<$Res> get client {
+  
+  return $ClientInfoDtoCopyWith<$Res>(_self.client, (value) {
+    return _then(_self.copyWith(client: value));
+  });
+}
 }
 
 
@@ -161,7 +170,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String client,  String status, @JsonKey(name: 'current_stage')  int currentStage,  List<ProjectStageDto> stages)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  ClientInfoDto client,  String status, @JsonKey(name: 'current_stage')  int currentStage,  List<ProjectStageDto> stages)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProjectTrackingDto() when $default != null:
 return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.stages);case _:
@@ -182,7 +191,7 @@ return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String client,  String status, @JsonKey(name: 'current_stage')  int currentStage,  List<ProjectStageDto> stages)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  ClientInfoDto client,  String status, @JsonKey(name: 'current_stage')  int currentStage,  List<ProjectStageDto> stages)  $default,) {final _that = this;
 switch (_that) {
 case _ProjectTrackingDto():
 return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.stages);}
@@ -199,7 +208,7 @@ return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String client,  String status, @JsonKey(name: 'current_stage')  int currentStage,  List<ProjectStageDto> stages)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  ClientInfoDto client,  String status, @JsonKey(name: 'current_stage')  int currentStage,  List<ProjectStageDto> stages)?  $default,) {final _that = this;
 switch (_that) {
 case _ProjectTrackingDto() when $default != null:
 return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.stages);case _:
@@ -219,7 +228,7 @@ class _ProjectTrackingDto implements ProjectTrackingDto {
 
 @override final  String id;
 @override final  String name;
-@override final  String client;
+@override final  ClientInfoDto client;
 @override final  String status;
 @override@JsonKey(name: 'current_stage') final  int currentStage;
  final  List<ProjectStageDto> _stages;
@@ -265,11 +274,11 @@ abstract mixin class _$ProjectTrackingDtoCopyWith<$Res> implements $ProjectTrack
   factory _$ProjectTrackingDtoCopyWith(_ProjectTrackingDto value, $Res Function(_ProjectTrackingDto) _then) = __$ProjectTrackingDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String client, String status,@JsonKey(name: 'current_stage') int currentStage, List<ProjectStageDto> stages
+ String id, String name, ClientInfoDto client, String status,@JsonKey(name: 'current_stage') int currentStage, List<ProjectStageDto> stages
 });
 
 
-
+@override $ClientInfoDtoCopyWith<$Res> get client;
 
 }
 /// @nodoc
@@ -287,14 +296,23 @@ class __$ProjectTrackingDtoCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,client: null == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
-as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as ClientInfoDto,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,currentStage: null == currentStage ? _self.currentStage : currentStage // ignore: cast_nullable_to_non_nullable
 as int,stages: null == stages ? _self._stages : stages // ignore: cast_nullable_to_non_nullable
 as List<ProjectStageDto>,
   ));
 }
 
-
+/// Create a copy of ProjectTrackingDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ClientInfoDtoCopyWith<$Res> get client {
+  
+  return $ClientInfoDtoCopyWith<$Res>(_self.client, (value) {
+    return _then(_self.copyWith(client: value));
+  });
+}
 }
 
 // dart format on

@@ -55,14 +55,30 @@ class _ProjectMeta {
   const _ProjectMeta({
     required this.name,
     required this.client,
+    required this.address,
+    required this.contactName,
+    required this.contactRole,
+    required this.phone,
     required this.status,
     required this.currentStage,
   });
 
   final String name;
   final String client;
+  final String address;
+  final String contactName;
+  final String contactRole;
+  final String phone;
   final String status;
   final int currentStage;
+
+  Map<String, dynamic> get clientJson => <String, dynamic>{
+    'name': client,
+    'address': address,
+    'contact_name': contactName,
+    'contact_role': contactRole,
+    'phone': phone,
+  };
 }
 
 /// Metadata ringkas per proyek — diselaraskan dengan dummy `dashboard`.
@@ -70,48 +86,80 @@ const _projectMeta = <String, _ProjectMeta>{
   'PRJ-001': _ProjectMeta(
     name: 'E-Commerce App',
     client: 'PT. ABC Retail',
+    address: 'Jl. Jenderal Sudirman Kav. 52-53, Jakarta Selatan 12190',
+    contactName: 'Dewi Lestari',
+    contactRole: 'IT Manager',
+    phone: '+62 812-3456-7890',
     status: 'In Progress',
     currentStage: 4,
   ),
   'PRJ-002': _ProjectMeta(
     name: 'Mobile Banking Revamp',
     client: 'Bank Nusantara',
+    address: 'Menara Nusantara, Jl. MH Thamrin No. 5, Jakarta Pusat 10340',
+    contactName: 'Andi Pratama',
+    contactRole: 'Digital Product Lead',
+    phone: '+62 811-2233-4455',
     status: 'In Progress',
     currentStage: 6,
   ),
   'PRJ-003': _ProjectMeta(
     name: 'HRIS Internal Portal',
     client: 'PT. Sinar Jaya',
+    address: 'Gedung Sinar Jaya Lt. 8, Jl. Gatot Subroto No. 21, Jakarta 12930',
+    contactName: 'Maya Kusuma',
+    contactRole: 'HR Director',
+    phone: '+62 813-9988-7766',
     status: 'On Hold',
     currentStage: 3,
   ),
   'PRJ-004': _ProjectMeta(
     name: 'Company Profile Website',
     client: 'CV. Kreatif Media',
+    address: 'Jl. Kemang Raya No. 12, Jakarta Selatan 12730',
+    contactName: 'Rendi Saputra',
+    contactRole: 'Founder',
+    phone: '+62 812-7788-9900',
     status: 'Completed',
     currentStage: 8,
   ),
   'PRJ-005': _ProjectMeta(
     name: 'Logistics Dashboard',
     client: 'PT. Kirim Cepat',
+    address: 'Jl. Raya Bekasi Timur KM 18, Jakarta Timur 13910',
+    contactName: 'Siti Rahma',
+    contactRole: 'Operations Manager',
+    phone: '+62 815-4455-6677',
     status: 'In Progress',
     currentStage: 2,
   ),
   'PRJ-006': _ProjectMeta(
     name: 'POS Integration',
     client: 'Toko Sejahtera',
+    address: 'Jl. Pahlawan No. 45, Bandung 40123',
+    contactName: 'Agus Wijaya',
+    contactRole: 'Owner',
+    phone: '+62 812-1010-2020',
     status: 'Not Started',
     currentStage: 0,
   ),
   'PRJ-007': _ProjectMeta(
     name: 'Healthcare Booking System',
     client: 'Klinik Sehat',
+    address: 'Jl. Diponegoro No. 88, Surabaya 60241',
+    contactName: 'dr. Nadia Putri',
+    contactRole: 'Klinik Director',
+    phone: '+62 811-3030-4040',
     status: 'In Progress',
     currentStage: 5,
   ),
   'PRJ-008': _ProjectMeta(
     name: 'ERP Customization',
     client: 'PT. Maju Bersama',
+    address: 'Gedung Maju Tower Lt. 12, Jl. TB Simatupang No. 9, Jakarta 12430',
+    contactName: 'Hendra Gunawan',
+    contactRole: 'Finance Director',
+    phone: '+62 813-5566-7788',
     status: 'Completed',
     currentStage: 8,
   ),
@@ -138,6 +186,10 @@ Map<String, dynamic> _buildProjectPayload(String projectId) {
       _ProjectMeta(
         name: 'Proyek $projectId',
         client: 'Internal',
+        address: 'Alamat belum tersedia',
+        contactName: 'Belum ada PIC',
+        contactRole: '-',
+        phone: '-',
         status: 'In Progress',
         currentStage: 1,
       );
@@ -157,7 +209,7 @@ Map<String, dynamic> _buildProjectPayload(String projectId) {
   return <String, dynamic>{
     'id': projectId,
     'name': meta.name,
-    'client': meta.client,
+    'client': meta.clientJson,
     'status': meta.status,
     'current_stage': meta.currentStage,
     'stages': <Map<String, dynamic>>[

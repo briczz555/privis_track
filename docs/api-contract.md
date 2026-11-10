@@ -1,8 +1,18 @@
 # PriVis Track — API Contract (Draft Fase 2)
 
-**Status:** Draft untuk review — belum diimplementasikan, aplikasi Flutter masih memakai data dummy.
+**Status:** Draft — auth dan endpoint baca sudah diimplementasikan di `privis_track_api` (10 Nov 2026). Endpoint tulis (PATCH) dan dokumen (upload/download) belum.
 **Versi API:** `v1`
 **Kontrak mesin:** [`openapi.yaml`](openapi.yaml) (OpenAPI 3.0.3)
+
+## Status implementasi
+
+| Bagian | Status |
+|---|---|
+| Auth (`login`, `refresh`, `logout`, `me`) | ✅ |
+| `GET /dashboard`, `GET /projects`, `GET /projects/{code}`, `GET /activities` | ✅ |
+| `PATCH /projects/{code}`, `PATCH .../stages/{stage_no}` | ⏳ |
+| Upload/download dokumen | ⏳ |
+| Swagger runtime & rate limiting | ⏳ |
 
 ## Keputusan desain (disetujui)
 
@@ -84,7 +94,7 @@ Tidak ada registrasi publik dan tidak ada akses klien.
 
 - `completed_stages` = jumlah tahap dengan `is_completed = true` (0..8).
 - `progress_percent` = `round(completed_stages / 8 * 100)` (0..100).
-- `current_stage` = nomor tahap belum selesai **terkecil** (1..8); jika semua selesai → 8.
+- `current_stage` = 0 jika proyek belum mulai; selain itu nomor tahap belum selesai **terkecil** (1..8), dan 8 jika semua selesai.
 - `current_stage_title` mengikuti nomor tersebut.
 - Saat tahap diselesaikan/dibuka kembali, server menghitung ulang ketiga nilai di atas dan mencatat aktivitas.
 - Jika semua tahap selesai, `status` otomatis menjadi `completed`; membuka kembali tahap mengubah status menjadi `in_progress`.

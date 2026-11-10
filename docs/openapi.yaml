@@ -718,7 +718,7 @@ components:
           type: integer
           minimum: 0
           maximum: 8
-          description: Nomor tahap belum selesai terkecil (8 jika semua selesai)
+          description: 0 jika belum mulai; nomor tahap belum selesai terkecil (8 jika semua selesai)
           example: 4
         current_stage_title:
           type: string

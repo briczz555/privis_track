@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
   title: PriVis Track API
-  version: 1.0.0-draft
+  version: 1.0.0
   description: |
-    Kontrak REST API untuk PriVis Track (Fase 2). Masih draft untuk review —
-    belum diimplementasikan. Auth memakai Bearer JWT; semua waktu ISO-8601 UTC;
+    Kontrak REST API PriVis Track (Fase 2) yang sudah diimplementasikan di
+    privis_track_api. Auth memakai Bearer JWT; semua waktu ISO-8601 UTC;
     field memakai snake_case agar selaras dengan DTO Freezed di aplikasi Flutter.
   contact:
     name: PriVis Track Team

@@ -2,45 +2,109 @@
 
 **Project Name:** PriVis Track
 **Project Description:** Internal Project Tracking & Document Archive App
-**Phase:** Phase 1 – Mobile UI/UX Implementation & Architecture Setup
+**Phase:** Fase 2 – Backend & API Integration (berjalan)
 **Platform:** Mobile App (Flutter / Android & iOS)
 **Base Architecture:** [briczz555/flutter-clean-starter](https://github.com/briczz555/flutter-clean-starter)
-**Document Status:** Approved for Development
+**Document Status:** Approved — diperbarui 12 November 2026 sesuai implementasi
+**Repositori:** `privis_track` (Flutter) · `privis_track_api` (NestJS)
 
 ---
 
 ## 1. Product Overview & Vision
+
 Aplikasi internal (*in-house tool*) yang dirancang khusus untuk tim *software house* guna melacak progres proyek klien melalui 8 tahap *Software Development Life Cycle* (SDLC).
 Aplikasi ini berfungsi sebagai **pusat arsip dokumen** agar seluruh anggota tim lintas divisi (PM, Developer, Finance) memiliki transparansi status proyek secara *real-time*.
 
 ## 2. Project Scope & Phasing
-* ✅ **Fase 1 (Current Scope):**
-  * Inisialisasi proyek menggunakan skill `/flutter-clean-starter/start`.
-  * Pengembangan antarmuka (UI/UX) untuk fitur *Dashboard* dan *Project Tracking*.
-  * Implementasi navigasi (GoRouter), *state management* (Riverpod), dan *data modeling* (Freezed).
-  * Penggunaan **Dummy Data** yang diimplementasikan pada lapisan Data Source (Mock).
-* ⏳ **Fase 2 (Future Scope):**
-  * Pengembangan Backend & REST API.
-  * Integrasi Dio `remote_data_source` ke API sesungguhnya.
-  * Penyimpanan luring menggunakan Drift di `core/storage/`.
+
+### 2.1. Fase 1 — ✅ Selesai
+
+- Inisialisasi proyek menggunakan skill `/flutter-clean-starter/start`.
+- Pengembangan antarmuka (UI/UX) untuk fitur *Dashboard* dan *Project Tracking*.
+- Implementasi navigasi (GoRouter), *state management* (Riverpod), dan *data modeling* (Freezed).
+- Penggunaan **Dummy Data** di lapisan Data Source (Mock).
+
+Dummy data sudah sepenuhnya diganti API nyata pada Fase 2.
+
+### 2.2. Fase 2 — 🟡 Berjalan
+
+| Item | Status |
+|---|---|
+| Pengembangan Backend & REST API (NestJS + Prisma + PostgreSQL + MinIO) | ✅ |
+| Integrasi Dio `remote_data_source` ke API sesungguhnya | ✅ |
+| Auth JWT, role, dokumen, PATCH tahap/proyek, ganti password, manajemen user | ✅ |
+| Hardening backend (rate limit, Swagger, magic-bytes, akun layanan MinIO) | ✅ |
+| Penyimpanan luring Drift di `core/storage/` (cache baca) | ⏳ |
+
+**Sisa Fase 2:** cache offline Drift untuk data baca (dashboard, daftar proyek, detail
+tracking), fallback saat jaringan gagal, dan indikator data luring. Antrean tulis
+offline (upload/PATCH) **tidak** termasuk cakupan Fase 2.
+
+### 2.3. Tambahan di luar PRD awal
+
+Fitur berikut lahir dari kebutuhan operasional dan sudah diimplementasikan:
+
+| Tambahan | Alasan |
+|---|---|
+| Login JWT + refresh rotation + secure storage | Aplikasi tidak boleh terbuka tanpa autentikasi |
+| Upload/download/hapus dokumen ke MinIO (maks. 20 MB) | Melengkapi *document vault* agar benar-benar menjadi arsip |
+| PATCH tahap & status proyek (admin/PM) | Progres harus bisa diperbarui dari aplikasi |
+| Ganti password + manajemen user | Akun seed tidak boleh dipakai permanen |
+| Rate limit, Swagger `/docs`, validasi magic-bytes, akun layanan MinIO | Kesiapan produksi |
+
+### 2.4. Fase 3 — ⏳ Operasional & skala
+
+- Backup offsite otomatis (PostgreSQL + MinIO) dan monitoring uptime.
+- Pagination UI untuk lebih dari 100 proyek.
+- Deep-link: kembali ke halaman tujuan setelah login.
+- Antivirus scan dokumen sebelum dapat diunduh.
+- Audit log aksi admin (manajemen user belum masuk activity proyek).
 
 ## 3. Target Audience (User Personas)
+
 Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
-1. **Project Manager (PM):** Memantau *timeline* dan status tahapan.
+
+1. **Project Manager (PM):** Memantau *timeline*, mengubah status/tahap, dan mengelola dokumen.
 2. **Developer & QA:** Mengakses referensi dokumen teknis dan mengunggah UAT *checklist*.
-3. **Finance / Admin:** Mengunggah *invoice* dan bukti pembayaran.
+3. **Finance / Admin:** Mengunggah *invoice* dan bukti pembayaran; admin mengelola akun tim.
 
-## 4. Core Features & Requirements (Phase 1)
+## 4. Core Features & Requirements
 
-### 4.1. Feature: Dashboard (`lib/features/dashboard/`)
-* **Portfolio Chart:** *Donut/Pie Chart* interaktif yang memvisualisasikan proporsi status proyek.
-* **Active Projects List:** Daftar proyek berjalan dengan indikator persentase (*progress bar*).
-* **Team Activity Feed:** Daftar vertikal log aktivitas terbaru (misal: "Finance uploaded BAST 1").
+### 4.1. Dashboard (`lib/features/dashboard/`)
 
-### 4.2. Feature: Project Tracking (`lib/features/project_tracking/`)
-* **Vertical 8-Stage Timeline UI:** Menampilkan 8 tahap SDLC secara vertikal (Discovery hingga Maintenance).
-* **No Step-Lock Logic:** Semua tahap bersifat *clickable* tanpa validasi status progres (akses bebas untuk arsip internal).
-* **Document Vault (Bottom Sheet):** Menampilkan daftar file per tahapan dan tombol *mock upload*.
+- **Portfolio Chart:** *Donut/Pie Chart* interaktif yang memvisualisasikan proporsi status proyek.
+- **Active Projects List:** Daftar proyek berjalan dengan indikator persentase (*progress bar*).
+- **Team Activity Feed:** Daftar vertikal log aktivitas terbaru (misal: "Finance uploaded BAST 1").
+- **Semua Proyek** (`/projects`): daftar seluruh proyek dengan filter status.
+- Data berasal dari `GET /v1/dashboard` dan `GET /v1/projects`.
+
+### 4.2. Project Tracking (`lib/features/project_tracking/`)
+
+- **Vertical 8-Stage Timeline UI:** Menampilkan 8 tahap SDLC secara vertikal (Discovery hingga Maintenance).
+- **No Step-Lock Logic:** Semua tahap bersifat *clickable* tanpa validasi status progres (akses bebas untuk arsip internal).
+- **Document Vault (Bottom Sheet):** Daftar file per tahap dengan upload, unduh, dan hapus (khusus admin/PM). Format PDF, DOC/DOCX, XLS/XLSX, CSV, PNG/JPG, FIG; maks. 20 MB.
+- **Aksi progres:** admin/PM dapat menandai tahap selesai atau membuka kembali, serta mengubah status proyek. Server menghitung ulang `completed_stages`, `progress_percent`, dan `current_stage`.
+- Umpan balik aksi ditampilkan inline di dalam bottom sheet agar tidak tertutup modal.
+
+### 4.3. Auth & Akun (`lib/features/auth/`)
+
+- Login dengan email/password, token disimpan di `flutter_secure_storage`.
+- Access token 15 menit; refresh token 7 hari dengan rotasi dan pencabutan sesi.
+- Restore sesi saat aplikasi dibuka, redirect guard GoRouter.
+- Halaman Pengaturan: profil, ganti password, dan logout.
+
+### 4.4. Manajemen User (`lib/features/user_management/`, admin)
+
+- Daftar user beserta role, divisi, dan status aktif.
+- Tambah user, ubah nama/role/divisi, aktif/nonaktifkan, reset password.
+- Nonaktif dan reset password mencabut seluruh sesi user tersebut.
+- Admin tidak dapat menonaktifkan atau menurunkan role akun sendiri; minimal satu admin aktif harus tersisa.
+
+### 4.5. Cache Offline (`rencana Fase 2`)
+
+- Cache baca memakai Drift di `core/storage/`.
+- Saat jaringan gagal, tampilkan data terakhir beserta waktu pembaruan dan label "data luring".
+- Cache dibersihkan saat logout; tidak ada antrean aksi tulis offline.
 
 ---
 
@@ -49,17 +113,26 @@ Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
 Pengembangan **wajib** mengikuti pola **Feature-first + Clean Architecture** sesuai aturan `flutter-clean-starter`. Segala pelanggaran akan diblokir oleh *hook* pengecekan struktur.
 
 ### 5.1. Tech Stack Utama
-* **State Management:** Riverpod + Riverpod Generator (menggunakan `Ref` generik).
-* **Data Modeling:** Freezed + JSON Serializable (`sealed class` wajib digunakan).
-* **Routing:** GoRouter (terpusat di `core/navigation/`).
-* **Network & DB:** Dio (untuk Mock API sementara) & Drift (jika diperlukan untuk *caching* dummy di Fase 1).
+
+| Lapisan | Teknologi |
+|---|---|
+| Mobile | Flutter (Android & iOS) |
+| State Management | Riverpod + Riverpod Generator (`Ref` generik) |
+| Data Modeling | Freezed + JSON Serializable (`sealed class` wajib) |
+| Routing | GoRouter (terpusat di `core/navigation/`) |
+| Network | Dio ke API nyata, `mapDioException()` di repository |
+| Local cache | Drift (sudah terpasang, belum dipakai — sisa Fase 2) |
+| Backend | NestJS 12, Prisma 6, PostgreSQL 16, MinIO (S3-compatible) |
+| Deployment | Docker Compose di VPS, Cloudflare Tunnel → Nginx Proxy Manager |
 
 ### 5.2. Layering Strategy per Feature
-Setiap fitur (misal: `dashboard`, `project_tracking`) harus memiliki struktur internal berikut:
+
+Setiap fitur harus memiliki struktur internal berikut:
+
 ```text
 lib/features/<feature_name>/
 ├── data/
-│   ├── datasources/ (<feature_name>_remote_data_source.dart) -> Berisi Mock Future.delayed
+│   ├── datasources/ (<feature_name>_remote_data_source.dart) -> HTTP Dio / sumber data
 │   ├── dto/         (<feature_name>_dto.dart) -> Freezed class dengan fromJson/toJson
 │   ├── models/      (<feature_name>_model.dart)
 │   └── repositories/(<feature_name>_repository_impl.dart)
@@ -74,7 +147,9 @@ lib/features/<feature_name>/
 ```
 
 ### 5.3. Strict Architecture Rules (Wajib Dipatuhi)
+
 AI Developer atau tim *engineer* **harus** mematuhi aturan *hook* berikut:
+
 1. **Root Folder Bersih:** Dilarang membuat folder `repositories/`, `router/`, atau `tables/` sejajar dengan `data/domain/presentation` di root fitur.
 2. **Isolasi Domain:** Layer `domain/` **DILARANG KERAS** mengimpor Flutter, Dio, atau Drift. Tidak boleh ada `fromJson`/`toJson` di *domain entity*.
 3. **Isolasi Presentation:** Layer `presentation/` **DILARANG** mengimpor Dio/Drift secara langsung.
@@ -83,30 +158,70 @@ AI Developer atau tim *engineer* **harus** mematuhi aturan *hook* berikut:
 6. **Aturan Riverpod:** Provider fungsional harus menggunakan `Ref` generik dengan *import* eksplisit `package:flutter_riverpod/flutter_riverpod.dart`. *Class provider* hasil *generate* tidak perlu akhiran `Notifier`.
 7. **Aturan GoRouter:** `redirect` harus menggunakan `ref.read`/`ref.listen`, dilarang menggunakan `ref.watch`. Semua *route* didaftarkan di `core/navigation/routes.dart`.
 
-## 6. Dummy Data Implementation Strategy
+### 5.4. Backend & API
 
-Karena ini adalah Fase 1 (Mock State), data *dummy* tidak boleh di- *hardcode* di *Presentation Layer*.
-* **Data Source:** Buat `ProjectRemoteDataSource` yang mengembalikan `Future.delayed` berisi struktur JSON Statis.
-* **DTO:** Gunakan Freezed `sealed class` untuk melakukan *parsing* JSON *dummy* tersebut di `ProjectDto`.
-* **Mapping:** `ProjectRepositoryImpl` memetakan `ProjectDto` menjadi `ProjectEntity` (bebas JSON) untuk dilempar ke *Domain Layer*.
+- Base URL produksi: `https://privis.briczz.my.id/v1`.
+- Kontrak lengkap: [`api-contract.md`](api-contract.md) dan [`openapi.yaml`](openapi.yaml); Swagger runtime di `/docs`.
+- Modul: `auth`, `users`, `projects`, `documents`, `dashboard`, `activities`, `health`.
+- Auth: JWT access 15 menit + refresh token opaque (rotasi, hash di server).
+- Dokumen disimpan di MinIO privat; unduhan melalui stream API (bukan signed URL).
+- Semua endpoint selain health/login/refresh/logout memerlukan Bearer token.
+- Rate limit: 120 request/menit/IP; login 5 percobaan/menit/IP.
 
-**Contoh Struktur JSON Dummy yang akan di-parsing:**
-```json
-{
-  "id": "PRJ-001",
-  "name": "E-Commerce App",
-  "client": "PT. ABC",
-  "status": "In Progress",
-  "current_stage": 4, 
-  "stages": [
-     {
-       "id": 1,
-       "title": "Discovery & Brief",
-       "is_completed": true,
-       "documents": [
-          { "name": "MoM.pdf", "type": "pdf", "url": "https://dummy.link" }
-       ]
-     }
-  ]
-}
+## 6. Strategi Data
+
+Data **tidak boleh** di-hardcode di presentation layer.
+
+1. `*_remote_data_source.dart` memanggil endpoint Dio dan mengembalikan payload JSON.
+2. `*_dto.dart` mem-parsing payload (Freezed + JSON Serializable).
+3. `*_model.dart` memetakan DTO ke entity domain (role/status/enum dinormalisasi di sini).
+4. `*_repository_impl.dart` menangkap `DioException` dan melempar exception domain melalui `mapDioException()`.
+5. `domain/` hanya mengenal entity murni; `presentation/` mengakses data lewat usecase/repository.
+
+Contoh payload nyata ada di [`api-contract.md`](api-contract.md) dan dapat diuji langsung melalui Swagger `/docs`.
+
+**Rencana cache offline:** simpan snapshot data baca per fitur di Drift beserta `updated_at`. Repository mencoba jaringan terlebih dahulu; jika gagal karena koneksi/timeout, gunakan snapshot dan tandai data sebagai luring. Cache dihapus saat logout atau ketika pengguna berganti akun.
+
+## 7. Di Luar Cakupan
+
+- Notifikasi push, komentar per dokumen, dan versioning file.
+- Multi-tenant dan akses klien.
+- Realtime websocket.
+- Antrean aksi tulis offline (upload/PATCH saat tanpa jaringan).
+- Audit log aksi admin.
+- Restore dokumen yang sudah dihapus.
+
+## 8. Roadmap & Definition of Done
+
+### Fase 2 — Definition of Done
+
+- [x] Backend REST API berjalan di VPS dan terhubung PostgreSQL + MinIO.
+- [x] Auth, role, dan seluruh endpoint baca terintegrasi di Flutter.
+- [x] Upload/download/hapus dokumen dari aplikasi.
+- [x] Update tahap & status proyek dari aplikasi.
+- [x] Ganti password dan manajemen user oleh admin.
+- [x] Hardening: rate limit, Swagger, magic-bytes, akun layanan MinIO.
+- [ ] Cache offline Drift + indikator data luring.
+- [ ] Test dan dokumentasi cache offline.
+
+### Fase 3 — Backlog
+
+1. Backup offsite otomatis + monitoring uptime.
+2. Pagination Semua Proyek >100 dan deep-link setelah login.
+3. Antivirus scan dokumen.
+4. Audit log aksi admin.
+
+## 9. Verifikasi
+
+```bash
+# Flutter
+flutter analyze
+flutter test
+
+# Backend
+npm run build
+npm run lint
+npm test
 ```
+
+Deploy backend: `cd ~/privis_track_api && ./build.sh` (lihat `privis_track_api/docs/deployment-vps.md`).

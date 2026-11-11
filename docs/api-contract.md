@@ -1,7 +1,7 @@
 # PriVis Track — API Contract (Draft Fase 2)
 
 **Status:** Draft — auth, endpoint baca, dokumen (upload/download/hapus), PATCH proyek/tahap, ganti password, serta hardening (rate limit, Swagger, magic-bytes, akun layanan MinIO) sudah diimplementasikan di `privis_track_api` (11 Nov 2026).
-**Versi API:** `v1`
+**Versi API:** `v1` (status: Fase 2, sudah diimplementasikan)
 **Kontrak mesin:** [`openapi.yaml`](openapi.yaml) (OpenAPI 3.0.3)
 
 ## Status implementasi

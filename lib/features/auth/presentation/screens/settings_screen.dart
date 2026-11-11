@@ -7,6 +7,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/app_loading_state.dart';
 import '../../domain/entities/auth_role.dart';
 import '../providers/auth_controller.dart';
+import '../widgets/change_password_dialog.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -91,6 +92,16 @@ class SettingsScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: AppSpacing.md),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.lock_outline_rounded),
+                    title: const Text('Ganti password'),
+                    subtitle: const Text('Perbarui kredensial akun Anda'),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => _openChangePassword(context),
+                  ),
+                ),
                 const SizedBox(height: AppSpacing.lg),
                 OutlinedButton.icon(
                   onPressed: () =>
@@ -107,6 +118,19 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
     );
+  }
+}
+
+Future<void> _openChangePassword(BuildContext context) async {
+  final changed = await showDialog<bool>(
+    context: context,
+    builder: (context) => const ChangePasswordDialog(),
+  );
+
+  if (changed == true && context.mounted) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Password berhasil diubah.')));
   }
 }
 

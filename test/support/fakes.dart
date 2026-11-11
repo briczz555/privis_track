@@ -50,6 +50,15 @@ class FakeAuthRepository implements AuthRepository {
   Future<AuthSessionEntity?> restoreSession() async => session;
 
   @override
+  Future<AuthSessionEntity> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    session ??= testSession;
+    return session!;
+  }
+
+  @override
   Future<void> logout() async {
     session = null;
   }
@@ -105,6 +114,9 @@ class FakeProjectTrackingRepository implements ProjectTrackingRepository {
   Future<Uint8List> downloadDocument(String documentId) async {
     return Uint8List.fromList([1, 2, 3]);
   }
+
+  @override
+  Future<void> deleteDocument(String documentId) async {}
 
   @override
   Future<void> updateStage({

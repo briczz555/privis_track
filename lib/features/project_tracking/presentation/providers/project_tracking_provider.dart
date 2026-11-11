@@ -11,6 +11,7 @@ import '../../data/repositories/project_tracking_repository_impl.dart';
 import '../../domain/entities/project_tracking_entity.dart';
 import '../../domain/entities/stage_document_entity.dart';
 import '../../domain/repositories/project_tracking_repository.dart';
+import '../../domain/usecases/delete_document_usecase.dart';
 import '../../domain/usecases/download_document_usecase.dart';
 import '../../domain/usecases/get_project_tracking_usecase.dart';
 import '../../domain/usecases/update_project_status_usecase.dart';
@@ -43,6 +44,11 @@ UploadStageDocumentUsecase uploadStageDocumentUsecase(Ref ref) {
 @riverpod
 DownloadDocumentUsecase downloadDocumentUsecase(Ref ref) {
   return DownloadDocumentUsecase(ref.watch(projectTrackingRepositoryProvider));
+}
+
+@riverpod
+DeleteDocumentUsecase deleteDocumentUsecase(Ref ref) {
+  return DeleteDocumentUsecase(ref.watch(projectTrackingRepositoryProvider));
 }
 
 @riverpod
@@ -101,6 +107,21 @@ class ProjectTrackingNotifier extends _$ProjectTrackingNotifier {
 
   Future<Uint8List> downloadDocument(String documentId) {
     return ref.read(downloadDocumentUsecaseProvider).call(documentId);
+  }
+
+  Future<void> deleteDocument({
+    required int stageId,
+    required String documentId,
+  }) async {
+    await ref.read(deleteDocumentUsecaseProvider).call(documentId);
+
+    if (!ref.mounted) return;
+    final current = state.value;
+    if (current != null) {
+      state = AsyncData(
+        current.removeDocument(stageId: stageId, documentId: documentId),
+      );
+    }
   }
 
   Future<void> updateStage({

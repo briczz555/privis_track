@@ -16,6 +16,8 @@ abstract interface class ProjectTrackingRepository {
 
   Future<Uint8List> downloadDocument(String documentId);
 
+  Future<void> deleteDocument(String documentId);
+
   Future<void> updateStage({
     required String projectCode,
     required int stageId,

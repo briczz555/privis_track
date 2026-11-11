@@ -49,6 +49,9 @@ class _FakeProjectDataSource implements IProjectTrackingRemoteDataSource {
       Uint8List.fromList([1, 2, 3]);
 
   @override
+  Future<void> deleteDocument(String documentId) async {}
+
+  @override
   Future<void> updateStage({
     required String projectCode,
     required int stageId,
@@ -243,6 +246,24 @@ void main() {
       expect(find.text('MoM Kickoff.pdf'), findsOneWidget);
       expect(find.text('Project Brief.pdf'), findsOneWidget);
       expect(find.text('2 file'), findsOneWidget);
+    });
+
+    testWidgets('admin dapat menghapus dokumen dari vault', (tester) async {
+      await pumpScreen(tester);
+
+      await tester.tap(find.text('Discovery & Brief'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byTooltip('Hapus dokumen').first);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Hapus dokumen?'), findsOneWidget);
+      await tester.tap(find.widgetWithText(FilledButton, 'Hapus'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('berhasil dihapus'), findsOneWidget);
+      expect(find.text('MoM Kickoff.pdf'), findsNothing);
+      expect(find.text('1 file'), findsOneWidget);
     });
   });
 }

@@ -64,6 +64,15 @@ class ProjectTrackingRepositoryImpl implements ProjectTrackingRepository {
   }
 
   @override
+  Future<void> deleteDocument(String documentId) async {
+    try {
+      await _remote.deleteDocument(documentId);
+    } on DioException catch (error) {
+      throw mapDioException(error);
+    }
+  }
+
+  @override
   Future<void> updateStage({
     required String projectCode,
     required int stageId,

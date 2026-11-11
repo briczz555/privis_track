@@ -99,6 +99,34 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
+  /auth/change-password:
+    post:
+      tags: [Auth]
+      summary: Ubah password user yang sedang login
+      description: |
+        Memverifikasi password saat ini lalu mengganti hash password.
+        Semua refresh token lama dicabut; respons berisi token baru agar
+        perangkat ini tetap login.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: Password diubah dan token baru diterbitkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokens'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
   /me:
     get:
       tags: [Auth]
@@ -446,6 +474,16 @@ components:
         maxLength: 100
 
   responses:
+    BadRequest:
+      description: Permintaan tidak bisa diproses (mis. password saat ini salah)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error:
+              code: bad_request
+              message: Password saat ini salah.
     Unauthorized:
       description: Token tidak ada atau kedaluwarsa
       content:
@@ -611,6 +649,21 @@ components:
       properties:
         refresh_token:
           type: string
+
+    ChangePasswordRequest:
+      type: object
+      required: [current_password, new_password]
+      properties:
+        current_password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 72
+        new_password:
+          type: string
+          format: password
+          minLength: 8
+          maxLength: 72
 
     User:
       type: object

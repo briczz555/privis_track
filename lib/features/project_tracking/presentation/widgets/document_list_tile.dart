@@ -12,12 +12,16 @@ class DocumentListTile extends StatelessWidget {
     super.key,
     required this.document,
     this.onOpen,
+    this.onDelete,
     this.isBusy = false,
+    this.isDeleting = false,
   });
 
   final StageDocumentEntity document;
   final VoidCallback? onOpen;
+  final VoidCallback? onDelete;
   final bool isBusy;
+  final bool isDeleting;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +83,23 @@ class DocumentListTile extends StatelessWidget {
                   )
                 : Icon(Icons.download_rounded, size: 18, color: secondaryText),
           ),
+          if (onDelete != null)
+            IconButton(
+              tooltip: 'Hapus dokumen',
+              visualDensity: VisualDensity.compact,
+              onPressed: isBusy || isDeleting ? null : onDelete,
+              icon: isDeleting
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Icon(
+                      Icons.delete_outline_rounded,
+                      size: 18,
+                      color: theme.colorScheme.error,
+                    ),
+            ),
         ],
       ),
     );

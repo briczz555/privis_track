@@ -13,6 +13,8 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/error_message.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
+import '../../../auth/domain/entities/auth_role.dart';
+import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../domain/entities/stage_document_entity.dart';
 import '../providers/project_tracking_provider.dart';
 import 'document_list_tile.dart';
@@ -49,6 +51,7 @@ class DocumentVaultSheet extends ConsumerStatefulWidget {
 class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
   bool _isUploading = false;
   String? _downloadingId;
+  String? _deletingId;
 
   Future<void> _upload() async {
     if (_isUploading) return;
@@ -137,12 +140,67 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+  Future<void> _delete(StageDocumentEntity document) async {
+    if (_deletingId != null) return;
+
+    final theme = Theme.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Hapus dokumen?'),
+        content: Text(
+          '"${document.name}" akan dihapus dari arsip tahap ini. '
+          'Tindakan ini tidak bisa dibatalkan.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('Batal'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: FilledButton.styleFrom(
+              backgroundColor: theme.colorScheme.error,
+              foregroundColor: theme.colorScheme.onError,
+            ),
+            child: const Text('Hapus'),
+          ),
+        ],
+      ),
+    );
+
+    if (!mounted || confirmed != true) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _deletingId = document.id);
+
+    try {
+      await ref
+          .read(projectTrackingProvider(widget.projectCode).notifier)
+          .deleteDocument(stageId: widget.stageId, documentId: document.id);
+
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text('${document.name} berhasil dihapus.')),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(readableErrorMessage(error))),
+      );
+    } finally {
+      if (mounted) setState(() => _deletingId = null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final projectState = ref.watch(projectTrackingProvider(widget.projectCode));
     final stage = projectState.value?.stageById(widget.stageId);
     final secondaryText = theme.colorScheme.onSurface.withValues(alpha: 0.55);
+    final role = ref.watch(authControllerProvider).value?.user.role;
+    final canDelete = role == AuthRole.admin || role == AuthRole.pm;
 
     if (stage == null) {
       if (projectState.hasError) {
@@ -259,7 +317,9 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
                     return DocumentListTile(
                       document: document,
                       isBusy: _downloadingId == document.id,
+                      isDeleting: _deletingId == document.id,
                       onOpen: () => _download(document),
+                      onDelete: canDelete ? () => _delete(document) : null,
                     );
                   },
                 ),

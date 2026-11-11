@@ -6,12 +6,15 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/auth/auth_session_cache.dart';
 import '../../../../core/network/auth_dio_provider.dart';
+import '../../../../core/network/dio_provider.dart';
 import '../../../../core/network/exceptions/network_exception.dart';
+import '../../data/datasources/auth_account_remote_data_source.dart';
 import '../../data/datasources/auth_local_data_source.dart';
 import '../../data/datasources/auth_remote_data_source.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/auth_session_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/change_password_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/refresh_session_usecase.dart';
@@ -30,9 +33,15 @@ IAuthLocalDataSource authLocalDataSource(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
+IAuthAccountRemoteDataSource authAccountRemoteDataSource(Ref ref) {
+  return AuthAccountRemoteDataSource(ref.watch(dioProvider));
+}
+
+@Riverpod(keepAlive: true)
 AuthRepository authRepository(Ref ref) {
   return AuthRepositoryImpl(
     ref.watch(authRemoteDataSourceProvider),
+    ref.watch(authAccountRemoteDataSourceProvider),
     ref.watch(authLocalDataSourceProvider),
   );
 }
@@ -40,6 +49,10 @@ AuthRepository authRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 LoginUsecase loginUsecase(Ref ref) =>
     LoginUsecase(ref.watch(authRepositoryProvider));
+
+@Riverpod(keepAlive: true)
+ChangePasswordUsecase changePasswordUsecase(Ref ref) =>
+    ChangePasswordUsecase(ref.watch(authRepositoryProvider));
 
 @Riverpod(keepAlive: true)
 RefreshSessionUsecase refreshSessionUsecase(Ref ref) =>
@@ -100,6 +113,19 @@ class AuthController extends _$AuthController {
     final session = result.value;
     if (session != null) _syncCache(session);
     state = result;
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final session = await ref
+        .read(changePasswordUsecaseProvider)
+        .call(currentPassword: currentPassword, newPassword: newPassword);
+
+    if (!ref.mounted) return;
+    _syncCache(session);
+    state = AsyncData(session);
   }
 
   Future<AuthSessionEntity?> refreshSession() {

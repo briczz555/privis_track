@@ -87,6 +87,7 @@ NetworkException mapDioException(DioException e) {
           return NotFoundException(apiMessage ?? 'Data tidak ditemukan.');
         case 409:
           return ConflictException(apiMessage ?? 'Terjadi konflik data.');
+        case 400:
         case 413:
         case 415:
         case 422:

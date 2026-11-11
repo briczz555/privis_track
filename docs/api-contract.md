@@ -1,6 +1,6 @@
 # PriVis Track — API Contract (Draft Fase 2)
 
-**Status:** Draft — auth, endpoint baca, dan dokumen (upload/download/hapus) sudah diimplementasikan di `privis_track_api` (11 Nov 2026). Endpoint tulis (PATCH) belum.
+**Status:** Draft — auth, endpoint baca, dokumen (upload/download/hapus), PATCH proyek/tahap, dan ganti password sudah diimplementasikan di `privis_track_api` (11 Nov 2026).
 **Versi API:** `v1`
 **Kontrak mesin:** [`openapi.yaml`](openapi.yaml) (OpenAPI 3.0.3)
 
@@ -9,6 +9,7 @@
 | Bagian | Status |
 |---|---|
 | Auth (`login`, `refresh`, `logout`, `me`) | ✅ |
+| `POST /auth/change-password` | ✅ |
 | `GET /dashboard`, `GET /projects`, `GET /projects/{code}`, `GET /activities` | ✅ |
 | `PATCH /projects/{code}`, `PATCH .../stages/{stage_no}` | ✅ |
 | Upload/download/hapus dokumen | ✅ |
@@ -138,6 +139,7 @@ Tidak ada registrasi publik dan tidak ada akses klien.
 - `POST /auth/login` `{email, password}` → `AuthTokens` (access 900 detik, refresh 604800 detik).
 - `POST /auth/refresh` `{refresh_token}` → rotasi token; token lama dicabut; deteksi reuse → 401.
 - `POST /auth/logout` `{refresh_token}` → 204.
+- `POST /auth/change-password` `{current_password, new_password}` → `AuthTokens` baru; semua refresh token lama dicabut. Password salah → 400 `bad_request`.
 - `GET /me` → `User`.
 
 Refresh token disimpan sebagai hash di server; aplikasi menyimpan token di secure storage. Respons auth `Cache-Control: no-store`.

@@ -10,11 +10,14 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
 - **Dashboard**: donut chart portofolio, proyek berjalan, activity feed dari API.
 - **Semua Proyek** (`/projects`): daftar semua proyek + filter status.
 - **Project Tracking** (`/projects/:projectCode`): timeline 8 tahap, kontak klien,
-  document vault dengan **upload & download** (PDF, DOC/DOCX, XLS/XLSX, CSV,
-  PNG/JPG, FIG; maks. 20 MB).
+  document vault dengan **upload, download, dan hapus** (PDF, DOC/DOCX, XLS/XLSX,
+  CSV, PNG/JPG, FIG; maks. 20 MB), serta aksi PM/admin untuk menandai selesai
+  tahap dan mengubah status proyek.
+- **Pengaturan**: profil user, **ganti password**, dan logout.
 - Data diambil dari backend `privis_track_api` di VPS.
 
-Belum tersedia: ganti password, hapus dokumen dari UI, dan manajemen user.
+Belum tersedia: manajemen user (tambah/nonaktifkan akun) dan hardening backend
+(rate limit login, Swagger runtime, validasi magic-bytes).
 
 ## Backend
 
@@ -51,9 +54,9 @@ Login memakai akun internal yang dibuat lewat seed backend.
 lib/
 ├── core/                 # navigation, network, auth session cache, theme, storage
 ├── features/
-│   ├── auth/             # login, session, JWT refresh, pengaturan akun
+│   ├── auth/             # login, session, JWT refresh, pengaturan + ganti password
 │   ├── dashboard/        # dashboard + semua proyek
-│   └── project_tracking/ # timeline + document vault (upload/download)
+│   └── project_tracking/ # timeline + document vault (upload/download/hapus)
 └── main.dart
 ```
 

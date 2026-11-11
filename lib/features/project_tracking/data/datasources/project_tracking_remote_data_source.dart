@@ -16,6 +16,8 @@ abstract interface class IProjectTrackingRemoteDataSource {
 
   Future<Uint8List> downloadDocument(String documentId);
 
+  Future<void> deleteDocument(String documentId);
+
   Future<void> updateStage({
     required String projectCode,
     required int stageId,
@@ -75,6 +77,11 @@ class ProjectTrackingRemoteDataSource
     );
 
     return Uint8List.fromList(response.data ?? const []);
+  }
+
+  @override
+  Future<void> deleteDocument(String documentId) async {
+    await _dio.delete<void>('documents/$documentId');
   }
 
   @override

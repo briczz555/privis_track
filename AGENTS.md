@@ -52,11 +52,12 @@ Aturan yang tidak boleh dilanggar:
 
 ## Status fitur
 
-- `features/auth/` — login, restore sesi, refresh token, logout, halaman pengaturan.
+- `features/auth/` — login, restore sesi, refresh token, logout, ganti password,
+  halaman pengaturan.
 - `features/dashboard/` — dashboard API (portfolio, proyek aktif, aktivitas) dan
   halaman **Semua Proyek** (`/projects`) dengan filter status.
 - `features/project_tracking/` — timeline 8 tahap (semua clickable, no step-lock),
-  ringkasan progres, kontak klien, document vault (upload/download), aksi PM/admin
+  ringkasan progres, kontak klien, document vault (upload/download/hapus), aksi PM/admin
   untuk menandai selesai/membuka tahap dan mengubah status proyek.
   Route: `/projects/:projectCode`.
 

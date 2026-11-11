@@ -202,6 +202,54 @@ final class DownloadDocumentUsecaseProvider
 String _$downloadDocumentUsecaseHash() =>
     r'c7fdb68b8501e7c2b6bd3216b48229199329eece';
 
+@ProviderFor(deleteDocumentUsecase)
+final deleteDocumentUsecaseProvider = DeleteDocumentUsecaseProvider._();
+
+final class DeleteDocumentUsecaseProvider
+    extends
+        $FunctionalProvider<
+          DeleteDocumentUsecase,
+          DeleteDocumentUsecase,
+          DeleteDocumentUsecase
+        >
+    with $Provider<DeleteDocumentUsecase> {
+  DeleteDocumentUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'deleteDocumentUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$deleteDocumentUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<DeleteDocumentUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  DeleteDocumentUsecase create(Ref ref) {
+    return deleteDocumentUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DeleteDocumentUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DeleteDocumentUsecase>(value),
+    );
+  }
+}
+
+String _$deleteDocumentUsecaseHash() =>
+    r'0ad5db7e8f3864f0923eaa1a0f8dd6b3e0222cd0';
+
 @ProviderFor(updateStageUsecase)
 final updateStageUsecaseProvider = UpdateStageUsecaseProvider._();
 
@@ -343,7 +391,7 @@ final class ProjectTrackingNotifierProvider
 }
 
 String _$projectTrackingNotifierHash() =>
-    r'491feda52cbf945ae78e419c0befe3beb5156022';
+    r'f4bad4da1470f0e501f0c4a2e6c30b3b947c2dc0';
 
 final class ProjectTrackingNotifierFamily extends $Family
     with

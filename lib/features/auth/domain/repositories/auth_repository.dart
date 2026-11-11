@@ -10,5 +10,10 @@ abstract interface class AuthRepository {
 
   Future<AuthSessionEntity?> restoreSession();
 
+  Future<AuthSessionEntity> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  });
+
   Future<void> logout();
 }

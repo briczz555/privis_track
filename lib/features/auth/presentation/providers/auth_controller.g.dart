@@ -105,6 +105,55 @@ final class AuthLocalDataSourceProvider
 String _$authLocalDataSourceHash() =>
     r'14140e0b7977ab79a82595875c516057f65bec17';
 
+@ProviderFor(authAccountRemoteDataSource)
+final authAccountRemoteDataSourceProvider =
+    AuthAccountRemoteDataSourceProvider._();
+
+final class AuthAccountRemoteDataSourceProvider
+    extends
+        $FunctionalProvider<
+          IAuthAccountRemoteDataSource,
+          IAuthAccountRemoteDataSource,
+          IAuthAccountRemoteDataSource
+        >
+    with $Provider<IAuthAccountRemoteDataSource> {
+  AuthAccountRemoteDataSourceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'authAccountRemoteDataSourceProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$authAccountRemoteDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<IAuthAccountRemoteDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  IAuthAccountRemoteDataSource create(Ref ref) {
+    return authAccountRemoteDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IAuthAccountRemoteDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IAuthAccountRemoteDataSource>(value),
+    );
+  }
+}
+
+String _$authAccountRemoteDataSourceHash() =>
+    r'9b1aae8b7e1c4d95bee01a0e52b51e1d58515638';
+
 @ProviderFor(authRepository)
 final authRepositoryProvider = AuthRepositoryProvider._();
 
@@ -144,7 +193,7 @@ final class AuthRepositoryProvider
   }
 }
 
-String _$authRepositoryHash() => r'67eccf2df71935898c918e698c5165f59640d5d8';
+String _$authRepositoryHash() => r'a7ece434c7285c7b44abd57530e5b008ffe99b10';
 
 @ProviderFor(loginUsecase)
 final loginUsecaseProvider = LoginUsecaseProvider._();
@@ -186,6 +235,54 @@ final class LoginUsecaseProvider
 }
 
 String _$loginUsecaseHash() => r'0564b41939ce8306781effac4171478398541a54';
+
+@ProviderFor(changePasswordUsecase)
+final changePasswordUsecaseProvider = ChangePasswordUsecaseProvider._();
+
+final class ChangePasswordUsecaseProvider
+    extends
+        $FunctionalProvider<
+          ChangePasswordUsecase,
+          ChangePasswordUsecase,
+          ChangePasswordUsecase
+        >
+    with $Provider<ChangePasswordUsecase> {
+  ChangePasswordUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'changePasswordUsecaseProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$changePasswordUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<ChangePasswordUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  ChangePasswordUsecase create(Ref ref) {
+    return changePasswordUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ChangePasswordUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ChangePasswordUsecase>(value),
+    );
+  }
+}
+
+String _$changePasswordUsecaseHash() =>
+    r'821aa84e5e79fbc9509fd38bf65053c25625e00e';
 
 @ProviderFor(refreshSessionUsecase)
 final refreshSessionUsecaseProvider = RefreshSessionUsecaseProvider._();
@@ -348,7 +445,7 @@ final class AuthControllerProvider
   AuthController create() => AuthController();
 }
 
-String _$authControllerHash() => r'd7484e627ed9405c58fcf0849786230691050dd0';
+String _$authControllerHash() => r'86ef73f607fa5f170ea9b7aba2c4f1ae6a1bcb3b';
 
 abstract class _$AuthController extends $AsyncNotifier<AuthSessionEntity?> {
   FutureOr<AuthSessionEntity?> build();

@@ -56,4 +56,23 @@ sealed class ProjectTrackingEntity with _$ProjectTrackingEntity {
       ],
     );
   }
+
+  ProjectTrackingEntity removeDocument({
+    required int stageId,
+    required String documentId,
+  }) {
+    return copyWith(
+      stages: [
+        for (final stage in stages)
+          stage.id == stageId
+              ? stage.copyWith(
+                  documents: [
+                    for (final document in stage.documents)
+                      if (document.id != documentId) document,
+                  ],
+                )
+              : stage,
+      ],
+    );
+  }
 }

@@ -5,15 +5,17 @@ import 'package:dio/dio.dart';
 import '../../../../core/network/exceptions/network_exception.dart';
 import '../../domain/entities/auth_session_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_account_remote_data_source.dart';
 import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_remote_data_source.dart';
 import '../dto/auth_tokens_dto.dart';
 import '../models/auth_session_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  AuthRepositoryImpl(this._remote, this._local);
+  AuthRepositoryImpl(this._remote, this._account, this._local);
 
   final IAuthRemoteDataSource _remote;
+  final IAuthAccountRemoteDataSource _account;
   final IAuthLocalDataSource _local;
 
   @override
@@ -54,6 +56,24 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (_) {
       await _local.clearSession();
       return null;
+    }
+  }
+
+  @override
+  Future<AuthSessionEntity> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final payload = await _account.changePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      );
+      return await _persist(AuthTokensDto.fromJson(payload));
+    } on DioException catch (error) {
+      throw mapDioException(error);
+    } catch (_) {
+      throw const UnknownNetworkException('Respons server tidak sesuai.');
     }
   }
 

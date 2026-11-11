@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:privis_track/core/constants/project_status.dart';
 import 'package:privis_track/core/network/exceptions/network_exception.dart';
+import 'package:privis_track/features/auth/domain/entities/auth_role.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:privis_track/features/auth/domain/repositories/auth_repository.dart';
 import 'package:privis_track/features/dashboard/domain/entities/dashboard_entity.dart';
@@ -11,6 +12,8 @@ import 'package:privis_track/features/project_tracking/domain/entities/project_t
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_entity.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_type.dart';
 import 'package:privis_track/features/project_tracking/domain/repositories/project_tracking_repository.dart';
+import 'package:privis_track/features/user_management/domain/entities/managed_user_entity.dart';
+import 'package:privis_track/features/user_management/domain/repositories/user_management_repository.dart';
 
 import 'fixtures.dart';
 
@@ -130,4 +133,70 @@ class FakeProjectTrackingRepository implements ProjectTrackingRepository {
     required String projectCode,
     required ProjectStatus status,
   }) async {}
+}
+
+class FakeUserManagementRepository implements UserManagementRepository {
+  FakeUserManagementRepository(List<ManagedUserEntity> users)
+    : users = List.of(users);
+
+  final List<ManagedUserEntity> users;
+  int createCalls = 0;
+  int updateCalls = 0;
+  int resetCalls = 0;
+
+  @override
+  Future<List<ManagedUserEntity>> getUsers() async => List.unmodifiable(users);
+
+  @override
+  Future<ManagedUserEntity> createUser({
+    required String name,
+    required String email,
+    required String password,
+    required AuthRole role,
+    String? division,
+  }) async {
+    createCalls += 1;
+    final trimmedDivision = division?.trim();
+    final user = ManagedUserEntity(
+      id: 'user-new-$createCalls',
+      name: name,
+      email: email,
+      role: role,
+      division: (trimmedDivision == null || trimmedDivision.isEmpty)
+          ? null
+          : trimmedDivision,
+      isActive: true,
+      createdAt: DateTime.utc(2026, 11, 12),
+    );
+    users.add(user);
+    return user;
+  }
+
+  @override
+  Future<ManagedUserEntity> updateUser({
+    required String id,
+    required String name,
+    required AuthRole role,
+    String? division,
+    required bool isActive,
+  }) async {
+    updateCalls += 1;
+    final index = users.indexWhere((user) => user.id == id);
+    final updated = users[index].copyWith(
+      name: name,
+      role: role,
+      division: division,
+      isActive: isActive,
+    );
+    users[index] = updated;
+    return updated;
+  }
+
+  @override
+  Future<void> resetPassword({
+    required String id,
+    required String newPassword,
+  }) async {
+    resetCalls += 1;
+  }
 }

@@ -6,6 +6,7 @@ import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/dashboard/presentation/screens/all_projects_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/project_tracking/presentation/screens/project_tracking_screen.dart';
+import '../../features/user_management/presentation/screens/user_management_screen.dart';
 
 /// Nama-nama route sebagai konstanta, supaya navigasi (mis. `context.goNamed(...)`)
 /// tidak memakai string mentah yang gampang typo.
@@ -18,6 +19,7 @@ abstract class AppRoutes {
   static const dashboard = 'dashboard';
   static const allProjects = 'all-projects';
   static const projectTracking = 'project-tracking';
+  static const userManagement = 'user-management';
 }
 
 /// Semua GoRoute aplikasi, dikelompokkan per fitur lewat komentar section.
@@ -37,6 +39,11 @@ final List<GoRoute> appRoutes = [
     path: '/settings',
     name: AppRoutes.settings,
     builder: (context, state) => const SettingsScreen(),
+  ),
+  GoRoute(
+    path: '/settings/users',
+    name: AppRoutes.userManagement,
+    builder: (context, state) => const UserManagementScreen(),
   ),
 
   // ----- dashboard -----

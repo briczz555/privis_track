@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/navigation/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_shapes.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -92,6 +94,19 @@ class SettingsScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
+                const SizedBox(height: AppSpacing.md),
+                if (user.role == AuthRole.admin)
+                  Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.group_outlined),
+                      title: const Text('Kelola User'),
+                      subtitle: const Text(
+                        'Tambah, nonaktifkan, atau reset akun',
+                      ),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => context.pushNamed(AppRoutes.userManagement),
+                    ),
+                  ),
                 const SizedBox(height: AppSpacing.md),
                 Card(
                   child: ListTile(

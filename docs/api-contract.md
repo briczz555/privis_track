@@ -13,6 +13,7 @@
 | `GET /dashboard`, `GET /projects`, `GET /projects/{code}`, `GET /activities` | ✅ |
 | `PATCH /projects/{code}`, `PATCH .../stages/{stage_no}` | ✅ |
 | Upload/download/hapus dokumen | ✅ |
+| Manajemen user (admin) | ✅ |
 | Swagger runtime (`/docs`) & rate limit aplikasi | ✅ |
 
 ## Keputusan desain (disetujui)
@@ -324,7 +325,22 @@ Accept-Ranges: bytes
 
 Soft delete (`deleted_at`), role `admin`/`pm` (finance untuk dokumen finance bila disepakati), catat aktivitas `document_deleted`.
 
-### 6.6 Aktivitas
+### 6.6 User (khusus admin)
+
+Semua endpoint memerlukan Bearer token dengan role `admin`.
+
+- `GET /users` → `200 { "data": [User] }`, urutan user aktif lebih dulu lalu nama.
+- `POST /users` `{name, email, password, role, division?}` → `201 User`. Email unik; duplikat → `409 conflict`.
+- `PATCH /users/{id}` `{name?, role?, division?, is_active?}` → `200 User`.
+  - Admin tidak bisa menonaktifkan atau mengubah role akun sendiri (`400`).
+  - Minimal harus tersisa satu admin aktif (`400`).
+  - `is_active=false` mencabut seluruh refresh token user tersebut.
+- `POST /users/{id}/reset-password` `{new_password}` → `204`; mencabut semua sesi user.
+  - Untuk akun sendiri → `400`; gunakan `/auth/change-password`.
+
+`User` = `{id, name, email, role, division, is_active, created_at}`.
+
+### 6.7 Aktivitas
 
 `GET /activities?limit=20&cursor=...` → `{ data: [Activity], next_cursor }`.
 
@@ -332,7 +348,7 @@ Soft delete (`deleted_at`), role `admin`/`pm` (finance untuk dokumen finance bil
 - `limit` default 20, maksimum 100.
 - `Activity` memuat `type`, `action` (teks tampilan), `target`, `actor`, `project`, `created_at`.
 
-### 6.7 Health
+### 6.8 Health
 
 `GET /health` (tanpa `/v1`) → `{ "status": "ok" }`. Tidak menampilkan versi/uptime ke publik.
 
@@ -380,7 +396,7 @@ Soft delete (`deleted_at`), role `admin`/`pm` (finance untuk dokumen finance bil
 - Notifikasi push, komentar per dokumen, versioning file.
 - Multi-tenant.
 - Realtime websocket.
-- User management UI (endpoint admin menyusul).
+- Audit log aksi admin (manajemen user belum masuk activity proyek).
 - Restore dokumen yang sudah dihapus.
 
 ## 12. Checklist review
@@ -389,7 +405,7 @@ Soft delete (`deleted_at`), role `admin`/`pm` (finance untuk dokumen finance bil
 - [x] Identifier proyek memakai `code`.
 - [x] Progres dari tahap selesai.
 - [ ] NPM/Cloudflare dikonfigurasi sesuai bagian 2.
-- [ ] Batas upload 20 MB & whitelist MIME disetujui.
-- [ ] Role matrix (hapus dokumen, ubah tahap/status).
-- [ ] Cloudflare Access hanya untuk `/docs` (atau tanpa Access).
+- [x] Batas upload 20 MB & whitelist MIME disetujui.
+- [x] Role matrix (hapus dokumen, ubah tahap/status, kelola user).
+- [x] `/docs` tersedia; bisa dilindungi Cloudflare Access atau dimatikan.
 - [ ] Backup offsite disiapkan.

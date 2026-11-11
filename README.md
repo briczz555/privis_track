@@ -14,9 +14,11 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
   CSV, PNG/JPG, FIG; maks. 20 MB), serta aksi PM/admin untuk menandai selesai
   tahap dan mengubah status proyek.
 - **Pengaturan**: profil user, **ganti password**, dan logout.
+- **Kelola User** (`/settings/users`, admin): daftar akun, tambah user, ubah
+  nama/role/divisi, aktif/nonaktifkan, dan reset password.
 - Data diambil dari backend `privis_track_api` di VPS.
 
-Belum tersedia: manajemen user (tambah/nonaktifkan akun, reset password oleh admin).
+Belum tersedia: audit log aksi admin dan antivirus scan dokumen.
 
 ## Backend
 

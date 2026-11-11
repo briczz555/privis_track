@@ -60,6 +60,9 @@ Aturan yang tidak boleh dilanggar:
   ringkasan progres, kontak klien, document vault (upload/download/hapus), aksi PM/admin
   untuk menandai selesai/membuka tahap dan mengubah status proyek.
   Route: `/projects/:projectCode`.
+- `features/user_management/` — halaman **Kelola User** (khusus admin): daftar user,
+  tambah, ubah nama/role/divisi, aktif/nonaktifkan, dan reset password.
+  Route: `/settings/users`.
 
 Helper lintas fitur di `core/`: `constants/project_status.dart`,
 `constants/sdlc_stages.dart`, `extensions/project_status_style.dart`,

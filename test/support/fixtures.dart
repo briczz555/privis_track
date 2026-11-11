@@ -12,6 +12,7 @@ import 'package:privis_track/features/project_tracking/domain/entities/project_s
 import 'package:privis_track/features/project_tracking/domain/entities/project_tracking_entity.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_entity.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_type.dart';
+import 'package:privis_track/features/user_management/domain/entities/managed_user_entity.dart';
 
 final testUser = AuthUserEntity(
   id: 'user-1',
@@ -142,6 +143,36 @@ final testProjectList = ProjectListEntity(
   total: testProjects.length,
   totalPages: 1,
 );
+
+final testManagedUsers = [
+  ManagedUserEntity(
+    id: 'user-1',
+    name: 'Admin PriVis',
+    email: 'admin@privis.id',
+    role: AuthRole.admin,
+    division: 'Management',
+    isActive: true,
+    createdAt: DateTime.utc(2025, 1, 1),
+  ),
+  ManagedUserEntity(
+    id: 'user-2',
+    name: 'Rina PM',
+    email: 'rina@privis.id',
+    role: AuthRole.pm,
+    division: 'PM',
+    isActive: true,
+    createdAt: DateTime.utc(2025, 2, 1),
+  ),
+  ManagedUserEntity(
+    id: 'user-3',
+    name: 'Budi Dev',
+    email: 'budi@privis.id',
+    role: AuthRole.developer,
+    division: 'Engineering',
+    isActive: false,
+    createdAt: DateTime.utc(2025, 3, 1),
+  ),
+];
 
 final testTracking = ProjectTrackingEntity(
   id: 'id-PRJ-001',

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/navigation/routes.dart';
+import '../../../../core/network/exceptions/network_exception.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/error_message.dart';
 import '../../../../core/widgets/app_empty_state.dart';
@@ -46,8 +47,13 @@ class DashboardScreen extends ConsumerWidget {
             child: _DashboardContent(dashboard: data),
           ),
           _ when dashboard.hasError => AppErrorState(
-            title: 'Gagal memuat dashboard',
-            message: readableErrorMessage(dashboard.error!),
+            title: isOfflineError(dashboard.error)
+                ? 'Tidak ada koneksi'
+                : 'Gagal memuat dashboard',
+            message: isOfflineError(dashboard.error)
+                ? 'Belum ada data luring untuk dashboard. '
+                      'Sambungkan internet lalu muat ulang.'
+                : readableErrorMessage(dashboard.error!),
             onRetry: () => _refresh(ref),
           ),
           _ => const AppLoadingState(message: 'Memuat dashboard...'),

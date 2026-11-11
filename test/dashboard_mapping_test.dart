@@ -155,6 +155,24 @@ void main() {
     expect(cached.activeProjects.first.code, 'PRJ-001');
   });
 
+  test('memakai snapshot daftar proyek saat offline', () async {
+    final cache = MemorySnapshotCache();
+    final fresh = await repository(cache: cache).getProjects();
+
+    expect(fresh.isFromCache, isFalse);
+    expect(
+      cache.snapshots.keys.any((key) => key.startsWith('projects:')),
+      isTrue,
+    );
+
+    final cached = await repository(offline: true, cache: cache).getProjects();
+
+    expect(cached.isFromCache, isTrue);
+    expect(cached.cachedAt, isNotNull);
+    expect(cached.projects, hasLength(1));
+    expect(cached.total, 1);
+  });
+
   test('tanpa cache, kegagalan koneksi tetap dilempar', () async {
     await expectLater(
       repository(offline: true).getDashboard(),

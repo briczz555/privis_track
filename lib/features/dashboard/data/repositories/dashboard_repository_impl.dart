@@ -32,7 +32,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
       return entity;
     } on DioException catch (error) {
       final mapped = mapDioException(error);
-      if (isOfflineFailure(mapped)) {
+      if (isOfflineError(mapped)) {
         final cached = await _readCache(_dashboardCacheKey);
         if (cached != null) {
           return DashboardModel.fromDto(
@@ -70,7 +70,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
       return entity;
     } on DioException catch (error) {
       final mapped = mapDioException(error);
-      if (isOfflineFailure(mapped)) {
+      if (isOfflineError(mapped)) {
         final cached = await _readCache(cacheKey);
         if (cached != null) {
           return ProjectListModel.fromDto(

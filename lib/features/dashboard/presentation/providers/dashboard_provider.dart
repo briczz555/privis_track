@@ -1,3 +1,5 @@
+import 'dart:async';
+
 // Wajib import eksplisit agar `Ref` tidak bergantung pada re-export
 // riverpod_annotation (aturan Riverpod di PRD bagian 5.3).
 // ignore: unnecessary_import
@@ -37,8 +39,12 @@ GetProjectsUsecase getProjectsUsecase(Ref ref) {
 @riverpod
 class DashboardNotifier extends _$DashboardNotifier {
   @override
-  Future<DashboardEntity> build() {
-    return ref.watch(getDashboardUsecaseProvider).call();
+  Future<DashboardEntity> build() async {
+    final dashboard = await ref.watch(getDashboardUsecaseProvider).call();
+    // Hangatkan cache daftar proyek agar halaman Semua Proyek tetap bisa
+    // dibuka saat offline meski user belum pernah membukanya.
+    unawaited(_warmProjectsCache());
+    return dashboard;
   }
 
   Future<void> refresh() async {
@@ -47,6 +53,15 @@ class DashboardNotifier extends _$DashboardNotifier {
     final result = await AsyncValue.guard<DashboardEntity>(usecase.call);
     if (!ref.mounted) return;
     state = result;
+    if (result.hasValue) unawaited(_warmProjectsCache());
+  }
+
+  Future<void> _warmProjectsCache() async {
+    try {
+      await ref.read(getProjectsUsecaseProvider).call();
+    } catch (_) {
+      // Pemanasan cache bersifat best-effort; kegagalan tidak ditampilkan.
+    }
   }
 }
 

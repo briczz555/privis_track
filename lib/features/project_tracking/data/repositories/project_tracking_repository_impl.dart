@@ -34,7 +34,7 @@ class ProjectTrackingRepositoryImpl implements ProjectTrackingRepository {
       return entity;
     } on DioException catch (error) {
       final mapped = mapDioException(error);
-      if (isOfflineFailure(mapped)) {
+      if (isOfflineError(mapped)) {
         final cached = await _readCache(cacheKey);
         if (cached != null) {
           return ProjectTrackingModel.fromDto(

@@ -107,6 +107,8 @@ Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
 - Snapshot JSON data baca disimpan di Drift (`cache_snapshots`).
 - Saat jaringan gagal/timeout, tampilkan data terakhir beserta waktu pembaruan dan label "data luring".
 - Hanya error koneksi/timeout yang memakai cache; error 401/403/404 tetap ditampilkan.
+- Daftar proyek dihangatkan otomatis setelah dashboard berhasil dimuat, sehingga halaman Semua Proyek tetap terbuka offline. Detail proyek perlu dibuka minimal sekali saat online.
+- Jika belum ada snapshot, tampil pesan "Belum ada data luring" (bukan error generik).
 - Cache dibersihkan saat login/logout; tidak ada antrean aksi tulis offline.
 
 ---
@@ -188,7 +190,9 @@ Contoh payload nyata ada di [`api-contract.md`](api-contract.md) dan dapat diuji
 dahulu; jika gagal karena koneksi/timeout, snapshot dipakai dan entity ditandai
 `isFromCache` sehingga UI menampilkan banner data luring. Error autentikasi,
 izin, atau validasi tidak memakai cache. Cache dihapus saat login/logout agar
-data tidak berpindah akun. Key cache: `dashboard`,
+data tidak berpindah akun. Setelah dashboard berhasil dimuat, daftar proyek
+dihangatkan di latar belakang; detail proyek disimpan saat pertama kali dibuka
+online. Key cache: `dashboard`,
 `projects:page=...:limit=...:status=...:search=...`, dan `project:<code>`.
 
 ## 7. Di Luar Cakupan

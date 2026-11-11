@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/project_status.dart';
 import '../../../../core/extensions/project_status_style.dart';
+import '../../../../core/network/exceptions/network_exception.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/error_message.dart';
@@ -181,8 +182,13 @@ class _ProjectTrackingScreenState extends ConsumerState<ProjectTrackingScreen> {
               )
             : projectState.hasError
             ? AppErrorState(
-                title: 'Gagal memuat project tracking',
-                message: readableErrorMessage(projectState.error!),
+                title: isOfflineError(projectState.error)
+                    ? 'Tidak ada koneksi'
+                    : 'Gagal memuat project tracking',
+                message: isOfflineError(projectState.error)
+                    ? 'Belum ada data luring untuk proyek ini. '
+                          'Buka sekali saat online agar tersimpan.'
+                    : readableErrorMessage(projectState.error!),
                 onRetry: _refresh,
               )
             : const AppLoadingState(message: 'Memuat timeline proyek...'),

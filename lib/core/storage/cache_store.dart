@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../network/exceptions/network_exception.dart';
 import 'database.dart';
 
 part 'cache_store.g.dart';
@@ -74,8 +73,5 @@ class DriftSnapshotCache implements SnapshotCache {
 
 /// Hanya gangguan koneksi/timeout yang boleh memakai data cache. Error
 /// autentikasi, izin, atau validasi tetap diteruskan ke UI.
-bool isOfflineFailure(NetworkException error) =>
-    error is NoConnectionException || error is TimeoutNetworkException;
-
 Map<String, dynamic> decodeCachedPayload(String payload) =>
     Map<String, dynamic>.from(jsonDecode(payload) as Map);

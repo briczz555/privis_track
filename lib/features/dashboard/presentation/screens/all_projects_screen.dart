@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/project_status.dart';
 import '../../../../core/extensions/project_status_style.dart';
 import '../../../../core/navigation/routes.dart';
+import '../../../../core/network/exceptions/network_exception.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/error_message.dart';
 import '../../../../core/widgets/app_empty_state.dart';
@@ -59,8 +60,13 @@ class _AllProjectsScreenState extends ConsumerState<AllProjectsScreen> {
               )
             : projects.hasError
             ? AppErrorState(
-                title: 'Gagal memuat daftar proyek',
-                message: readableErrorMessage(projects.error!),
+                title: isOfflineError(projects.error)
+                    ? 'Tidak ada koneksi'
+                    : 'Gagal memuat daftar proyek',
+                message: isOfflineError(projects.error)
+                    ? 'Belum ada data luring untuk daftar proyek. '
+                          'Sambungkan internet lalu muat ulang.'
+                    : readableErrorMessage(projects.error!),
                 onRetry: _refresh,
               )
             : const AppLoadingState(message: 'Memuat daftar proyek...'),

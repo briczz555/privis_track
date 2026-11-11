@@ -17,7 +17,9 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
 - **Kelola User** (`/settings/users`, admin): daftar akun, tambah user, ubah
   nama/role/divisi, aktif/nonaktifkan, dan reset password.
 - **Cache offline** (Drift): dashboard, daftar proyek, dan tracking menampilkan
-  snapshot terakhir + banner "data luring" saat koneksi gagal.
+  snapshot terakhir + banner "data luring" saat koneksi gagal. Daftar proyek
+  dihangatkan otomatis setelah dashboard dimuat; detail proyek perlu dibuka
+  sekali saat online.
 - Data diambil dari backend `privis_track_api` di VPS.
 
 Belum tersedia: audit log aksi admin dan antivirus scan dokumen.

@@ -62,6 +62,11 @@ class UnknownNetworkException extends NetworkException {
   const UnknownNetworkException(super.message);
 }
 
+/// True bila kegagalan disebabkan koneksi/timeout, bukan auth, izin, atau
+/// validasi. Hanya jenis ini yang boleh memakai cache offline.
+bool isOfflineError(Object? error) =>
+    error is NoConnectionException || error is TimeoutNetworkException;
+
 NetworkException mapDioException(DioException e) {
   switch (e.type) {
     case DioExceptionType.connectionError:

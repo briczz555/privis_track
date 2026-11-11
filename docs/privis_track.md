@@ -110,6 +110,7 @@ Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
 - Daftar proyek dihangatkan otomatis setelah dashboard berhasil dimuat, lalu detail semua proyek (maks. 30) disiapkan di latar belakang. Detail yang snapshot-nya masih segar (< 15 menit) dilewati.
 - Jika belum ada snapshot, tampil pesan "Belum ada data luring" (bukan error generik).
 - Cache dibersihkan saat login/logout; tidak ada antrean aksi tulis offline.
+- Rencana migrasi ke bulk sync saat data membesar ada di bagian 6.1.
 
 ---
 
@@ -198,7 +199,85 @@ kegagalan koneksi berturut-turut). Ukuran data saat ini ±38 KB untuk 8 proyek
 `projects:page=...:limit=...:status=...:search=...`, dan `project:<code>`.
 
 Jika jumlah proyek tumbuh besar (mis. > 30 atau payload > 1 MB), ganti prefetch
-N-request dengan endpoint bulk sync `GET /sync?since=...` agar tetap efisien.
+N-request dengan endpoint bulk sync (opsi 3) yang dijelaskan di bagian 6.1.
+
+### 6.1. Opsi 3 — Bulk sync (opsional, jika data membesar)
+
+Prefetch detail per proyek (opsi 1) dipilih karena data saat ini kecil: ±38 KB
+dan 10 request untuk 8 proyek. Opsi 3 **belum diimplementasikan** dan hanya
+dikerjakan jika ambang berikut terlampaui.
+
+**Kapan pindah ke opsi 3:**
+
+- Jumlah proyek > 30 atau total payload detail > 1 MB.
+- Prefetch terasa lambat (> 3 detik di jaringan seluler) atau memakan kuota.
+- Jumlah user aktif bertambah sehingga N request per login membebani server.
+- Dibutuhkan snapshot yang konsisten (satu waktu sinkronisasi) atau fitur
+  "Siapkan data offline" manual.
+
+**Kontrak API usulan:**
+
+```http
+GET /v1/sync?since=2026-11-12T00:00:00.000Z
+Authorization: Bearer <access_token>
+```
+
+Respons `200`:
+
+```json
+{
+  "server_time": "2026-11-12T08:30:00.000Z",
+  "dashboard": { "...": "payload sama dengan GET /dashboard" },
+  "projects": { "...": "payload sama dengan GET /projects" },
+  "project_details": [
+    { "...": "payload sama dengan GET /projects/{code}" }
+  ]
+}
+```
+
+- Tanpa `since` → snapshot penuh. Dengan `since` → hanya proyek yang
+  `updated_at`-nya lebih baru (termasuk tahap/dokumen yang berubah).
+- `server_time` disimpan client sebagai `since` untuk sinkronisasi berikutnya.
+- Jika kelak ada penghapusan proyek, sertakan `deleted_project_codes` agar cache
+  terkait ikut dibersihkan. Saat ini proyek tidak pernah dihapus.
+- Opsional: dukungan `ETag`/`If-None-Match` → `304` bila tidak ada perubahan.
+- Tetap read-only; tidak ada endpoint tulis di bulk sync.
+
+**Catatan backend:**
+
+- Modul baru `sync` (controller + service) memakai query Prisma yang sama
+  dengan `projects.detail`, dijalankan dalam satu waktu baca agar konsisten.
+- Hindari N+1; ambil semua proyek + tahap + dokumen dalam beberapa query.
+- Jika payload masih besar, tambahkan parameter `include` (mis.
+  `include=stages` tanpa daftar dokumen) atau batas `limit` + cursor.
+- Endpoint ikut rate limit global dan hanya untuk user terautentikasi.
+
+**Langkah migrasi di Flutter (dibuat mudah):**
+
+1. Tambah `SyncRepository` + `SyncOfflineDataUsecase` (fitur baru
+   `features/offline_sync/` atau di `core/`), dengan DTO/Model untuk payload di atas.
+2. Simpan `server_time` sebagai `since` (key cache `sync:last_at`).
+3. Tulis hasilnya ke cache dengan **key yang sama** seperti sekarang:
+   `dashboard`, `projects:page=1:limit=100:status=all:search=`, dan
+   `project:<code>`.
+4. Ganti pemanggilan prefetch di `dashboard_provider._warmOfflineCache` dengan
+   usecase sync. Layar, entity `isFromCache`, banner luring, dan fallback
+   repository **tidak perlu diubah**.
+5. Selama endpoint belum tersedia atau gagal, jatuhkan kembali (fallback) ke
+   prefetch N-request yang sekarang. Dengan begitu migrasi bisa bertahap:
+   deploy backend dulu, lalu aktifkan client.
+
+**Yang tetap sama setelah migrasi:**
+
+- Cache per fitur dan perilaku fallback hanya untuk error koneksi/timeout.
+- Cache dibersihkan saat login/logout.
+- Aksi tulis (PATCH/upload/hapus) tetap online-only; antrean tulis offline
+  tetap di luar cakupan.
+
+**Risiko yang perlu diuji:** ukuran satu respons besar, waktu query server,
+konsistensi snapshot, cache versioning saat format berubah, dan perilaku saat
+sinkronisasi terputus di tengah jalan (snapshot lama harus tetap utuh sampai
+snapshot baru selesai ditulis).
 
 ## 7. Di Luar Cakupan
 
@@ -228,6 +307,7 @@ N-request dengan endpoint bulk sync `GET /sync?since=...` agar tetap efisien.
 2. Pagination Semua Proyek >100 dan deep-link setelah login.
 3. Antivirus scan dokumen.
 4. Audit log aksi admin.
+5. Opsional: migrasi cache offline ke bulk sync `GET /v1/sync` bila data membesar (lihat bagian 6.1).
 
 ## 9. Verifikasi
 

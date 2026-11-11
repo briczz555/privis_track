@@ -18,6 +18,10 @@ abstract interface class ProjectTrackingRepository {
 
   Future<void> deleteDocument(String documentId);
 
+  /// Menyiapkan cache detail proyek untuk akses offline. Best-effort: tidak
+  /// melempar error dan melewati proyek yang snapshot-nya masih segar.
+  Future<void> prefetchProjects(List<String> projectCodes);
+
   Future<void> updateStage({
     required String projectCode,
     required int stageId,

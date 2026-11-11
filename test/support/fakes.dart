@@ -91,6 +91,8 @@ class FakeProjectTrackingRepository implements ProjectTrackingRepository {
 
   final ProjectTrackingEntity project;
   int calls = 0;
+  int prefetchCalls = 0;
+  final List<String> prefetchedCodes = [];
 
   @override
   Future<ProjectTrackingEntity> getProject(String projectCode) async {
@@ -121,6 +123,12 @@ class FakeProjectTrackingRepository implements ProjectTrackingRepository {
 
   @override
   Future<void> deleteDocument(String documentId) async {}
+
+  @override
+  Future<void> prefetchProjects(List<String> projectCodes) async {
+    prefetchCalls += 1;
+    prefetchedCodes.addAll(projectCodes);
+  }
 
   @override
   Future<void> updateStage({

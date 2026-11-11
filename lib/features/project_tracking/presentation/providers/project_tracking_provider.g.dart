@@ -105,6 +105,57 @@ final class GetProjectTrackingUsecaseProvider
 String _$getProjectTrackingUsecaseHash() =>
     r'5143743f2d6759de0c5d46f0099005b089fc162f';
 
+@ProviderFor(prefetchProjectDetailsUsecase)
+final prefetchProjectDetailsUsecaseProvider =
+    PrefetchProjectDetailsUsecaseProvider._();
+
+final class PrefetchProjectDetailsUsecaseProvider
+    extends
+        $FunctionalProvider<
+          PrefetchProjectDetailsUsecase,
+          PrefetchProjectDetailsUsecase,
+          PrefetchProjectDetailsUsecase
+        >
+    with $Provider<PrefetchProjectDetailsUsecase> {
+  PrefetchProjectDetailsUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'prefetchProjectDetailsUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$prefetchProjectDetailsUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<PrefetchProjectDetailsUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  PrefetchProjectDetailsUsecase create(Ref ref) {
+    return prefetchProjectDetailsUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PrefetchProjectDetailsUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PrefetchProjectDetailsUsecase>(
+        value,
+      ),
+    );
+  }
+}
+
+String _$prefetchProjectDetailsUsecaseHash() =>
+    r'10c571001a75c5e3f6d917b2dc331c197ff0be53';
+
 @ProviderFor(uploadStageDocumentUsecase)
 final uploadStageDocumentUsecaseProvider =
     UploadStageDocumentUsecaseProvider._();

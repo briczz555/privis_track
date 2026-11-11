@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:privis_track/core/constants/project_status.dart';
 import 'package:privis_track/core/network/exceptions/network_exception.dart';
+import 'package:privis_track/core/storage/cache_store.dart';
 import 'package:privis_track/core/theme/app_theme.dart';
 import 'package:privis_track/features/auth/presentation/providers/auth_controller.dart';
 import 'package:privis_track/features/project_tracking/data/datasources/project_tracking_remote_data_source.dart';
@@ -23,6 +25,7 @@ class _FakeProjectDataSource implements IProjectTrackingRemoteDataSource {
   final Map<String, dynamic> payload;
   final bool offline;
   String? requestedCode;
+  final List<String> requestedCodes = [];
 
   DioException _offlineError() => DioException(
     requestOptions: RequestOptions(path: '/projects'),
@@ -33,6 +36,7 @@ class _FakeProjectDataSource implements IProjectTrackingRemoteDataSource {
   Future<Map<String, dynamic>> fetchProject(String projectCode) async {
     if (offline) throw _offlineError();
     requestedCode = projectCode;
+    requestedCodes.add(projectCode);
     return payload;
   }
 
@@ -224,6 +228,21 @@ void main() {
         repository.getProject('PRJ-001'),
         throwsA(isA<NoConnectionException>()),
       );
+    });
+
+    test('prefetch melewati cache segar dan mengisi yang belum ada', () async {
+      final cache = MemorySnapshotCache();
+      cache.snapshots['project:PRJ-001'] = CachedSnapshot(
+        payload: jsonEncode(_projectPayload()),
+        updatedAt: DateTime.now(),
+      );
+      final remote = _FakeProjectDataSource(_projectPayload());
+      final repository = ProjectTrackingRepositoryImpl(remote, cache);
+
+      await repository.prefetchProjects(['PRJ-001', 'PRJ-002']);
+
+      expect(remote.requestedCodes, ['PRJ-002']);
+      expect(cache.snapshots.containsKey('project:PRJ-002'), isTrue);
     });
   });
 

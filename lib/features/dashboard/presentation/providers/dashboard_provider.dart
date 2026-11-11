@@ -15,6 +15,7 @@ import '../../domain/entities/project_list_entity.dart';
 import '../../domain/repositories/dashboard_repository.dart';
 import '../../domain/usecases/get_dashboard_usecase.dart';
 import '../../domain/usecases/get_projects_usecase.dart';
+import '../../../project_tracking/presentation/providers/project_tracking_provider.dart';
 
 part 'dashboard_provider.g.dart';
 
@@ -41,9 +42,9 @@ class DashboardNotifier extends _$DashboardNotifier {
   @override
   Future<DashboardEntity> build() async {
     final dashboard = await ref.watch(getDashboardUsecaseProvider).call();
-    // Hangatkan cache daftar proyek agar halaman Semua Proyek tetap bisa
-    // dibuka saat offline meski user belum pernah membukanya.
-    unawaited(_warmProjectsCache());
+    // Siapkan cache offline: daftar proyek + detail tiap proyek. Dilewati
+    // saat data dashboard sendiri berasal dari cache (sedang offline).
+    if (!dashboard.isFromCache) unawaited(_warmOfflineCache());
     return dashboard;
   }
 
@@ -53,12 +54,25 @@ class DashboardNotifier extends _$DashboardNotifier {
     final result = await AsyncValue.guard<DashboardEntity>(usecase.call);
     if (!ref.mounted) return;
     state = result;
-    if (result.hasValue) unawaited(_warmProjectsCache());
+
+    final updated = result.value;
+    if (updated != null && !updated.isFromCache) {
+      unawaited(_warmOfflineCache());
+    }
   }
 
-  Future<void> _warmProjectsCache() async {
+  Future<void> _warmOfflineCache() async {
     try {
-      await ref.read(getProjectsUsecaseProvider).call();
+      final list = await ref.read(getProjectsUsecaseProvider).call();
+      if (list.isFromCache) return;
+
+      await ref
+          .read(prefetchProjectDetailsUsecaseProvider)
+          .call(
+            projectCodes: list.projects
+                .map((project) => project.code)
+                .toList(growable: false),
+          );
     } catch (_) {
       // Pemanasan cache bersifat best-effort; kegagalan tidak ditampilkan.
     }

@@ -15,6 +15,10 @@ import '../dto/stage_document_dto.dart';
 import '../models/project_tracking_model.dart';
 import '../models/stage_document_model.dart';
 
+const _maxPrefetchProjects = 30;
+const _prefetchFreshFor = Duration(minutes: 15);
+const _prefetchGap = Duration(milliseconds: 120);
+
 class ProjectTrackingRepositoryImpl implements ProjectTrackingRepository {
   ProjectTrackingRepositoryImpl(this._remote, this._cache);
 
@@ -61,6 +65,40 @@ class ProjectTrackingRepositoryImpl implements ProjectTrackingRepository {
       return await _cache.read(key);
     } catch (_) {
       return null;
+    }
+  }
+
+  @override
+  Future<void> prefetchProjects(List<String> projectCodes) async {
+    final codes = projectCodes
+        .take(_maxPrefetchProjects)
+        .toList(growable: false);
+    var consecutiveFailures = 0;
+
+    for (var index = 0; index < codes.length; index++) {
+      final code = codes[index];
+      final cacheKey = 'project:$code';
+      final cached = await _readCache(cacheKey);
+
+      if (cached != null &&
+          DateTime.now().difference(cached.updatedAt) < _prefetchFreshFor) {
+        continue;
+      }
+
+      try {
+        final payload = await _remote.fetchProject(code);
+        await _writeCache(cacheKey, payload);
+        consecutiveFailures = 0;
+      } catch (_) {
+        consecutiveFailures += 1;
+        // Koneksi bermasalah: hentikan prefetch agar tidak menunggu timeout
+        // berkali-kali di latar belakang.
+        if (consecutiveFailures >= 2) return;
+      }
+
+      if (index < codes.length - 1) {
+        await Future<void>.delayed(_prefetchGap);
+      }
     }
   }
 

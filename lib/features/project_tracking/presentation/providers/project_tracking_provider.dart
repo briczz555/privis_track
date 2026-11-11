@@ -15,6 +15,7 @@ import '../../domain/repositories/project_tracking_repository.dart';
 import '../../domain/usecases/delete_document_usecase.dart';
 import '../../domain/usecases/download_document_usecase.dart';
 import '../../domain/usecases/get_project_tracking_usecase.dart';
+import '../../domain/usecases/prefetch_project_details_usecase.dart';
 import '../../domain/usecases/update_project_status_usecase.dart';
 import '../../domain/usecases/update_stage_usecase.dart';
 import '../../domain/usecases/upload_stage_document_usecase.dart';
@@ -32,6 +33,13 @@ ProjectTrackingRepository projectTrackingRepository(Ref ref) {
 @riverpod
 GetProjectTrackingUsecase getProjectTrackingUsecase(Ref ref) {
   return GetProjectTrackingUsecase(
+    ref.watch(projectTrackingRepositoryProvider),
+  );
+}
+
+@riverpod
+PrefetchProjectDetailsUsecase prefetchProjectDetailsUsecase(Ref ref) {
+  return PrefetchProjectDetailsUsecase(
     ref.watch(projectTrackingRepositoryProvider),
   );
 }

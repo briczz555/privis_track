@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ActivityDto {
 
- String get id; String get actor; String get division; String get action; String get target;@JsonKey(name: 'project_name') String get projectName;@JsonKey(name: 'occurred_at') String get occurredAt;
+ String get id; String get type; ActivityActorDto get actor; String get action; String get target; ActivityProjectDto get project;@JsonKey(name: 'created_at') String get createdAt;
 /// Create a copy of ActivityDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $ActivityDtoCopyWith<ActivityDto> get copyWith => _$ActivityDtoCopyWithImpl<Acti
 @override
 bool operator ==(Object other) {
   final _this = this as ActivityDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActivityDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.actor, _this.actor) || other.actor == _this.actor)&&(identical(other.division, _this.division) || other.division == _this.division)&&(identical(other.action, _this.action) || other.action == _this.action)&&(identical(other.target, _this.target) || other.target == _this.target)&&(identical(other.projectName, _this.projectName) || other.projectName == _this.projectName)&&(identical(other.occurredAt, _this.occurredAt) || other.occurredAt == _this.occurredAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActivityDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.actor, _this.actor) || other.actor == _this.actor)&&(identical(other.action, _this.action) || other.action == _this.action)&&(identical(other.target, _this.target) || other.target == _this.target)&&(identical(other.project, _this.project) || other.project == _this.project)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as ActivityDto;
-  return Object.hash(runtimeType,_this.id,_this.actor,_this.division,_this.action,_this.target,_this.projectName,_this.occurredAt);
+  return Object.hash(runtimeType,_this.id,_this.type,_this.actor,_this.action,_this.target,_this.project,_this.createdAt);
 }
 
 @override
 String toString() {
   final _this = this as ActivityDto;
-  return 'ActivityDto(id: ${_this.id}, actor: ${_this.actor}, division: ${_this.division}, action: ${_this.action}, target: ${_this.target}, projectName: ${_this.projectName}, occurredAt: ${_this.occurredAt})';
+  return 'ActivityDto(id: ${_this.id}, type: ${_this.type}, actor: ${_this.actor}, action: ${_this.action}, target: ${_this.target}, project: ${_this.project}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $ActivityDtoCopyWith<$Res>  {
   factory $ActivityDtoCopyWith(ActivityDto value, $Res Function(ActivityDto) _then) = _$ActivityDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String actor, String division, String action, String target,@JsonKey(name: 'project_name') String projectName,@JsonKey(name: 'occurred_at') String occurredAt
+ String id, String type, ActivityActorDto actor, String action, String target, ActivityProjectDto project,@JsonKey(name: 'created_at') String createdAt
 });
 
 
-
+$ActivityActorDtoCopyWith<$Res> get actor;$ActivityProjectDtoCopyWith<$Res> get project;
 
 }
 /// @nodoc
@@ -71,19 +71,37 @@ class _$ActivityDtoCopyWithImpl<$Res>
 
 /// Create a copy of ActivityDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? actor = null,Object? division = null,Object? action = null,Object? target = null,Object? projectName = null,Object? occurredAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? actor = null,Object? action = null,Object? target = null,Object? project = null,Object? createdAt = null,}) {
   return _then(ActivityDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,actor: null == actor ? _self.actor : actor // ignore: cast_nullable_to_non_nullable
-as String,division: null == division ? _self.division : division // ignore: cast_nullable_to_non_nullable
-as String,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
+as ActivityActorDto,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
 as String,target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
-as String,projectName: null == projectName ? _self.projectName : projectName // ignore: cast_nullable_to_non_nullable
-as String,occurredAt: null == occurredAt ? _self.occurredAt : occurredAt // ignore: cast_nullable_to_non_nullable
+as String,project: null == project ? _self.project : project // ignore: cast_nullable_to_non_nullable
+as ActivityProjectDto,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
-
+/// Create a copy of ActivityDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ActivityActorDtoCopyWith<$Res> get actor {
+  
+  return $ActivityActorDtoCopyWith<$Res>(_self.actor, (value) {
+    return _then(_self.copyWith(actor: value));
+  });
+}/// Create a copy of ActivityDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ActivityProjectDtoCopyWith<$Res> get project {
+  
+  return $ActivityProjectDtoCopyWith<$Res>(_self.project, (value) {
+    return _then(_self.copyWith(project: value));
+  });
+}
 }
 
 
@@ -162,10 +180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String actor,  String division,  String action,  String target, @JsonKey(name: 'project_name')  String projectName, @JsonKey(name: 'occurred_at')  String occurredAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String type,  ActivityActorDto actor,  String action,  String target,  ActivityProjectDto project, @JsonKey(name: 'created_at')  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ActivityDto() when $default != null:
-return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_that.projectName,_that.occurredAt);case _:
+return $default(_that.id,_that.type,_that.actor,_that.action,_that.target,_that.project,_that.createdAt);case _:
   return orElse();
 
 }
@@ -183,10 +201,10 @@ return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String actor,  String division,  String action,  String target, @JsonKey(name: 'project_name')  String projectName, @JsonKey(name: 'occurred_at')  String occurredAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String type,  ActivityActorDto actor,  String action,  String target,  ActivityProjectDto project, @JsonKey(name: 'created_at')  String createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _ActivityDto():
-return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_that.projectName,_that.occurredAt);}
+return $default(_that.id,_that.type,_that.actor,_that.action,_that.target,_that.project,_that.createdAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -200,10 +218,10 @@ return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String actor,  String division,  String action,  String target, @JsonKey(name: 'project_name')  String projectName, @JsonKey(name: 'occurred_at')  String occurredAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String type,  ActivityActorDto actor,  String action,  String target,  ActivityProjectDto project, @JsonKey(name: 'created_at')  String createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ActivityDto() when $default != null:
-return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_that.projectName,_that.occurredAt);case _:
+return $default(_that.id,_that.type,_that.actor,_that.action,_that.target,_that.project,_that.createdAt);case _:
   return null;
 
 }
@@ -215,16 +233,16 @@ return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_t
 @JsonSerializable()
 
 class _ActivityDto implements ActivityDto {
-  const _ActivityDto({required this.id, required this.actor, required this.division, required this.action, required this.target, @JsonKey(name: 'project_name') required this.projectName, @JsonKey(name: 'occurred_at') required this.occurredAt});
+  const _ActivityDto({required this.id, required this.type, required this.actor, required this.action, required this.target, required this.project, @JsonKey(name: 'created_at') required this.createdAt});
   factory _ActivityDto.fromJson(Map<String, dynamic> json) => _$ActivityDtoFromJson(json);
 
 @override final  String id;
-@override final  String actor;
-@override final  String division;
+@override final  String type;
+@override final  ActivityActorDto actor;
 @override final  String action;
 @override final  String target;
-@override@JsonKey(name: 'project_name') final  String projectName;
-@override@JsonKey(name: 'occurred_at') final  String occurredAt;
+@override final  ActivityProjectDto project;
+@override@JsonKey(name: 'created_at') final  String createdAt;
 
 /// Create a copy of ActivityDto
 /// with the given fields replaced by the non-null parameter values.
@@ -239,18 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActivityDto&&(identical(other.id, id) || other.id == id)&&(identical(other.actor, actor) || other.actor == actor)&&(identical(other.division, division) || other.division == division)&&(identical(other.action, action) || other.action == action)&&(identical(other.target, target) || other.target == target)&&(identical(other.projectName, projectName) || other.projectName == projectName)&&(identical(other.occurredAt, occurredAt) || other.occurredAt == occurredAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActivityDto&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.actor, actor) || other.actor == actor)&&(identical(other.action, action) || other.action == action)&&(identical(other.target, target) || other.target == target)&&(identical(other.project, project) || other.project == project)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,actor,division,action,target,projectName,occurredAt);
+    return Object.hash(runtimeType,id,type,actor,action,target,project,createdAt);
 }
 
 @override
 String toString() {
-    return 'ActivityDto(id: $id, actor: $actor, division: $division, action: $action, target: $target, projectName: $projectName, occurredAt: $occurredAt)';
+    return 'ActivityDto(id: $id, type: $type, actor: $actor, action: $action, target: $target, project: $project, createdAt: $createdAt)';
 }
 
 
@@ -261,11 +279,11 @@ abstract mixin class _$ActivityDtoCopyWith<$Res> implements $ActivityDtoCopyWith
   factory _$ActivityDtoCopyWith(_ActivityDto value, $Res Function(_ActivityDto) _then) = __$ActivityDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String actor, String division, String action, String target,@JsonKey(name: 'project_name') String projectName,@JsonKey(name: 'occurred_at') String occurredAt
+ String id, String type, ActivityActorDto actor, String action, String target, ActivityProjectDto project,@JsonKey(name: 'created_at') String createdAt
 });
 
 
-
+@override $ActivityActorDtoCopyWith<$Res> get actor;@override $ActivityProjectDtoCopyWith<$Res> get project;
 
 }
 /// @nodoc
@@ -278,20 +296,38 @@ class __$ActivityDtoCopyWithImpl<$Res>
 
 /// Create a copy of ActivityDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? actor = null,Object? division = null,Object? action = null,Object? target = null,Object? projectName = null,Object? occurredAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? actor = null,Object? action = null,Object? target = null,Object? project = null,Object? createdAt = null,}) {
   return _then(_ActivityDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,actor: null == actor ? _self.actor : actor // ignore: cast_nullable_to_non_nullable
-as String,division: null == division ? _self.division : division // ignore: cast_nullable_to_non_nullable
-as String,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
+as ActivityActorDto,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
 as String,target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
-as String,projectName: null == projectName ? _self.projectName : projectName // ignore: cast_nullable_to_non_nullable
-as String,occurredAt: null == occurredAt ? _self.occurredAt : occurredAt // ignore: cast_nullable_to_non_nullable
+as String,project: null == project ? _self.project : project // ignore: cast_nullable_to_non_nullable
+as ActivityProjectDto,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
 
-
+/// Create a copy of ActivityDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ActivityActorDtoCopyWith<$Res> get actor {
+  
+  return $ActivityActorDtoCopyWith<$Res>(_self.actor, (value) {
+    return _then(_self.copyWith(actor: value));
+  });
+}/// Create a copy of ActivityDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ActivityProjectDtoCopyWith<$Res> get project {
+  
+  return $ActivityProjectDtoCopyWith<$Res>(_self.project, (value) {
+    return _then(_self.copyWith(project: value));
+  });
+}
 }
 
 // dart format on

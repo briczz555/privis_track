@@ -2,7 +2,7 @@
 
 Aplikasi internal (*in-house*) untuk melacak progres proyek klien lewat 8 tahap SDLC
 sekaligus menjadi arsip dokumen tim. Platform: Flutter (Android & iOS).
-PRD lengkap: [`docs/privis_track.md`](docs/privis_track.md).
+PRD: [`docs/privis_track.md`](docs/privis_track.md).
 
 ## Arsitektur
 
@@ -10,7 +10,7 @@ Feature-first + Clean Architecture (pola plugin `flutter-clean-starter`).
 
 ```
 lib/
-├── core/                 # infrastruktur bersama (navigation, network, theme, storage)
+├── core/                 # navigation, network, auth session cache, theme, storage
 ├── features/<feature>/
 │   ├── data/             # datasources, dto, models, repositories (impl)
 │   ├── domain/           # entities, repositories (interface), usecases — murni Dart
@@ -35,33 +35,36 @@ Aturan yang tidak boleh dilanggar:
 - Warna, spacing, tipografi, shape diambil dari `lib/core/theme/` — jangan hardcode
   `Color(0x...)`, padding, atau `TextStyle` baru di widget.
 
-## Backend
+## Backend & API
 
-Fase 1 **belum ada backend** — data dummy berada di `*_remote_data_source.dart`
-(`Future.delayed` + payload JSON statis) dan dipetakan DTO → Model → Entity.
-`lib/core/network/dio_provider.dart` masih memakai base URL placeholder
-(`https://api.example.com`). Auth API: belum ada.
-
-Fase 2: ganti isi data source dengan pemanggilan Dio, lalu hapus payload dummy-nya.
+- Backend: repo `privis_track_api` (NestJS + Prisma + PostgreSQL + MinIO) di VPS.
+- Base URL default: `https://privis.briczz.my.id/v1`
+  (override `--dart-define=API_BASE_URL=...`).
+- Kontrak: `docs/api-contract.md` + `docs/openapi.yaml`.
+- Endpoint yang dipakai app: `/auth/login`, `/auth/refresh`, `/auth/logout`, `/me`,
+  `/dashboard`, `/projects`, `/projects/{code}`, `/activities`.
+- Auth: JWT access 15 menit, refresh rotation; token disimpan dengan
+  `flutter_secure_storage` lewat `core/auth/auth_session_cache.dart` + `features/auth/`.
+- `AuthInterceptor` menambahkan Bearer token dan mencoba refresh sekali saat 401.
+- Dokumen masih read-only: upload/download belum tersedia di backend.
 
 ## Status fitur
 
-- `features/dashboard/` — selesai: donut portfolio interaktif, proyek berjalan,
-  aktivitas tim, dan halaman **Semua Proyek** (`/projects`) dengan filter status.
-  Proyek Selesai/Ditunda/Belum Mulai bisa dibuka ke project tracking dari sini.
-- `features/project_tracking/` — selesai: timeline vertikal 8 tahap (semua tahap clickable,
-  tanpa step-lock), ringkasan progres, kartu kontak klien (alamat, PIC, WhatsApp + salin
-  nomor), document vault bottom sheet + mock upload.
-  Route: `/projects/:projectId` (dibuka dari kartu proyek dashboard atau Semua Proyek).
+- `features/auth/` — login, restore sesi, refresh token, logout.
+- `features/dashboard/` — dashboard API (portfolio, proyek aktif, aktivitas) dan
+  halaman **Semua Proyek** (`/projects`) dengan filter status.
+- `features/project_tracking/` — timeline 8 tahap (semua clickable, no step-lock),
+  ringkasan progres, kontak klien, document vault read-only.
+  Route: `/projects/:projectCode`.
 
-Helper lintas fitur ada di `core/`: `constants/project_status.dart`,
+Helper lintas fitur di `core/`: `constants/project_status.dart`,
 `constants/sdlc_stages.dart`, `extensions/project_status_style.dart`,
 `widgets/project_status_chip.dart`, `widgets/section_header.dart`,
 `widgets/app_loading_state.dart`, `widgets/app_error_state.dart`,
-`utils/date_formatter.dart`, `utils/error_message.dart`.
+`utils/date_formatter.dart`, `utils/error_message.dart`, `auth/auth_session_cache.dart`.
 Jangan menduplikasi helper tersebut di dalam fitur.
 
-## Konvensi proyek — plugin flutter-clean-starter
+## Konvensi verifikasi
 
 ### Kapan WAJIB `flutter analyze` / `dart run build_runner build`
 
@@ -71,19 +74,20 @@ Jangan menduplikasi helper tersebut di dalam fitur.
 - Setelah menambah import baru, provider baru, atau mengubah signature function/class.
 - Setelah mengubah struktur folder (pindah/rename file).
 
-### Kapan TIDAK perlu `flutter analyze` / `build_runner`
+### Kapan TIDAK perlu
 
-- Perubahan murni visual di `presentation/screens/` atau `presentation/widgets/`: padding,
-  warna, ukuran font, teks statis, spacing, urutan widget — SELAMA tidak menambah import
-  baru, tidak mengubah signature function/class, dan tidak menyentuh Entity/Model/Provider.
-  Verifikasi cukup lewat hot reload / dilihat langsung oleh user.
-- Kalau ragu apakah suatu perubahan "murni visual" atau tidak, tetap jalankan
-  `flutter analyze`.
+- Perubahan murni visual di `presentation/screens/` atau `presentation/widgets/`
+  (padding, warna, ukuran font, teks statis, spacing) selama tidak menambah import baru,
+  tidak mengubah signature, dan tidak menyentuh Entity/Model/Provider. Verifikasi cukup
+  lewat hot reload.
+- Kalau ragu, tetap jalankan `flutter analyze`.
 
-## Perintah verifikasi
+## Perintah
 
 ```bash
 flutter analyze
 flutter test
 dart run build_runner build
+flutter run                                   # production API default
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:3000/v1
 ```

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProjectEntity {
 
- String get id; String get name; String get client; ProjectStatus get status; int get currentStage; String get currentStageTitle; int get documentCount; DateTime? get dueDate;
+ String get id; String get code; String get name; String get client; ProjectStatus get status; int get currentStage; String get currentStageTitle; int get completedStages; int get progressPercent; int get documentCount; DateTime? get dueDate; DateTime get updatedAt;
 /// Create a copy of ProjectEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ProjectEntityCopyWith<ProjectEntity> get copyWith => _$ProjectEntityCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as ProjectEntity;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.client, _this.client) || other.client == _this.client)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.currentStage, _this.currentStage) || other.currentStage == _this.currentStage)&&(identical(other.currentStageTitle, _this.currentStageTitle) || other.currentStageTitle == _this.currentStageTitle)&&(identical(other.documentCount, _this.documentCount) || other.documentCount == _this.documentCount)&&(identical(other.dueDate, _this.dueDate) || other.dueDate == _this.dueDate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProjectEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.client, _this.client) || other.client == _this.client)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.currentStage, _this.currentStage) || other.currentStage == _this.currentStage)&&(identical(other.currentStageTitle, _this.currentStageTitle) || other.currentStageTitle == _this.currentStageTitle)&&(identical(other.completedStages, _this.completedStages) || other.completedStages == _this.completedStages)&&(identical(other.progressPercent, _this.progressPercent) || other.progressPercent == _this.progressPercent)&&(identical(other.documentCount, _this.documentCount) || other.documentCount == _this.documentCount)&&(identical(other.dueDate, _this.dueDate) || other.dueDate == _this.dueDate)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ProjectEntity;
-  return Object.hash(runtimeType,_this.id,_this.name,_this.client,_this.status,_this.currentStage,_this.currentStageTitle,_this.documentCount,_this.dueDate);
+  return Object.hash(runtimeType,_this.id,_this.code,_this.name,_this.client,_this.status,_this.currentStage,_this.currentStageTitle,_this.completedStages,_this.progressPercent,_this.documentCount,_this.dueDate,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as ProjectEntity;
-  return 'ProjectEntity(id: ${_this.id}, name: ${_this.name}, client: ${_this.client}, status: ${_this.status}, currentStage: ${_this.currentStage}, currentStageTitle: ${_this.currentStageTitle}, documentCount: ${_this.documentCount}, dueDate: ${_this.dueDate})';
+  return 'ProjectEntity(id: ${_this.id}, code: ${_this.code}, name: ${_this.name}, client: ${_this.client}, status: ${_this.status}, currentStage: ${_this.currentStage}, currentStageTitle: ${_this.currentStageTitle}, completedStages: ${_this.completedStages}, progressPercent: ${_this.progressPercent}, documentCount: ${_this.documentCount}, dueDate: ${_this.dueDate}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ProjectEntityCopyWith<$Res>  {
   factory $ProjectEntityCopyWith(ProjectEntity value, $Res Function(ProjectEntity) _then) = _$ProjectEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String client, ProjectStatus status, int currentStage, String currentStageTitle, int documentCount, DateTime? dueDate
+ String id, String code, String name, String client, ProjectStatus status, int currentStage, String currentStageTitle, int completedStages, int progressPercent, int documentCount, DateTime? dueDate, DateTime updatedAt
 });
 
 
@@ -68,17 +68,21 @@ class _$ProjectEntityCopyWithImpl<$Res>
 
 /// Create a copy of ProjectEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? client = null,Object? status = null,Object? currentStage = null,Object? currentStageTitle = null,Object? documentCount = null,Object? dueDate = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? code = null,Object? name = null,Object? client = null,Object? status = null,Object? currentStage = null,Object? currentStageTitle = null,Object? completedStages = null,Object? progressPercent = null,Object? documentCount = null,Object? dueDate = freezed,Object? updatedAt = null,}) {
   return _then(ProjectEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,client: null == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ProjectStatus,currentStage: null == currentStage ? _self.currentStage : currentStage // ignore: cast_nullable_to_non_nullable
 as int,currentStageTitle: null == currentStageTitle ? _self.currentStageTitle : currentStageTitle // ignore: cast_nullable_to_non_nullable
-as String,documentCount: null == documentCount ? _self.documentCount : documentCount // ignore: cast_nullable_to_non_nullable
+as String,completedStages: null == completedStages ? _self.completedStages : completedStages // ignore: cast_nullable_to_non_nullable
+as int,progressPercent: null == progressPercent ? _self.progressPercent : progressPercent // ignore: cast_nullable_to_non_nullable
+as int,documentCount: null == documentCount ? _self.documentCount : documentCount // ignore: cast_nullable_to_non_nullable
 as int,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -160,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String client,  ProjectStatus status,  int currentStage,  String currentStageTitle,  int documentCount,  DateTime? dueDate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String code,  String name,  String client,  ProjectStatus status,  int currentStage,  String currentStageTitle,  int completedStages,  int progressPercent,  int documentCount,  DateTime? dueDate,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProjectEntity() when $default != null:
-return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.currentStageTitle,_that.documentCount,_that.dueDate);case _:
+return $default(_that.id,_that.code,_that.name,_that.client,_that.status,_that.currentStage,_that.currentStageTitle,_that.completedStages,_that.progressPercent,_that.documentCount,_that.dueDate,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -181,10 +185,10 @@ return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String client,  ProjectStatus status,  int currentStage,  String currentStageTitle,  int documentCount,  DateTime? dueDate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String code,  String name,  String client,  ProjectStatus status,  int currentStage,  String currentStageTitle,  int completedStages,  int progressPercent,  int documentCount,  DateTime? dueDate,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ProjectEntity():
-return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.currentStageTitle,_that.documentCount,_that.dueDate);}
+return $default(_that.id,_that.code,_that.name,_that.client,_that.status,_that.currentStage,_that.currentStageTitle,_that.completedStages,_that.progressPercent,_that.documentCount,_that.dueDate,_that.updatedAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -198,10 +202,10 @@ return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String client,  ProjectStatus status,  int currentStage,  String currentStageTitle,  int documentCount,  DateTime? dueDate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String code,  String name,  String client,  ProjectStatus status,  int currentStage,  String currentStageTitle,  int completedStages,  int progressPercent,  int documentCount,  DateTime? dueDate,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ProjectEntity() when $default != null:
-return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage,_that.currentStageTitle,_that.documentCount,_that.dueDate);case _:
+return $default(_that.id,_that.code,_that.name,_that.client,_that.status,_that.currentStage,_that.currentStageTitle,_that.completedStages,_that.progressPercent,_that.documentCount,_that.dueDate,_that.updatedAt);case _:
   return null;
 
 }
@@ -213,17 +217,21 @@ return $default(_that.id,_that.name,_that.client,_that.status,_that.currentStage
 
 
 class _ProjectEntity extends ProjectEntity {
-  const _ProjectEntity({required this.id, required this.name, required this.client, required this.status, required this.currentStage, required this.currentStageTitle, required this.documentCount, this.dueDate}): super._();
+  const _ProjectEntity({required this.id, required this.code, required this.name, required this.client, required this.status, required this.currentStage, required this.currentStageTitle, required this.completedStages, required this.progressPercent, required this.documentCount, this.dueDate, required this.updatedAt}): super._();
   
 
 @override final  String id;
+@override final  String code;
 @override final  String name;
 @override final  String client;
 @override final  ProjectStatus status;
 @override final  int currentStage;
 @override final  String currentStageTitle;
+@override final  int completedStages;
+@override final  int progressPercent;
 @override final  int documentCount;
 @override final  DateTime? dueDate;
+@override final  DateTime updatedAt;
 
 /// Create a copy of ProjectEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -235,18 +243,18 @@ _$ProjectEntityCopyWith<_ProjectEntity> get copyWith => __$ProjectEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProjectEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.client, client) || other.client == client)&&(identical(other.status, status) || other.status == status)&&(identical(other.currentStage, currentStage) || other.currentStage == currentStage)&&(identical(other.currentStageTitle, currentStageTitle) || other.currentStageTitle == currentStageTitle)&&(identical(other.documentCount, documentCount) || other.documentCount == documentCount)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProjectEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.code, code) || other.code == code)&&(identical(other.name, name) || other.name == name)&&(identical(other.client, client) || other.client == client)&&(identical(other.status, status) || other.status == status)&&(identical(other.currentStage, currentStage) || other.currentStage == currentStage)&&(identical(other.currentStageTitle, currentStageTitle) || other.currentStageTitle == currentStageTitle)&&(identical(other.completedStages, completedStages) || other.completedStages == completedStages)&&(identical(other.progressPercent, progressPercent) || other.progressPercent == progressPercent)&&(identical(other.documentCount, documentCount) || other.documentCount == documentCount)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,name,client,status,currentStage,currentStageTitle,documentCount,dueDate);
+    return Object.hash(runtimeType,id,code,name,client,status,currentStage,currentStageTitle,completedStages,progressPercent,documentCount,dueDate,updatedAt);
 }
 
 @override
 String toString() {
-    return 'ProjectEntity(id: $id, name: $name, client: $client, status: $status, currentStage: $currentStage, currentStageTitle: $currentStageTitle, documentCount: $documentCount, dueDate: $dueDate)';
+    return 'ProjectEntity(id: $id, code: $code, name: $name, client: $client, status: $status, currentStage: $currentStage, currentStageTitle: $currentStageTitle, completedStages: $completedStages, progressPercent: $progressPercent, documentCount: $documentCount, dueDate: $dueDate, updatedAt: $updatedAt)';
 }
 
 
@@ -257,7 +265,7 @@ abstract mixin class _$ProjectEntityCopyWith<$Res> implements $ProjectEntityCopy
   factory _$ProjectEntityCopyWith(_ProjectEntity value, $Res Function(_ProjectEntity) _then) = __$ProjectEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String client, ProjectStatus status, int currentStage, String currentStageTitle, int documentCount, DateTime? dueDate
+ String id, String code, String name, String client, ProjectStatus status, int currentStage, String currentStageTitle, int completedStages, int progressPercent, int documentCount, DateTime? dueDate, DateTime updatedAt
 });
 
 
@@ -274,17 +282,21 @@ class __$ProjectEntityCopyWithImpl<$Res>
 
 /// Create a copy of ProjectEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? client = null,Object? status = null,Object? currentStage = null,Object? currentStageTitle = null,Object? documentCount = null,Object? dueDate = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? code = null,Object? name = null,Object? client = null,Object? status = null,Object? currentStage = null,Object? currentStageTitle = null,Object? completedStages = null,Object? progressPercent = null,Object? documentCount = null,Object? dueDate = freezed,Object? updatedAt = null,}) {
   return _then(_ProjectEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,client: null == client ? _self.client : client // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as ProjectStatus,currentStage: null == currentStage ? _self.currentStage : currentStage // ignore: cast_nullable_to_non_nullable
 as int,currentStageTitle: null == currentStageTitle ? _self.currentStageTitle : currentStageTitle // ignore: cast_nullable_to_non_nullable
-as String,documentCount: null == documentCount ? _self.documentCount : documentCount // ignore: cast_nullable_to_non_nullable
+as String,completedStages: null == completedStages ? _self.completedStages : completedStages // ignore: cast_nullable_to_non_nullable
+as int,progressPercent: null == progressPercent ? _self.progressPercent : progressPercent // ignore: cast_nullable_to_non_nullable
+as int,documentCount: null == documentCount ? _self.documentCount : documentCount // ignore: cast_nullable_to_non_nullable
 as int,dueDate: freezed == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

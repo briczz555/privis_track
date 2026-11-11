@@ -1,19 +1,21 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'activity_actor_dto.dart';
+import 'activity_project_dto.dart';
+
 part 'activity_dto.freezed.dart';
 part 'activity_dto.g.dart';
 
-/// Bentuk mentah log aktivitas tim sesuai payload API (dummy pada Fase 1).
 @freezed
 sealed class ActivityDto with _$ActivityDto {
   const factory ActivityDto({
     required String id,
-    required String actor,
-    required String division,
+    required String type,
+    required ActivityActorDto actor,
     required String action,
     required String target,
-    @JsonKey(name: 'project_name') required String projectName,
-    @JsonKey(name: 'occurred_at') required String occurredAt,
+    required ActivityProjectDto project,
+    @JsonKey(name: 'created_at') required String createdAt,
   }) = _ActivityDto;
 
   factory ActivityDto.fromJson(Map<String, dynamic> json) =>

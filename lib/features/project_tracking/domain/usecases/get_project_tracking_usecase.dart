@@ -6,6 +6,6 @@ class GetProjectTrackingUsecase {
 
   final ProjectTrackingRepository _repository;
 
-  Future<ProjectTrackingEntity> call(String projectId) =>
-      _repository.getProject(projectId);
+  Future<ProjectTrackingEntity> call(String projectCode) =>
+      _repository.getProject(projectCode);
 }

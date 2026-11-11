@@ -16,18 +16,18 @@ import '../widgets/project_summary_card.dart';
 import '../widgets/stage_timeline_tile.dart';
 
 class ProjectTrackingScreen extends ConsumerWidget {
-  const ProjectTrackingScreen({super.key, required this.projectId});
+  const ProjectTrackingScreen({super.key, required this.projectCode});
 
-  final String projectId;
+  final String projectCode;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final projectState = ref.watch(projectTrackingProvider(projectId));
+    final projectState = ref.watch(projectTrackingProvider(projectCode));
     final project = projectState.value;
     final theme = Theme.of(context);
 
     // Saat reload gagal, data lama tetap tampil — beri tahu user lewat SnackBar.
-    ref.listen(projectTrackingProvider(projectId), (previous, next) {
+    ref.listen(projectTrackingProvider(projectCode), (previous, next) {
       if (next.hasValue && next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(readableErrorMessage(next.error!))),
@@ -43,7 +43,7 @@ class ProjectTrackingScreen extends ConsumerWidget {
           children: [
             const Text('Project Tracking'),
             Text(
-              projectId,
+              projectCode,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
               ),
@@ -53,7 +53,9 @@ class ProjectTrackingScreen extends ConsumerWidget {
         actions: [
           IconButton(
             tooltip: 'Muat ulang',
-            onPressed: () => ref.invalidate(projectTrackingProvider(projectId)),
+            onPressed: () => ref
+                .read(projectTrackingProvider(projectCode).notifier)
+                .refresh(),
             icon: const Icon(Icons.refresh_rounded),
           ),
         ],
@@ -66,8 +68,9 @@ class ProjectTrackingScreen extends ConsumerWidget {
             ? AppErrorState(
                 title: 'Gagal memuat project tracking',
                 message: readableErrorMessage(projectState.error!),
-                onRetry: () =>
-                    ref.invalidate(projectTrackingProvider(projectId)),
+                onRetry: () => ref
+                    .read(projectTrackingProvider(projectCode).notifier)
+                    .refresh(),
               )
             : const AppLoadingState(message: 'Memuat timeline proyek...'),
       ),
@@ -87,7 +90,7 @@ class _ProjectTrackingContent extends StatelessWidget {
       useSafeArea: true,
       showDragHandle: true,
       builder: (context) =>
-          DocumentVaultSheet(projectId: project.id, stageId: stage.id),
+          DocumentVaultSheet(projectCode: project.code, stageId: stage.id),
     );
   }
 

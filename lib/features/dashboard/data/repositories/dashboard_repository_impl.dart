@@ -1,11 +1,15 @@
 import 'package:dio/dio.dart';
 
+import '../../../../core/constants/project_status.dart';
 import '../../../../core/network/exceptions/network_exception.dart';
 import '../../domain/entities/dashboard_entity.dart';
+import '../../domain/entities/project_list_entity.dart';
 import '../../domain/repositories/dashboard_repository.dart';
 import '../datasources/dashboard_remote_data_source.dart';
 import '../dto/dashboard_dto.dart';
+import '../dto/project_list_dto.dart';
 import '../models/dashboard_model.dart';
+import '../models/project_list_model.dart';
 
 class DashboardRepositoryImpl implements DashboardRepository {
   DashboardRepositoryImpl(this._remote);
@@ -16,12 +20,34 @@ class DashboardRepositoryImpl implements DashboardRepository {
   Future<DashboardEntity> getDashboard() async {
     try {
       final payload = await _remote.fetchDashboard();
-      final dto = DashboardDto.fromJson(payload);
-      return DashboardModel.fromDto(dto).toEntity();
+      return DashboardModel.fromDto(DashboardDto.fromJson(payload)).toEntity();
     } on DioException catch (error) {
-      // Fase 1 belum memakai HTTP, tapi jalur error sudah disiapkan supaya
-      // Fase 2 tinggal mengganti isi data source tanpa menyentuh layer ini.
       throw mapDioException(error);
+    } catch (_) {
+      throw const UnknownNetworkException('Respons server tidak sesuai.');
+    }
+  }
+
+  @override
+  Future<ProjectListEntity> getProjects({
+    int page = 1,
+    int limit = 100,
+    ProjectStatus? status,
+    String? search,
+  }) async {
+    try {
+      final payload = await _remote.fetchProjects(
+        page: page,
+        limit: limit,
+        status: status,
+        search: search,
+      );
+      return ProjectListModel.fromDto(ProjectListDto.fromJson(payload))
+          .toEntity();
+    } on DioException catch (error) {
+      throw mapDioException(error);
+    } catch (_) {
+      throw const UnknownNetworkException('Respons server tidak sesuai.');
     }
   }
 }

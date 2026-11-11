@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/navigation/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_shapes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/date_formatter.dart';
 
-/// Header dashboard: brand, judul, tanggal hari ini, dan avatar pengguna.
+/// Header dashboard: brand, judul, tanggal, dan akses pengaturan akun.
 class DashboardHeader extends StatelessWidget {
   const DashboardHeader({super.key});
 
@@ -60,23 +62,27 @@ class DashboardHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.md),
-        Container(
-          width: 44,
-          height: 44,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColors.primary, AppColors.info],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
             borderRadius: BorderRadius.circular(AppRadius.xl),
-          ),
-          child: Text(
-            'PM',
-            style: theme.textTheme.labelLarge?.copyWith(
-              color: theme.colorScheme.onPrimary,
-              fontWeight: FontWeight.w700,
+            onTap: () => context.pushNamed(AppRoutes.settings),
+            child: Ink(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [AppColors.primary, AppColors.info],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
+              ),
+              child: Icon(
+                Icons.person_rounded,
+                color: theme.colorScheme.onPrimary,
+                size: 24,
+              ),
             ),
           ),
         ),

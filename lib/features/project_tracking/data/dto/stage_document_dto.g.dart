@@ -11,8 +11,11 @@ _StageDocumentDto _$StageDocumentDtoFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       name: json['name'] as String,
       type: json['type'] as String,
-      url: json['url'] as String,
-      uploadedBy: json['uploaded_by'] as String,
+      mimeType: json['mime_type'] as String?,
+      sizeBytes: (json['size_bytes'] as num?)?.toInt(),
+      uploadedBy: UploadedByDto.fromJson(
+        json['uploaded_by'] as Map<String, dynamic>,
+      ),
       uploadedAt: json['uploaded_at'] as String,
     );
 
@@ -21,7 +24,8 @@ Map<String, dynamic> _$StageDocumentDtoToJson(_StageDocumentDto instance) =>
       'id': instance.id,
       'name': instance.name,
       'type': instance.type,
-      'url': instance.url,
+      'mime_type': instance.mimeType,
+      'size_bytes': instance.sizeBytes,
       'uploaded_by': instance.uploadedBy,
       'uploaded_at': instance.uploadedAt,
     };

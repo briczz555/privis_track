@@ -8,7 +8,7 @@ part 'project_stage_dto.g.dart';
 @freezed
 sealed class ProjectStageDto with _$ProjectStageDto {
   const factory ProjectStageDto({
-    required int id,
+    @JsonKey(name: 'stage_no') required int stageNo,
     required String title,
     @JsonKey(name: 'is_completed') required bool isCompleted,
     @JsonKey(name: 'completed_at') String? completedAt,

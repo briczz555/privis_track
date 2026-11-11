@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StageDocumentDto {
 
- String get id; String get name; String get type; String get url;@JsonKey(name: 'uploaded_by') String get uploadedBy;@JsonKey(name: 'uploaded_at') String get uploadedAt;
+ String get id; String get name; String get type;@JsonKey(name: 'mime_type') String? get mimeType;@JsonKey(name: 'size_bytes') int? get sizeBytes;@JsonKey(name: 'uploaded_by') UploadedByDto get uploadedBy;@JsonKey(name: 'uploaded_at') String get uploadedAt;
 /// Create a copy of StageDocumentDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $StageDocumentDtoCopyWith<StageDocumentDto> get copyWith => _$StageDocumentDtoCo
 @override
 bool operator ==(Object other) {
   final _this = this as StageDocumentDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StageDocumentDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.url, _this.url) || other.url == _this.url)&&(identical(other.uploadedBy, _this.uploadedBy) || other.uploadedBy == _this.uploadedBy)&&(identical(other.uploadedAt, _this.uploadedAt) || other.uploadedAt == _this.uploadedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StageDocumentDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.mimeType, _this.mimeType) || other.mimeType == _this.mimeType)&&(identical(other.sizeBytes, _this.sizeBytes) || other.sizeBytes == _this.sizeBytes)&&(identical(other.uploadedBy, _this.uploadedBy) || other.uploadedBy == _this.uploadedBy)&&(identical(other.uploadedAt, _this.uploadedAt) || other.uploadedAt == _this.uploadedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as StageDocumentDto;
-  return Object.hash(runtimeType,_this.id,_this.name,_this.type,_this.url,_this.uploadedBy,_this.uploadedAt);
+  return Object.hash(runtimeType,_this.id,_this.name,_this.type,_this.mimeType,_this.sizeBytes,_this.uploadedBy,_this.uploadedAt);
 }
 
 @override
 String toString() {
   final _this = this as StageDocumentDto;
-  return 'StageDocumentDto(id: ${_this.id}, name: ${_this.name}, type: ${_this.type}, url: ${_this.url}, uploadedBy: ${_this.uploadedBy}, uploadedAt: ${_this.uploadedAt})';
+  return 'StageDocumentDto(id: ${_this.id}, name: ${_this.name}, type: ${_this.type}, mimeType: ${_this.mimeType}, sizeBytes: ${_this.sizeBytes}, uploadedBy: ${_this.uploadedBy}, uploadedAt: ${_this.uploadedAt})';
 }
 
 
@@ -54,11 +54,11 @@ abstract mixin class $StageDocumentDtoCopyWith<$Res>  {
   factory $StageDocumentDtoCopyWith(StageDocumentDto value, $Res Function(StageDocumentDto) _then) = _$StageDocumentDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String type, String url,@JsonKey(name: 'uploaded_by') String uploadedBy,@JsonKey(name: 'uploaded_at') String uploadedAt
+ String id, String name, String type,@JsonKey(name: 'mime_type') String? mimeType,@JsonKey(name: 'size_bytes') int? sizeBytes,@JsonKey(name: 'uploaded_by') UploadedByDto uploadedBy,@JsonKey(name: 'uploaded_at') String uploadedAt
 });
 
 
-
+$UploadedByDtoCopyWith<$Res> get uploadedBy;
 
 }
 /// @nodoc
@@ -71,18 +71,28 @@ class _$StageDocumentDtoCopyWithImpl<$Res>
 
 /// Create a copy of StageDocumentDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? type = null,Object? url = null,Object? uploadedBy = null,Object? uploadedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? type = null,Object? mimeType = freezed,Object? sizeBytes = freezed,Object? uploadedBy = null,Object? uploadedAt = null,}) {
   return _then(StageDocumentDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
-as String,uploadedAt: null == uploadedAt ? _self.uploadedAt : uploadedAt // ignore: cast_nullable_to_non_nullable
+as String,mimeType: freezed == mimeType ? _self.mimeType : mimeType // ignore: cast_nullable_to_non_nullable
+as String?,sizeBytes: freezed == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
+as int?,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
+as UploadedByDto,uploadedAt: null == uploadedAt ? _self.uploadedAt : uploadedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
-
+/// Create a copy of StageDocumentDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UploadedByDtoCopyWith<$Res> get uploadedBy {
+  
+  return $UploadedByDtoCopyWith<$Res>(_self.uploadedBy, (value) {
+    return _then(_self.copyWith(uploadedBy: value));
+  });
+}
 }
 
 
@@ -161,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String type,  String url, @JsonKey(name: 'uploaded_by')  String uploadedBy, @JsonKey(name: 'uploaded_at')  String uploadedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String type, @JsonKey(name: 'mime_type')  String? mimeType, @JsonKey(name: 'size_bytes')  int? sizeBytes, @JsonKey(name: 'uploaded_by')  UploadedByDto uploadedBy, @JsonKey(name: 'uploaded_at')  String uploadedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StageDocumentDto() when $default != null:
-return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.uploadedAt);case _:
+return $default(_that.id,_that.name,_that.type,_that.mimeType,_that.sizeBytes,_that.uploadedBy,_that.uploadedAt);case _:
   return orElse();
 
 }
@@ -182,10 +192,10 @@ return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String type,  String url, @JsonKey(name: 'uploaded_by')  String uploadedBy, @JsonKey(name: 'uploaded_at')  String uploadedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String type, @JsonKey(name: 'mime_type')  String? mimeType, @JsonKey(name: 'size_bytes')  int? sizeBytes, @JsonKey(name: 'uploaded_by')  UploadedByDto uploadedBy, @JsonKey(name: 'uploaded_at')  String uploadedAt)  $default,) {final _that = this;
 switch (_that) {
 case _StageDocumentDto():
-return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.uploadedAt);}
+return $default(_that.id,_that.name,_that.type,_that.mimeType,_that.sizeBytes,_that.uploadedBy,_that.uploadedAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -199,10 +209,10 @@ return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String type,  String url, @JsonKey(name: 'uploaded_by')  String uploadedBy, @JsonKey(name: 'uploaded_at')  String uploadedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String type, @JsonKey(name: 'mime_type')  String? mimeType, @JsonKey(name: 'size_bytes')  int? sizeBytes, @JsonKey(name: 'uploaded_by')  UploadedByDto uploadedBy, @JsonKey(name: 'uploaded_at')  String uploadedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _StageDocumentDto() when $default != null:
-return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.uploadedAt);case _:
+return $default(_that.id,_that.name,_that.type,_that.mimeType,_that.sizeBytes,_that.uploadedBy,_that.uploadedAt);case _:
   return null;
 
 }
@@ -214,14 +224,15 @@ return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.
 @JsonSerializable()
 
 class _StageDocumentDto implements StageDocumentDto {
-  const _StageDocumentDto({required this.id, required this.name, required this.type, required this.url, @JsonKey(name: 'uploaded_by') required this.uploadedBy, @JsonKey(name: 'uploaded_at') required this.uploadedAt});
+  const _StageDocumentDto({required this.id, required this.name, required this.type, @JsonKey(name: 'mime_type') this.mimeType, @JsonKey(name: 'size_bytes') this.sizeBytes, @JsonKey(name: 'uploaded_by') required this.uploadedBy, @JsonKey(name: 'uploaded_at') required this.uploadedAt});
   factory _StageDocumentDto.fromJson(Map<String, dynamic> json) => _$StageDocumentDtoFromJson(json);
 
 @override final  String id;
 @override final  String name;
 @override final  String type;
-@override final  String url;
-@override@JsonKey(name: 'uploaded_by') final  String uploadedBy;
+@override@JsonKey(name: 'mime_type') final  String? mimeType;
+@override@JsonKey(name: 'size_bytes') final  int? sizeBytes;
+@override@JsonKey(name: 'uploaded_by') final  UploadedByDto uploadedBy;
 @override@JsonKey(name: 'uploaded_at') final  String uploadedAt;
 
 /// Create a copy of StageDocumentDto
@@ -237,18 +248,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StageDocumentDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StageDocumentDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.mimeType, mimeType) || other.mimeType == mimeType)&&(identical(other.sizeBytes, sizeBytes) || other.sizeBytes == sizeBytes)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,name,type,url,uploadedBy,uploadedAt);
+    return Object.hash(runtimeType,id,name,type,mimeType,sizeBytes,uploadedBy,uploadedAt);
 }
 
 @override
 String toString() {
-    return 'StageDocumentDto(id: $id, name: $name, type: $type, url: $url, uploadedBy: $uploadedBy, uploadedAt: $uploadedAt)';
+    return 'StageDocumentDto(id: $id, name: $name, type: $type, mimeType: $mimeType, sizeBytes: $sizeBytes, uploadedBy: $uploadedBy, uploadedAt: $uploadedAt)';
 }
 
 
@@ -259,11 +270,11 @@ abstract mixin class _$StageDocumentDtoCopyWith<$Res> implements $StageDocumentD
   factory _$StageDocumentDtoCopyWith(_StageDocumentDto value, $Res Function(_StageDocumentDto) _then) = __$StageDocumentDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String type, String url,@JsonKey(name: 'uploaded_by') String uploadedBy,@JsonKey(name: 'uploaded_at') String uploadedAt
+ String id, String name, String type,@JsonKey(name: 'mime_type') String? mimeType,@JsonKey(name: 'size_bytes') int? sizeBytes,@JsonKey(name: 'uploaded_by') UploadedByDto uploadedBy,@JsonKey(name: 'uploaded_at') String uploadedAt
 });
 
 
-
+@override $UploadedByDtoCopyWith<$Res> get uploadedBy;
 
 }
 /// @nodoc
@@ -276,19 +287,29 @@ class __$StageDocumentDtoCopyWithImpl<$Res>
 
 /// Create a copy of StageDocumentDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? type = null,Object? url = null,Object? uploadedBy = null,Object? uploadedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? type = null,Object? mimeType = freezed,Object? sizeBytes = freezed,Object? uploadedBy = null,Object? uploadedAt = null,}) {
   return _then(_StageDocumentDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
-as String,uploadedAt: null == uploadedAt ? _self.uploadedAt : uploadedAt // ignore: cast_nullable_to_non_nullable
+as String,mimeType: freezed == mimeType ? _self.mimeType : mimeType // ignore: cast_nullable_to_non_nullable
+as String?,sizeBytes: freezed == sizeBytes ? _self.sizeBytes : sizeBytes // ignore: cast_nullable_to_non_nullable
+as int?,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
+as UploadedByDto,uploadedAt: null == uploadedAt ? _self.uploadedAt : uploadedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
 
-
+/// Create a copy of StageDocumentDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UploadedByDtoCopyWith<$Res> get uploadedBy {
+  
+  return $UploadedByDtoCopyWith<$Res>(_self.uploadedBy, (value) {
+    return _then(_self.copyWith(uploadedBy: value));
+  });
+}
 }
 
 // dart format on

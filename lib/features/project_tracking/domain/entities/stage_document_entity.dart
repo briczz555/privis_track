@@ -10,7 +10,6 @@ sealed class StageDocumentEntity with _$StageDocumentEntity {
     required String id,
     required String name,
     required StageDocumentType type,
-    required String url,
     required String uploadedBy,
     required DateTime uploadedAt,
   }) = _StageDocumentEntity;

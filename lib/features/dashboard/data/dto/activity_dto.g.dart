@@ -8,21 +8,21 @@ part of 'activity_dto.dart';
 
 _ActivityDto _$ActivityDtoFromJson(Map<String, dynamic> json) => _ActivityDto(
   id: json['id'] as String,
-  actor: json['actor'] as String,
-  division: json['division'] as String,
+  type: json['type'] as String,
+  actor: ActivityActorDto.fromJson(json['actor'] as Map<String, dynamic>),
   action: json['action'] as String,
   target: json['target'] as String,
-  projectName: json['project_name'] as String,
-  occurredAt: json['occurred_at'] as String,
+  project: ActivityProjectDto.fromJson(json['project'] as Map<String, dynamic>),
+  createdAt: json['created_at'] as String,
 );
 
 Map<String, dynamic> _$ActivityDtoToJson(_ActivityDto instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'type': instance.type,
       'actor': instance.actor,
-      'division': instance.division,
       'action': instance.action,
       'target': instance.target,
-      'project_name': instance.projectName,
-      'occurred_at': instance.occurredAt,
+      'project': instance.project,
+      'created_at': instance.createdAt,
     };

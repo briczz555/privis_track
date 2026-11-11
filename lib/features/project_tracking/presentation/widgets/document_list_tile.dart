@@ -61,11 +61,13 @@ class DocumentListTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Buka dokumen',
+            tooltip: 'Unduh dokumen (segera)',
             visualDensity: VisualDensity.compact,
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Mock: membuka ${document.name}')),
+                const SnackBar(
+                  content: Text('Fitur unduh dokumen belum tersedia.'),
+                ),
               );
             },
             icon: Icon(

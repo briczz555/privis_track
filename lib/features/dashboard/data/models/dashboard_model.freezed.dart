@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DashboardModel {
 
- List<ProjectModel> get projects; List<ActivityModel> get activities;
+ DateTime get generatedAt; int get totalProjects; List<PortfolioSliceModel> get portfolio; List<ProjectModel> get activeProjects; List<ActivityModel> get activities;
 /// Create a copy of DashboardModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $DashboardModelCopyWith<DashboardModel> get copyWith => _$DashboardModelCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as DashboardModel;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardModel&&const DeepCollectionEquality().equals(other.projects, _this.projects)&&const DeepCollectionEquality().equals(other.activities, _this.activities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardModel&&(identical(other.generatedAt, _this.generatedAt) || other.generatedAt == _this.generatedAt)&&(identical(other.totalProjects, _this.totalProjects) || other.totalProjects == _this.totalProjects)&&const DeepCollectionEquality().equals(other.portfolio, _this.portfolio)&&const DeepCollectionEquality().equals(other.activeProjects, _this.activeProjects)&&const DeepCollectionEquality().equals(other.activities, _this.activities));
 }
 
 
 @override
 int get hashCode {
   final _this = this as DashboardModel;
-  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.projects),const DeepCollectionEquality().hash(_this.activities));
+  return Object.hash(runtimeType,_this.generatedAt,_this.totalProjects,const DeepCollectionEquality().hash(_this.portfolio),const DeepCollectionEquality().hash(_this.activeProjects),const DeepCollectionEquality().hash(_this.activities));
 }
 
 @override
 String toString() {
   final _this = this as DashboardModel;
-  return 'DashboardModel(projects: ${_this.projects}, activities: ${_this.activities})';
+  return 'DashboardModel(generatedAt: ${_this.generatedAt}, totalProjects: ${_this.totalProjects}, portfolio: ${_this.portfolio}, activeProjects: ${_this.activeProjects}, activities: ${_this.activities})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $DashboardModelCopyWith<$Res>  {
   factory $DashboardModelCopyWith(DashboardModel value, $Res Function(DashboardModel) _then) = _$DashboardModelCopyWithImpl;
 @useResult
 $Res call({
- List<ProjectModel> projects, List<ActivityModel> activities
+ DateTime generatedAt, int totalProjects, List<PortfolioSliceModel> portfolio, List<ProjectModel> activeProjects, List<ActivityModel> activities
 });
 
 
@@ -68,9 +68,12 @@ class _$DashboardModelCopyWithImpl<$Res>
 
 /// Create a copy of DashboardModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? projects = null,Object? activities = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? generatedAt = null,Object? totalProjects = null,Object? portfolio = null,Object? activeProjects = null,Object? activities = null,}) {
   return _then(DashboardModel(
-projects: null == projects ? _self.projects : projects // ignore: cast_nullable_to_non_nullable
+generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,totalProjects: null == totalProjects ? _self.totalProjects : totalProjects // ignore: cast_nullable_to_non_nullable
+as int,portfolio: null == portfolio ? _self.portfolio : portfolio // ignore: cast_nullable_to_non_nullable
+as List<PortfolioSliceModel>,activeProjects: null == activeProjects ? _self.activeProjects : activeProjects // ignore: cast_nullable_to_non_nullable
 as List<ProjectModel>,activities: null == activities ? _self.activities : activities // ignore: cast_nullable_to_non_nullable
 as List<ActivityModel>,
   ));
@@ -154,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<ProjectModel> projects,  List<ActivityModel> activities)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime generatedAt,  int totalProjects,  List<PortfolioSliceModel> portfolio,  List<ProjectModel> activeProjects,  List<ActivityModel> activities)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DashboardModel() when $default != null:
-return $default(_that.projects,_that.activities);case _:
+return $default(_that.generatedAt,_that.totalProjects,_that.portfolio,_that.activeProjects,_that.activities);case _:
   return orElse();
 
 }
@@ -175,10 +178,10 @@ return $default(_that.projects,_that.activities);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<ProjectModel> projects,  List<ActivityModel> activities)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime generatedAt,  int totalProjects,  List<PortfolioSliceModel> portfolio,  List<ProjectModel> activeProjects,  List<ActivityModel> activities)  $default,) {final _that = this;
 switch (_that) {
 case _DashboardModel():
-return $default(_that.projects,_that.activities);}
+return $default(_that.generatedAt,_that.totalProjects,_that.portfolio,_that.activeProjects,_that.activities);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -192,10 +195,10 @@ return $default(_that.projects,_that.activities);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<ProjectModel> projects,  List<ActivityModel> activities)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime generatedAt,  int totalProjects,  List<PortfolioSliceModel> portfolio,  List<ProjectModel> activeProjects,  List<ActivityModel> activities)?  $default,) {final _that = this;
 switch (_that) {
 case _DashboardModel() when $default != null:
-return $default(_that.projects,_that.activities);case _:
+return $default(_that.generatedAt,_that.totalProjects,_that.portfolio,_that.activeProjects,_that.activities);case _:
   return null;
 
 }
@@ -207,14 +210,23 @@ return $default(_that.projects,_that.activities);case _:
 
 
 class _DashboardModel extends DashboardModel {
-  const _DashboardModel({required  List<ProjectModel> projects, required  List<ActivityModel> activities}): _projects = projects,_activities = activities,super._();
+  const _DashboardModel({required this.generatedAt, required this.totalProjects, required  List<PortfolioSliceModel> portfolio, required  List<ProjectModel> activeProjects, required  List<ActivityModel> activities}): _portfolio = portfolio,_activeProjects = activeProjects,_activities = activities,super._();
   
 
- final  List<ProjectModel> _projects;
-@override List<ProjectModel> get projects {
-  if (_projects is EqualUnmodifiableListView) return _projects;
+@override final  DateTime generatedAt;
+@override final  int totalProjects;
+ final  List<PortfolioSliceModel> _portfolio;
+@override List<PortfolioSliceModel> get portfolio {
+  if (_portfolio is EqualUnmodifiableListView) return _portfolio;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_projects);
+  return EqualUnmodifiableListView(_portfolio);
+}
+
+ final  List<ProjectModel> _activeProjects;
+@override List<ProjectModel> get activeProjects {
+  if (_activeProjects is EqualUnmodifiableListView) return _activeProjects;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_activeProjects);
 }
 
  final  List<ActivityModel> _activities;
@@ -235,18 +247,18 @@ _$DashboardModelCopyWith<_DashboardModel> get copyWith => __$DashboardModelCopyW
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardModel&&const DeepCollectionEquality().equals(other.projects, _projects)&&const DeepCollectionEquality().equals(other.activities, _activities));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardModel&&(identical(other.generatedAt, generatedAt) || other.generatedAt == generatedAt)&&(identical(other.totalProjects, totalProjects) || other.totalProjects == totalProjects)&&const DeepCollectionEquality().equals(other.portfolio, _portfolio)&&const DeepCollectionEquality().equals(other.activeProjects, _activeProjects)&&const DeepCollectionEquality().equals(other.activities, _activities));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_projects),const DeepCollectionEquality().hash(_activities));
+    return Object.hash(runtimeType,generatedAt,totalProjects,const DeepCollectionEquality().hash(_portfolio),const DeepCollectionEquality().hash(_activeProjects),const DeepCollectionEquality().hash(_activities));
 }
 
 @override
 String toString() {
-    return 'DashboardModel(projects: $projects, activities: $activities)';
+    return 'DashboardModel(generatedAt: $generatedAt, totalProjects: $totalProjects, portfolio: $portfolio, activeProjects: $activeProjects, activities: $activities)';
 }
 
 
@@ -257,7 +269,7 @@ abstract mixin class _$DashboardModelCopyWith<$Res> implements $DashboardModelCo
   factory _$DashboardModelCopyWith(_DashboardModel value, $Res Function(_DashboardModel) _then) = __$DashboardModelCopyWithImpl;
 @override @useResult
 $Res call({
- List<ProjectModel> projects, List<ActivityModel> activities
+ DateTime generatedAt, int totalProjects, List<PortfolioSliceModel> portfolio, List<ProjectModel> activeProjects, List<ActivityModel> activities
 });
 
 
@@ -274,9 +286,12 @@ class __$DashboardModelCopyWithImpl<$Res>
 
 /// Create a copy of DashboardModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? projects = null,Object? activities = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? generatedAt = null,Object? totalProjects = null,Object? portfolio = null,Object? activeProjects = null,Object? activities = null,}) {
   return _then(_DashboardModel(
-projects: null == projects ? _self._projects : projects // ignore: cast_nullable_to_non_nullable
+generatedAt: null == generatedAt ? _self.generatedAt : generatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,totalProjects: null == totalProjects ? _self.totalProjects : totalProjects // ignore: cast_nullable_to_non_nullable
+as int,portfolio: null == portfolio ? _self._portfolio : portfolio // ignore: cast_nullable_to_non_nullable
+as List<PortfolioSliceModel>,activeProjects: null == activeProjects ? _self._activeProjects : activeProjects // ignore: cast_nullable_to_non_nullable
 as List<ProjectModel>,activities: null == activities ? _self._activities : activities // ignore: cast_nullable_to_non_nullable
 as List<ActivityModel>,
   ));

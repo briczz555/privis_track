@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StageDocumentEntity {
 
- String get id; String get name; StageDocumentType get type; String get url; String get uploadedBy; DateTime get uploadedAt;
+ String get id; String get name; StageDocumentType get type; String get uploadedBy; DateTime get uploadedAt;
 /// Create a copy of StageDocumentEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $StageDocumentEntityCopyWith<StageDocumentEntity> get copyWith => _$StageDocumen
 @override
 bool operator ==(Object other) {
   final _this = this as StageDocumentEntity;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StageDocumentEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.url, _this.url) || other.url == _this.url)&&(identical(other.uploadedBy, _this.uploadedBy) || other.uploadedBy == _this.uploadedBy)&&(identical(other.uploadedAt, _this.uploadedAt) || other.uploadedAt == _this.uploadedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StageDocumentEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.uploadedBy, _this.uploadedBy) || other.uploadedBy == _this.uploadedBy)&&(identical(other.uploadedAt, _this.uploadedAt) || other.uploadedAt == _this.uploadedAt));
 }
 
 
 @override
 int get hashCode {
   final _this = this as StageDocumentEntity;
-  return Object.hash(runtimeType,_this.id,_this.name,_this.type,_this.url,_this.uploadedBy,_this.uploadedAt);
+  return Object.hash(runtimeType,_this.id,_this.name,_this.type,_this.uploadedBy,_this.uploadedAt);
 }
 
 @override
 String toString() {
   final _this = this as StageDocumentEntity;
-  return 'StageDocumentEntity(id: ${_this.id}, name: ${_this.name}, type: ${_this.type}, url: ${_this.url}, uploadedBy: ${_this.uploadedBy}, uploadedAt: ${_this.uploadedAt})';
+  return 'StageDocumentEntity(id: ${_this.id}, name: ${_this.name}, type: ${_this.type}, uploadedBy: ${_this.uploadedBy}, uploadedAt: ${_this.uploadedAt})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $StageDocumentEntityCopyWith<$Res>  {
   factory $StageDocumentEntityCopyWith(StageDocumentEntity value, $Res Function(StageDocumentEntity) _then) = _$StageDocumentEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, StageDocumentType type, String url, String uploadedBy, DateTime uploadedAt
+ String id, String name, StageDocumentType type, String uploadedBy, DateTime uploadedAt
 });
 
 
@@ -68,13 +68,12 @@ class _$StageDocumentEntityCopyWithImpl<$Res>
 
 /// Create a copy of StageDocumentEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? type = null,Object? url = null,Object? uploadedBy = null,Object? uploadedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? type = null,Object? uploadedBy = null,Object? uploadedAt = null,}) {
   return _then(StageDocumentEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as StageDocumentType,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
+as StageDocumentType,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
 as String,uploadedAt: null == uploadedAt ? _self.uploadedAt : uploadedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -158,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  StageDocumentType type,  String url,  String uploadedBy,  DateTime uploadedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  StageDocumentType type,  String uploadedBy,  DateTime uploadedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StageDocumentEntity() when $default != null:
-return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.uploadedAt);case _:
+return $default(_that.id,_that.name,_that.type,_that.uploadedBy,_that.uploadedAt);case _:
   return orElse();
 
 }
@@ -179,10 +178,10 @@ return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  StageDocumentType type,  String url,  String uploadedBy,  DateTime uploadedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  StageDocumentType type,  String uploadedBy,  DateTime uploadedAt)  $default,) {final _that = this;
 switch (_that) {
 case _StageDocumentEntity():
-return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.uploadedAt);}
+return $default(_that.id,_that.name,_that.type,_that.uploadedBy,_that.uploadedAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -196,10 +195,10 @@ return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  StageDocumentType type,  String url,  String uploadedBy,  DateTime uploadedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  StageDocumentType type,  String uploadedBy,  DateTime uploadedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _StageDocumentEntity() when $default != null:
-return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.uploadedAt);case _:
+return $default(_that.id,_that.name,_that.type,_that.uploadedBy,_that.uploadedAt);case _:
   return null;
 
 }
@@ -211,13 +210,12 @@ return $default(_that.id,_that.name,_that.type,_that.url,_that.uploadedBy,_that.
 
 
 class _StageDocumentEntity implements StageDocumentEntity {
-  const _StageDocumentEntity({required this.id, required this.name, required this.type, required this.url, required this.uploadedBy, required this.uploadedAt});
+  const _StageDocumentEntity({required this.id, required this.name, required this.type, required this.uploadedBy, required this.uploadedAt});
   
 
 @override final  String id;
 @override final  String name;
 @override final  StageDocumentType type;
-@override final  String url;
 @override final  String uploadedBy;
 @override final  DateTime uploadedAt;
 
@@ -231,18 +229,18 @@ _$StageDocumentEntityCopyWith<_StageDocumentEntity> get copyWith => __$StageDocu
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StageDocumentEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.url, url) || other.url == url)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StageDocumentEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.type, type) || other.type == type)&&(identical(other.uploadedBy, uploadedBy) || other.uploadedBy == uploadedBy)&&(identical(other.uploadedAt, uploadedAt) || other.uploadedAt == uploadedAt));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,name,type,url,uploadedBy,uploadedAt);
+    return Object.hash(runtimeType,id,name,type,uploadedBy,uploadedAt);
 }
 
 @override
 String toString() {
-    return 'StageDocumentEntity(id: $id, name: $name, type: $type, url: $url, uploadedBy: $uploadedBy, uploadedAt: $uploadedAt)';
+    return 'StageDocumentEntity(id: $id, name: $name, type: $type, uploadedBy: $uploadedBy, uploadedAt: $uploadedAt)';
 }
 
 
@@ -253,7 +251,7 @@ abstract mixin class _$StageDocumentEntityCopyWith<$Res> implements $StageDocume
   factory _$StageDocumentEntityCopyWith(_StageDocumentEntity value, $Res Function(_StageDocumentEntity) _then) = __$StageDocumentEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, StageDocumentType type, String url, String uploadedBy, DateTime uploadedAt
+ String id, String name, StageDocumentType type, String uploadedBy, DateTime uploadedAt
 });
 
 
@@ -270,13 +268,12 @@ class __$StageDocumentEntityCopyWithImpl<$Res>
 
 /// Create a copy of StageDocumentEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? type = null,Object? url = null,Object? uploadedBy = null,Object? uploadedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? type = null,Object? uploadedBy = null,Object? uploadedAt = null,}) {
   return _then(_StageDocumentEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as StageDocumentType,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
-as String,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
+as StageDocumentType,uploadedBy: null == uploadedBy ? _self.uploadedBy : uploadedBy // ignore: cast_nullable_to_non_nullable
 as String,uploadedAt: null == uploadedAt ? _self.uploadedAt : uploadedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

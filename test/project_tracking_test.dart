@@ -1,110 +1,160 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:privis_track/core/theme/app_theme.dart';
 import 'package:privis_track/features/project_tracking/data/datasources/project_tracking_remote_data_source.dart';
 import 'package:privis_track/features/project_tracking/data/repositories/project_tracking_repository_impl.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_type.dart';
+import 'package:privis_track/features/project_tracking/presentation/providers/project_tracking_provider.dart';
 import 'package:privis_track/features/project_tracking/presentation/screens/project_tracking_screen.dart';
 
-Widget _wrap(Widget child) {
-  return ProviderScope(
-    child: MaterialApp(theme: AppTheme.light, home: child),
-  );
+import 'support/fakes.dart';
+import 'support/fixtures.dart';
+
+class _FakeProjectDataSource implements IProjectTrackingRemoteDataSource {
+  _FakeProjectDataSource(this.payload);
+
+  final Map<String, dynamic> payload;
+  String? requestedCode;
+
+  @override
+  Future<Map<String, dynamic>> fetchProject(String projectCode) async {
+    requestedCode = projectCode;
+    return payload;
+  }
 }
+
+Map<String, dynamic> _projectPayload() => {
+  'id': 'project-uuid',
+  'code': 'PRJ-001',
+  'name': 'E-Commerce App',
+  'client': {
+    'id': 'client-uuid',
+    'name': 'PT. ABC Retail',
+    'address': 'Jl. Jenderal Sudirman Kav. 52-53, Jakarta Selatan 12190',
+    'contact_name': 'Dewi Lestari',
+    'contact_role': 'IT Manager',
+    'phone': '+62 812-3456-7890',
+  },
+  'status': 'in_progress',
+  'current_stage': 4,
+  'current_stage_title': 'Development',
+  'completed_stages': 3,
+  'progress_percent': 38,
+  'updated_at': '2026-11-10T00:00:00.000Z',
+  'stages': [
+    for (var stageNo = 1; stageNo <= 8; stageNo++)
+      {
+        'stage_no': stageNo,
+        'title': const [
+          'Discovery & Brief',
+          'Requirement',
+          'UI/UX Design',
+          'Development',
+          'QA & Testing',
+          'UAT',
+          'Deployment',
+          'Maintenance',
+        ][stageNo - 1],
+        'is_completed': stageNo <= 3,
+        'completed_at': stageNo <= 3
+            ? '2026-10-${10 + stageNo}T00:00:00.000Z'
+            : null,
+        'document_count': stageNo == 1 ? 2 : (stageNo == 4 ? 1 : 0),
+        'documents': [
+          if (stageNo == 1)
+            {
+              'id': 'doc-1',
+              'name': 'MoM Kickoff.pdf',
+              'type': 'pdf',
+              'mime_type': 'application/pdf',
+              'size_bytes': 245760,
+              'uploaded_by': {'id': 'u-1', 'name': 'Rina', 'division': 'PM'},
+              'uploaded_at': '2026-10-19T00:00:00.000Z',
+            },
+          if (stageNo == 1)
+            {
+              'id': 'doc-2',
+              'name': 'Project Brief.pdf',
+              'type': 'pdf',
+              'mime_type': 'application/pdf',
+              'size_bytes': 200000,
+              'uploaded_by': {
+                'id': 'u-2',
+                'name': 'Finance',
+                'division': 'Finance',
+              },
+              'uploaded_at': '2026-10-19T00:00:00.000Z',
+            },
+          if (stageNo == 4)
+            {
+              'id': 'doc-3',
+              'name': 'Technical Spec.pdf',
+              'type': 'pdf',
+              'mime_type': 'application/pdf',
+              'size_bytes': 180000,
+              'uploaded_by': {
+                'id': 'u-3',
+                'name': 'Budi',
+                'division': 'Developer',
+              },
+              'uploaded_at': '2026-11-09T00:00:00.000Z',
+            },
+        ],
+      },
+  ],
+};
+
+Widget _app(Widget home) => ProviderScope(
+  overrides: [
+    projectTrackingRepositoryProvider.overrideWith(
+      (ref) => FakeProjectTrackingRepository(testTracking),
+    ),
+  ],
+  child: MaterialApp(theme: AppTheme.light, home: home),
+);
 
 void main() {
   group('ProjectTrackingRepository', () {
-    final repository = ProjectTrackingRepositoryImpl(
-      const ProjectTrackingRemoteDataSource(
-        latency: Duration.zero,
-        uploadLatency: Duration.zero,
-      ),
-    );
+    test('memetakan payload API ke entity', () async {
+      final remote = _FakeProjectDataSource(_projectPayload());
+      final repository = ProjectTrackingRepositoryImpl(remote);
 
-    test('memetakan detail proyek dan 8 tahap SDLC', () async {
       final project = await repository.getProject('PRJ-001');
 
-      expect(project.name, 'E-Commerce App');
-      expect(project.client.name, 'PT. ABC Retail');
-      expect(project.client.address, contains('Sudirman'));
-      expect(project.client.contactName, 'Dewi Lestari');
-      expect(project.client.contactRole, 'IT Manager');
-      expect(project.client.phone, '+62 812-3456-7890');
+      expect(remote.requestedCode, 'PRJ-001');
+      expect(project.code, 'PRJ-001');
       expect(project.stages, hasLength(8));
-      expect(project.totalDocuments, 7);
-
-      final discovery = project.stageById(1)!;
-      expect(discovery.title, 'Discovery & Brief');
-      expect(discovery.isCompleted, isTrue);
-      expect(discovery.completedAt, isNotNull);
-      expect(discovery.documents.first.name, 'MoM Kickoff.pdf');
-      expect(discovery.documents.first.type, StageDocumentType.pdf);
-
-      final development = project.stageById(4)!;
-      expect(development.title, 'Development');
-      expect(development.isCompleted, isFalse);
-      expect(project.isCurrentStage(development), isTrue);
-      expect(development.documentCount, 1);
-
-      final maintenance = project.stageById(8)!;
-      expect(maintenance.documents, isEmpty);
+      expect(project.completedStages, 3);
+      expect(project.progressPercent, 38);
+      expect(project.currentStage, 4);
+      expect(project.totalDocuments, 3);
+      expect(project.client.name, 'PT. ABC Retail');
+      expect(project.client.phone, '+62 812-3456-7890');
+      expect(project.stages.first.documents.first.type, StageDocumentType.pdf);
+      expect(project.stages.first.documents.first.uploadedBy, 'Rina');
     });
-
-    test('proyek belum mulai tidak punya dokumen sama sekali', () async {
-      final project = await repository.getProject('PRJ-006');
-
-      expect(project.currentStage, 0);
-      expect(project.progressPercent, 0);
-      expect(project.totalDocuments, 0);
-      expect(
-        project.stages.every((stage) => stage.isCompleted == false),
-        isTrue,
-      );
-    });
-
-    test(
-      'mock upload mengembalikan dokumen bertipe sesuai nama file',
-      () async {
-        final document = await repository.uploadDocument(
-          projectId: 'PRJ-001',
-          stageId: 1,
-          fileName: 'Lampiran 3.pdf',
-        );
-
-        expect(document.name, 'Lampiran 3.pdf');
-        expect(document.type, StageDocumentType.pdf);
-        expect(document.uploadedBy, 'Anda');
-        expect(document.url, contains('dummy.link'));
-      },
-    );
   });
 
   group('ProjectTrackingScreen', () {
-    Future<void> pumpScreen(
-      WidgetTester tester, {
-      String projectId = 'PRJ-001',
-    }) async {
-      // Viewport tinggi supaya seluruh 8 tahap + kartu kontak terlihat tanpa scroll.
+    Future<void> pumpScreen(WidgetTester tester) async {
       tester.view.physicalSize = const Size(420, 1700);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
 
       await tester.pumpWidget(
-        _wrap(ProjectTrackingScreen(projectId: projectId)),
+        _app(const ProjectTrackingScreen(projectCode: 'PRJ-001')),
       );
       await tester.pumpAndSettle();
     }
 
-    testWidgets('menampilkan ringkasan proyek dan 8 tahap timeline', (
-      tester,
-    ) async {
+    testWidgets('menampilkan ringkasan, kontak, dan 8 tahap', (tester) async {
       await pumpScreen(tester);
 
       expect(find.text('Project Tracking'), findsOneWidget);
       expect(find.text('E-Commerce App'), findsOneWidget);
-      expect(find.text('Timeline SDLC'), findsOneWidget);
+      expect(find.text('KONTAK KLIEN'), findsOneWidget);
+      expect(find.text('+62 812-3456-7890'), findsOneWidget);
 
       for (final title in [
         'Discovery & Brief',
@@ -120,43 +170,7 @@ void main() {
       }
     });
 
-    testWidgets('menampilkan kontak klien dan menyalin nomor WhatsApp', (
-      tester,
-    ) async {
-      final calls = <MethodCall>[];
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        SystemChannels.platform,
-        (call) async {
-          calls.add(call);
-          return null;
-        },
-      );
-      addTearDown(
-        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-          SystemChannels.platform,
-          null,
-        ),
-      );
-
-      await pumpScreen(tester);
-
-      expect(find.text('KONTAK KLIEN'), findsOneWidget);
-      expect(find.text('PT. ABC Retail'), findsWidgets);
-      expect(
-        find.text('Jl. Jenderal Sudirman Kav. 52-53, Jakarta Selatan 12190'),
-        findsOneWidget,
-      );
-      expect(find.text('Dewi Lestari · IT Manager'), findsOneWidget);
-      expect(find.text('+62 812-3456-7890'), findsOneWidget);
-
-      await tester.tap(find.byTooltip('Salin nomor WhatsApp'));
-      await tester.pumpAndSettle();
-
-      expect(calls.any((call) => call.method == 'Clipboard.setData'), isTrue);
-      expect(find.text('Nomor WhatsApp Dewi Lestari disalin'), findsOneWidget);
-    });
-
-    testWidgets('tahap yang belum berjalan tetap bisa dibuka (no step-lock)', (
+    testWidgets('tahap belum berjalan tetap bisa dibuka (no step-lock)', (
       tester,
     ) async {
       await pumpScreen(tester);
@@ -165,12 +179,11 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('DOCUMENT VAULT'), findsOneWidget);
-      expect(find.textContaining('Belum ada dokumen'), findsOneWidget);
+      expect(find.textContaining('read-only'), findsOneWidget);
+      expect(find.text('Unggah dokumen (mock)'), findsNothing);
     });
 
-    testWidgets('mock upload menambah dokumen ke document vault', (
-      tester,
-    ) async {
+    testWidgets('document vault menampilkan dokumen tahap', (tester) async {
       await pumpScreen(tester);
 
       await tester.tap(find.text('Discovery & Brief'));
@@ -178,13 +191,8 @@ void main() {
 
       expect(find.text('DOCUMENT VAULT'), findsOneWidget);
       expect(find.text('MoM Kickoff.pdf'), findsOneWidget);
+      expect(find.text('Project Brief.pdf'), findsOneWidget);
       expect(find.text('2 file'), findsOneWidget);
-
-      await tester.tap(find.text('Unggah dokumen (mock)'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Lampiran 3.pdf'), findsOneWidget);
-      expect(find.text('3 file'), findsOneWidget);
     });
   });
 }

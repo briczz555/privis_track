@@ -2,25 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../features/auth/presentation/providers/auth_controller.dart';
 import 'routes.dart';
 
 part 'app_router.g.dart';
+
+class RouterRefreshNotifier extends ChangeNotifier {
+  void notify() => notifyListeners();
+}
 
 /// Instance GoRouter tunggal untuk seluruh aplikasi.
 /// File ini hanya mengonsumsi `appRoutes` dari routes.dart — JANGAN
 /// mendefinisikan GoRoute individual langsung di sini.
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
+  final refresh = RouterRefreshNotifier();
+
+  ref.onDispose(refresh.dispose);
+  ref.listen(authControllerProvider, (previous, next) => refresh.notify());
+
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/splash',
     debugLogDiagnostics: !const bool.fromEnvironment('dart.vm.product'),
+    refreshListenable: refresh,
+    redirect: (context, state) {
+      final auth = ref.read(authControllerProvider);
+      final path = state.matchedLocation;
+      final isLogin = path == '/login';
+      final isSplash = path == '/splash';
+
+      // Selama sesi masih dipulihkan, tetap di halaman saat ini.
+      if (auth.isLoading) return null;
+
+      final loggedIn = auth.value != null;
+
+      if (!loggedIn) {
+        return isLogin ? null : '/login';
+      }
+
+      if (isLogin || isSplash) return '/';
+      return null;
+    },
     routes: appRoutes,
-    // TODO: tambahkan `redirect` di sini kalau perlu auth guard. Pakai `ref.read(...)`
-    // di dalam closure ini, JANGAN `ref.watch(...)` — ref.watch membuat ulang GoRouter
-    // tiap state berubah dan me-reset stack navigasi. Untuk trigger ulang redirect saat
-    // state auth berubah, pakai `ref.listen(...)` yang men-trigger `refreshListenable`.
-    // Selama status masih loading, `redirect` harus `return null` (diam di tempat),
-    // jangan lempar ke splash — supaya URL di web tidak hilang saat refresh.
     errorBuilder: (context, state) => Scaffold(
       body: Center(child: Text('Halaman tidak ditemukan: ${state.uri}')),
     ),

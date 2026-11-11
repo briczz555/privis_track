@@ -10,57 +10,22 @@ import '../../../../core/widgets/app_loading_state.dart';
 import '../providers/project_tracking_provider.dart';
 import 'document_list_tile.dart';
 
-/// Bottom sheet arsip dokumen per tahap SDLC.
-///
-/// Membaca provider yang sama dengan timeline, jadi dokumen hasil mock upload
-/// langsung muncul tanpa menutup sheet.
-class DocumentVaultSheet extends ConsumerStatefulWidget {
+/// Bottom sheet arsip dokumen per tahap SDLC (read-only).
+class DocumentVaultSheet extends ConsumerWidget {
   const DocumentVaultSheet({
     super.key,
-    required this.projectId,
+    required this.projectCode,
     required this.stageId,
   });
 
-  final String projectId;
+  final String projectCode;
   final int stageId;
 
   @override
-  ConsumerState<DocumentVaultSheet> createState() => _DocumentVaultSheetState();
-}
-
-class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
-  bool _isUploading = false;
-
-  Future<void> _upload() async {
-    if (_isUploading) return;
-
-    setState(() => _isUploading = true);
-    final messenger = ScaffoldMessenger.of(context);
-
-    try {
-      final document = await ref
-          .read(projectTrackingProvider(widget.projectId).notifier)
-          .uploadDocument(stageId: widget.stageId);
-
-      if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text('${document.name} berhasil diunggah (mock)')),
-      );
-    } catch (error) {
-      if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text(readableErrorMessage(error))),
-      );
-    } finally {
-      if (mounted) setState(() => _isUploading = false);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final projectState = ref.watch(projectTrackingProvider(widget.projectId));
-    final stage = projectState.value?.stageById(widget.stageId);
+    final projectState = ref.watch(projectTrackingProvider(projectCode));
+    final stage = projectState.value?.stageById(stageId);
     final secondaryText = theme.colorScheme.onSurface.withValues(alpha: 0.55);
 
     if (stage == null) {
@@ -70,8 +35,7 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
           child: AppErrorState(
             title: 'Gagal memuat dokumen',
             message: readableErrorMessage(projectState.error!),
-            onRetry: () =>
-                ref.invalidate(projectTrackingProvider(widget.projectId)),
+            onRetry: () => ref.invalidate(projectTrackingProvider(projectCode)),
           ),
         );
       }
@@ -143,20 +107,34 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            SizedBox(
+            Container(
               width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: _isUploading ? null : _upload,
-                icon: _isUploading
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.upload_file_rounded, size: 18),
-                label: Text(
-                  _isUploading ? 'Mengunggah...' : 'Unggah dokumen (mock)',
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                border: Border.all(
+                  color: AppColors.primary.withValues(alpha: 0.18),
                 ),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.info_outline_rounded,
+                    size: 16,
+                    color: AppColors.primary,
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: Text(
+                      'Arsip dokumen saat ini read-only. Fitur unggah & unduh '
+                      'menyusul di iterasi berikutnya.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: secondaryText,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -220,12 +198,6 @@ class _EmptyVault extends StatelessWidget {
             'Belum ada dokumen pada tahap ini.',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 2),
-          Text(
-            'Gunakan tombol di atas untuk menambahkan arsip.',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(color: secondaryText),
           ),
         ],
       ),

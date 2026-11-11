@@ -14,7 +14,6 @@ sealed class StageDocumentModel with _$StageDocumentModel {
     required String id,
     required String name,
     required StageDocumentType type,
-    required String url,
     required String uploadedBy,
     required DateTime uploadedAt,
   }) = _StageDocumentModel;
@@ -24,8 +23,7 @@ sealed class StageDocumentModel with _$StageDocumentModel {
         id: dto.id,
         name: dto.name,
         type: _typeFromApi(dto.type),
-        url: dto.url,
-        uploadedBy: dto.uploadedBy,
+        uploadedBy: dto.uploadedBy.name,
         uploadedAt: DateTime.parse(dto.uploadedAt),
       );
 
@@ -33,7 +31,6 @@ sealed class StageDocumentModel with _$StageDocumentModel {
     id: id,
     name: name,
     type: type,
-    url: url,
     uploadedBy: uploadedBy,
     uploadedAt: uploadedAt,
   );

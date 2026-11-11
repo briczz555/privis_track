@@ -8,7 +8,7 @@ part of 'project_stage_dto.dart';
 
 _ProjectStageDto _$ProjectStageDtoFromJson(Map<String, dynamic> json) =>
     _ProjectStageDto(
-      id: (json['id'] as num).toInt(),
+      stageNo: (json['stage_no'] as num).toInt(),
       title: json['title'] as String,
       isCompleted: json['is_completed'] as bool,
       completedAt: json['completed_at'] as String?,
@@ -21,7 +21,7 @@ _ProjectStageDto _$ProjectStageDtoFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ProjectStageDtoToJson(_ProjectStageDto instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'stage_no': instance.stageNo,
       'title': instance.title,
       'is_completed': instance.isCompleted,
       'completed_at': instance.completedAt,

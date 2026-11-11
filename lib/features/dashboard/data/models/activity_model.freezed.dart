@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ActivityModel {
 
- String get id; String get actor; String get division; String get action; String get target; String get projectName; DateTime get occurredAt;
+ String get id; String get type; String get actor; String get division; String get action; String get target; String get projectCode; String get projectName; DateTime get occurredAt;
 /// Create a copy of ActivityModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $ActivityModelCopyWith<ActivityModel> get copyWith => _$ActivityModelCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as ActivityModel;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActivityModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.actor, _this.actor) || other.actor == _this.actor)&&(identical(other.division, _this.division) || other.division == _this.division)&&(identical(other.action, _this.action) || other.action == _this.action)&&(identical(other.target, _this.target) || other.target == _this.target)&&(identical(other.projectName, _this.projectName) || other.projectName == _this.projectName)&&(identical(other.occurredAt, _this.occurredAt) || other.occurredAt == _this.occurredAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ActivityModel&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.actor, _this.actor) || other.actor == _this.actor)&&(identical(other.division, _this.division) || other.division == _this.division)&&(identical(other.action, _this.action) || other.action == _this.action)&&(identical(other.target, _this.target) || other.target == _this.target)&&(identical(other.projectCode, _this.projectCode) || other.projectCode == _this.projectCode)&&(identical(other.projectName, _this.projectName) || other.projectName == _this.projectName)&&(identical(other.occurredAt, _this.occurredAt) || other.occurredAt == _this.occurredAt));
 }
 
 
 @override
 int get hashCode {
   final _this = this as ActivityModel;
-  return Object.hash(runtimeType,_this.id,_this.actor,_this.division,_this.action,_this.target,_this.projectName,_this.occurredAt);
+  return Object.hash(runtimeType,_this.id,_this.type,_this.actor,_this.division,_this.action,_this.target,_this.projectCode,_this.projectName,_this.occurredAt);
 }
 
 @override
 String toString() {
   final _this = this as ActivityModel;
-  return 'ActivityModel(id: ${_this.id}, actor: ${_this.actor}, division: ${_this.division}, action: ${_this.action}, target: ${_this.target}, projectName: ${_this.projectName}, occurredAt: ${_this.occurredAt})';
+  return 'ActivityModel(id: ${_this.id}, type: ${_this.type}, actor: ${_this.actor}, division: ${_this.division}, action: ${_this.action}, target: ${_this.target}, projectCode: ${_this.projectCode}, projectName: ${_this.projectName}, occurredAt: ${_this.occurredAt})';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ActivityModelCopyWith<$Res>  {
   factory $ActivityModelCopyWith(ActivityModel value, $Res Function(ActivityModel) _then) = _$ActivityModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String actor, String division, String action, String target, String projectName, DateTime occurredAt
+ String id, String type, String actor, String division, String action, String target, String projectCode, String projectName, DateTime occurredAt
 });
 
 
@@ -68,13 +68,15 @@ class _$ActivityModelCopyWithImpl<$Res>
 
 /// Create a copy of ActivityModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? actor = null,Object? division = null,Object? action = null,Object? target = null,Object? projectName = null,Object? occurredAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? actor = null,Object? division = null,Object? action = null,Object? target = null,Object? projectCode = null,Object? projectName = null,Object? occurredAt = null,}) {
   return _then(ActivityModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,actor: null == actor ? _self.actor : actor // ignore: cast_nullable_to_non_nullable
 as String,division: null == division ? _self.division : division // ignore: cast_nullable_to_non_nullable
 as String,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
 as String,target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
+as String,projectCode: null == projectCode ? _self.projectCode : projectCode // ignore: cast_nullable_to_non_nullable
 as String,projectName: null == projectName ? _self.projectName : projectName // ignore: cast_nullable_to_non_nullable
 as String,occurredAt: null == occurredAt ? _self.occurredAt : occurredAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
@@ -159,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String actor,  String division,  String action,  String target,  String projectName,  DateTime occurredAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String type,  String actor,  String division,  String action,  String target,  String projectCode,  String projectName,  DateTime occurredAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ActivityModel() when $default != null:
-return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_that.projectName,_that.occurredAt);case _:
+return $default(_that.id,_that.type,_that.actor,_that.division,_that.action,_that.target,_that.projectCode,_that.projectName,_that.occurredAt);case _:
   return orElse();
 
 }
@@ -180,10 +182,10 @@ return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String actor,  String division,  String action,  String target,  String projectName,  DateTime occurredAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String type,  String actor,  String division,  String action,  String target,  String projectCode,  String projectName,  DateTime occurredAt)  $default,) {final _that = this;
 switch (_that) {
 case _ActivityModel():
-return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_that.projectName,_that.occurredAt);}
+return $default(_that.id,_that.type,_that.actor,_that.division,_that.action,_that.target,_that.projectCode,_that.projectName,_that.occurredAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -197,10 +199,10 @@ return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String actor,  String division,  String action,  String target,  String projectName,  DateTime occurredAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String type,  String actor,  String division,  String action,  String target,  String projectCode,  String projectName,  DateTime occurredAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ActivityModel() when $default != null:
-return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_that.projectName,_that.occurredAt);case _:
+return $default(_that.id,_that.type,_that.actor,_that.division,_that.action,_that.target,_that.projectCode,_that.projectName,_that.occurredAt);case _:
   return null;
 
 }
@@ -212,14 +214,16 @@ return $default(_that.id,_that.actor,_that.division,_that.action,_that.target,_t
 
 
 class _ActivityModel extends ActivityModel {
-  const _ActivityModel({required this.id, required this.actor, required this.division, required this.action, required this.target, required this.projectName, required this.occurredAt}): super._();
+  const _ActivityModel({required this.id, required this.type, required this.actor, required this.division, required this.action, required this.target, required this.projectCode, required this.projectName, required this.occurredAt}): super._();
   
 
 @override final  String id;
+@override final  String type;
 @override final  String actor;
 @override final  String division;
 @override final  String action;
 @override final  String target;
+@override final  String projectCode;
 @override final  String projectName;
 @override final  DateTime occurredAt;
 
@@ -233,18 +237,18 @@ _$ActivityModelCopyWith<_ActivityModel> get copyWith => __$ActivityModelCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActivityModel&&(identical(other.id, id) || other.id == id)&&(identical(other.actor, actor) || other.actor == actor)&&(identical(other.division, division) || other.division == division)&&(identical(other.action, action) || other.action == action)&&(identical(other.target, target) || other.target == target)&&(identical(other.projectName, projectName) || other.projectName == projectName)&&(identical(other.occurredAt, occurredAt) || other.occurredAt == occurredAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ActivityModel&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.actor, actor) || other.actor == actor)&&(identical(other.division, division) || other.division == division)&&(identical(other.action, action) || other.action == action)&&(identical(other.target, target) || other.target == target)&&(identical(other.projectCode, projectCode) || other.projectCode == projectCode)&&(identical(other.projectName, projectName) || other.projectName == projectName)&&(identical(other.occurredAt, occurredAt) || other.occurredAt == occurredAt));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,actor,division,action,target,projectName,occurredAt);
+    return Object.hash(runtimeType,id,type,actor,division,action,target,projectCode,projectName,occurredAt);
 }
 
 @override
 String toString() {
-    return 'ActivityModel(id: $id, actor: $actor, division: $division, action: $action, target: $target, projectName: $projectName, occurredAt: $occurredAt)';
+    return 'ActivityModel(id: $id, type: $type, actor: $actor, division: $division, action: $action, target: $target, projectCode: $projectCode, projectName: $projectName, occurredAt: $occurredAt)';
 }
 
 
@@ -255,7 +259,7 @@ abstract mixin class _$ActivityModelCopyWith<$Res> implements $ActivityModelCopy
   factory _$ActivityModelCopyWith(_ActivityModel value, $Res Function(_ActivityModel) _then) = __$ActivityModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String actor, String division, String action, String target, String projectName, DateTime occurredAt
+ String id, String type, String actor, String division, String action, String target, String projectCode, String projectName, DateTime occurredAt
 });
 
 
@@ -272,13 +276,15 @@ class __$ActivityModelCopyWithImpl<$Res>
 
 /// Create a copy of ActivityModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? actor = null,Object? division = null,Object? action = null,Object? target = null,Object? projectName = null,Object? occurredAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? type = null,Object? actor = null,Object? division = null,Object? action = null,Object? target = null,Object? projectCode = null,Object? projectName = null,Object? occurredAt = null,}) {
   return _then(_ActivityModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,actor: null == actor ? _self.actor : actor // ignore: cast_nullable_to_non_nullable
 as String,division: null == division ? _self.division : division // ignore: cast_nullable_to_non_nullable
 as String,action: null == action ? _self.action : action // ignore: cast_nullable_to_non_nullable
 as String,target: null == target ? _self.target : target // ignore: cast_nullable_to_non_nullable
+as String,projectCode: null == projectCode ? _self.projectCode : projectCode // ignore: cast_nullable_to_non_nullable
 as String,projectName: null == projectName ? _self.projectName : projectName // ignore: cast_nullable_to_non_nullable
 as String,occurredAt: null == occurredAt ? _self.occurredAt : occurredAt // ignore: cast_nullable_to_non_nullable
 as DateTime,

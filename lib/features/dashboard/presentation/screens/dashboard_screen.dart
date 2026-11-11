@@ -129,7 +129,7 @@ class _DashboardContent extends StatelessWidget {
                   project: project,
                   onTap: () => context.pushNamed(
                     AppRoutes.projectTracking,
-                    pathParameters: {'projectId': project.id},
+                    pathParameters: {'projectCode': project.code},
                   ),
                 );
               },

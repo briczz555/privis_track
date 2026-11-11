@@ -19,7 +19,7 @@ sealed class ProjectStageModel with _$ProjectStageModel {
   }) = _ProjectStageModel;
 
   factory ProjectStageModel.fromDto(ProjectStageDto dto) => ProjectStageModel(
-    id: dto.id,
+    id: dto.stageNo,
     title: dto.title,
     isCompleted: dto.isCompleted,
     completedAt: switch (dto.completedAt) {

@@ -14,38 +14,43 @@ sealed class ProjectTrackingModel with _$ProjectTrackingModel {
 
   const factory ProjectTrackingModel({
     required String id,
+    required String code,
     required String name,
     required ClientInfoModel client,
     required ProjectStatus status,
     required int currentStage,
+    required int completedStages,
+    required int progressPercent,
     required List<ProjectStageModel> stages,
+    required DateTime updatedAt,
   }) = _ProjectTrackingModel;
 
   factory ProjectTrackingModel.fromDto(ProjectTrackingDto dto) =>
       ProjectTrackingModel(
         id: dto.id,
+        code: dto.code,
         name: dto.name,
         client: ClientInfoModel.fromDto(dto.client),
-        status: _statusFromApi(dto.status),
+        status: projectStatusFromApi(dto.status),
         currentStage: dto.currentStage,
+        completedStages: dto.completedStages,
+        progressPercent: dto.progressPercent,
         stages: dto.stages
             .map(ProjectStageModel.fromDto)
             .toList(growable: false),
+        updatedAt: DateTime.parse(dto.updatedAt),
       );
 
   ProjectTrackingEntity toEntity() => ProjectTrackingEntity(
     id: id,
+    code: code,
     name: name,
     client: client.toEntity(),
     status: status,
     currentStage: currentStage,
+    completedStages: completedStages,
+    progressPercent: progressPercent,
     stages: stages.map((stage) => stage.toEntity()).toList(growable: false),
+    updatedAt: updatedAt,
   );
 }
-
-ProjectStatus _statusFromApi(String value) => switch (value.toLowerCase()) {
-  'not started' => ProjectStatus.notStarted,
-  'on hold' => ProjectStatus.onHold,
-  'completed' => ProjectStatus.completed,
-  _ => ProjectStatus.inProgress,
-};

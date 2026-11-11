@@ -698,7 +698,7 @@ components:
     ProjectSummary:
       type: object
       required:
-        [id, code, name, client, status, current_stage, current_stage_title, completed_stages, progress_percent, document_count]
+        [id, code, name, client, status, current_stage, current_stage_title, completed_stages, progress_percent, document_count, updated_at]
       properties:
         id:
           type: string
@@ -797,7 +797,7 @@ components:
     ProjectDetail:
       type: object
       required:
-        [id, code, name, client, status, current_stage, completed_stages, progress_percent, stages]
+        [id, code, name, client, status, current_stage, current_stage_title, completed_stages, progress_percent, stages, updated_at]
       properties:
         id:
           type: string
@@ -816,6 +816,8 @@ components:
           type: integer
           minimum: 0
           maximum: 8
+        current_stage_title:
+          type: string
         completed_stages:
           type: integer
           minimum: 0

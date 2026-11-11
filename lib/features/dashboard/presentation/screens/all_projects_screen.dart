@@ -10,14 +10,13 @@ import '../../../../core/utils/error_message.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
-import '../../domain/entities/dashboard_entity.dart';
 import '../../domain/entities/project_entity.dart';
+import '../../domain/entities/project_list_entity.dart';
 import '../providers/dashboard_provider.dart';
 import '../widgets/project_card.dart';
 import '../widgets/project_filter_bar.dart';
 
-/// Daftar seluruh proyek (semua status) dengan filter, supaya proyek Selesai /
-/// Ditunda / Belum Mulai tetap bisa dibuka ke halaman project tracking.
+/// Daftar seluruh proyek (semua status) dengan filter.
 class AllProjectsScreen extends ConsumerStatefulWidget {
   const AllProjectsScreen({super.key});
 
@@ -28,14 +27,14 @@ class AllProjectsScreen extends ConsumerStatefulWidget {
 class _AllProjectsScreenState extends ConsumerState<AllProjectsScreen> {
   ProjectStatus? _selectedStatus;
 
-  Future<void> _refresh() => ref.read(dashboardProvider.notifier).refresh();
+  Future<void> _refresh() => ref.read(allProjectsProvider.notifier).refresh();
 
   @override
   Widget build(BuildContext context) {
-    final dashboard = ref.watch(dashboardProvider);
-    final data = dashboard.value;
+    final projects = ref.watch(allProjectsProvider);
+    final data = projects.value;
 
-    ref.listen(dashboardProvider, (previous, next) {
+    ref.listen(allProjectsProvider, (previous, next) {
       if (next.hasValue && next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(readableErrorMessage(next.error!))),
@@ -51,16 +50,16 @@ class _AllProjectsScreenState extends ConsumerState<AllProjectsScreen> {
             ? RefreshIndicator(
                 onRefresh: _refresh,
                 child: _AllProjectsContent(
-                  dashboard: data,
+                  data: data,
                   selectedStatus: _selectedStatus,
                   onStatusSelected: (status) =>
                       setState(() => _selectedStatus = status),
                 ),
               )
-            : dashboard.hasError
+            : projects.hasError
             ? AppErrorState(
                 title: 'Gagal memuat daftar proyek',
-                message: readableErrorMessage(dashboard.error!),
+                message: readableErrorMessage(projects.error!),
                 onRetry: _refresh,
               )
             : const AppLoadingState(message: 'Memuat daftar proyek...'),
@@ -71,12 +70,12 @@ class _AllProjectsScreenState extends ConsumerState<AllProjectsScreen> {
 
 class _AllProjectsContent extends StatelessWidget {
   const _AllProjectsContent({
-    required this.dashboard,
+    required this.data,
     required this.selectedStatus,
     required this.onStatusSelected,
   });
 
-  final DashboardEntity dashboard;
+  final ProjectListEntity data;
   final ProjectStatus? selectedStatus;
   final ValueChanged<ProjectStatus?> onStatusSelected;
 
@@ -88,7 +87,7 @@ class _AllProjectsContent extends StatelessWidget {
   };
 
   List<ProjectEntity> _visibleProjects() {
-    final sorted = [...dashboard.projects]
+    final sorted = [...data.projects]
       ..sort((a, b) {
         final byStatus = _statusPriority(a.status)
             .compareTo(_statusPriority(b.status));
@@ -105,15 +104,13 @@ class _AllProjectsContent extends StatelessWidget {
 
   Map<ProjectStatus, int> _countsByStatus() => {
     for (final status in ProjectStatus.values)
-      status: dashboard.projects
-          .where((project) => project.status == status)
-          .length,
+      status: data.projects.where((project) => project.status == status).length,
   };
 
   @override
   Widget build(BuildContext context) {
     final projects = _visibleProjects();
-    final total = dashboard.projects.length;
+    final total = data.total;
     final selected = selectedStatus;
 
     return CustomScrollView(
@@ -173,7 +170,7 @@ class _AllProjectsContent extends StatelessWidget {
                   project: project,
                   onTap: () => context.pushNamed(
                     AppRoutes.projectTracking,
-                    pathParameters: {'projectId': project.id},
+                    pathParameters: {'projectCode': project.code},
                   ),
                 );
               },

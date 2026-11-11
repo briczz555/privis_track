@@ -8,14 +8,9 @@ part of 'project_tracking_provider.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Composition root fitur: satu instance repository dipakai bersama oleh
-/// semua usecase. Fase 2 cukup menyisipkan `ref.watch(dioProvider)` di sini.
 
 @ProviderFor(projectTrackingRepository)
 final projectTrackingRepositoryProvider = ProjectTrackingRepositoryProvider._();
-
-/// Composition root fitur: satu instance repository dipakai bersama oleh
-/// semua usecase. Fase 2 cukup menyisipkan `ref.watch(dioProvider)` di sini.
 
 final class ProjectTrackingRepositoryProvider
     extends
@@ -25,8 +20,6 @@ final class ProjectTrackingRepositoryProvider
           ProjectTrackingRepository
         >
     with $Provider<ProjectTrackingRepository> {
-  /// Composition root fitur: satu instance repository dipakai bersama oleh
-  /// semua usecase. Fase 2 cukup menyisipkan `ref.watch(dioProvider)` di sini.
   ProjectTrackingRepositoryProvider._()
     : super(
         from: null,
@@ -62,7 +55,7 @@ final class ProjectTrackingRepositoryProvider
 }
 
 String _$projectTrackingRepositoryHash() =>
-    r'f6d0de64a74436b57a9cc155a8e3e602e568626c';
+    r'ca418990d5444393e47abe4d99f3f2110d82160a';
 
 @ProviderFor(getProjectTrackingUsecase)
 final getProjectTrackingUsecaseProvider = GetProjectTrackingUsecaseProvider._();
@@ -112,55 +105,6 @@ final class GetProjectTrackingUsecaseProvider
 String _$getProjectTrackingUsecaseHash() =>
     r'5143743f2d6759de0c5d46f0099005b089fc162f';
 
-@ProviderFor(uploadStageDocumentUsecase)
-final uploadStageDocumentUsecaseProvider =
-    UploadStageDocumentUsecaseProvider._();
-
-final class UploadStageDocumentUsecaseProvider
-    extends
-        $FunctionalProvider<
-          UploadStageDocumentUsecase,
-          UploadStageDocumentUsecase,
-          UploadStageDocumentUsecase
-        >
-    with $Provider<UploadStageDocumentUsecase> {
-  UploadStageDocumentUsecaseProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'uploadStageDocumentUsecaseProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$uploadStageDocumentUsecaseHash();
-
-  @$internal
-  @override
-  $ProviderElement<UploadStageDocumentUsecase> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
-
-  @override
-  UploadStageDocumentUsecase create(Ref ref) {
-    return uploadStageDocumentUsecase(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UploadStageDocumentUsecase value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<UploadStageDocumentUsecase>(value),
-    );
-  }
-}
-
-String _$uploadStageDocumentUsecaseHash() =>
-    r'946687e53337dc94410fc09e4cdab8c09cccea34';
-
 @ProviderFor(ProjectTrackingNotifier)
 final projectTrackingProvider = ProjectTrackingNotifierFamily._();
 
@@ -205,7 +149,7 @@ final class ProjectTrackingNotifierProvider
 }
 
 String _$projectTrackingNotifierHash() =>
-    r'658e9e2d52f445c892ebc267cfaac8c50a28a644';
+    r'2b7a0f121eee5669a3cd26f50f737f06b2881bf4';
 
 final class ProjectTrackingNotifierFamily extends $Family
     with
@@ -225,8 +169,8 @@ final class ProjectTrackingNotifierFamily extends $Family
         isAutoDispose: true,
       );
 
-  ProjectTrackingNotifierProvider call(String projectId) =>
-      ProjectTrackingNotifierProvider._(argument: projectId, from: this);
+  ProjectTrackingNotifierProvider call(String projectCode) =>
+      ProjectTrackingNotifierProvider._(argument: projectCode, from: this);
 
   @override
   String toString() => r'projectTrackingProvider';
@@ -235,9 +179,9 @@ final class ProjectTrackingNotifierFamily extends $Family
 abstract class _$ProjectTrackingNotifier
     extends $AsyncNotifier<ProjectTrackingEntity> {
   late final _$args = ref.$arg as String;
-  String get projectId => _$args;
+  String get projectCode => _$args;
 
-  FutureOr<ProjectTrackingEntity> build(String projectId);
+  FutureOr<ProjectTrackingEntity> build(String projectCode);
   @$mustCallSuper
   @override
   WhenComplete runBuild() {

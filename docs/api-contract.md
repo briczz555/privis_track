@@ -239,6 +239,7 @@ Contoh: `/projects/PRJ-001`. Respons `ProjectDetail` (8 tahap + dokumen di-embed
   },
   "status": "in_progress",
   "current_stage": 4,
+  "current_stage_title": "Development",
   "completed_stages": 3,
   "progress_percent": 38,
   "stages": [
@@ -260,7 +261,8 @@ Contoh: `/projects/PRJ-001`. Respons `ProjectDetail` (8 tahap + dokumen di-embed
         }
       ]
     }
-  ]
+  ],
+  "updated_at": "2026-11-05T10:12:00Z"
 }
 ```
 

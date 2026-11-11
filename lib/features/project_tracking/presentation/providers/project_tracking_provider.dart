@@ -4,21 +4,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/network/dio_provider.dart';
 import '../../data/datasources/project_tracking_remote_data_source.dart';
 import '../../data/repositories/project_tracking_repository_impl.dart';
 import '../../domain/entities/project_tracking_entity.dart';
-import '../../domain/entities/stage_document_entity.dart';
 import '../../domain/repositories/project_tracking_repository.dart';
 import '../../domain/usecases/get_project_tracking_usecase.dart';
-import '../../domain/usecases/upload_stage_document_usecase.dart';
 
 part 'project_tracking_provider.g.dart';
 
-/// Composition root fitur: satu instance repository dipakai bersama oleh
-/// semua usecase. Fase 2 cukup menyisipkan `ref.watch(dioProvider)` di sini.
 @riverpod
 ProjectTrackingRepository projectTrackingRepository(Ref ref) {
-  return ProjectTrackingRepositoryImpl(const ProjectTrackingRemoteDataSource());
+  return ProjectTrackingRepositoryImpl(
+    ProjectTrackingRemoteDataSource(ref.watch(dioProvider)),
+  );
 }
 
 @riverpod
@@ -29,38 +28,18 @@ GetProjectTrackingUsecase getProjectTrackingUsecase(Ref ref) {
 }
 
 @riverpod
-UploadStageDocumentUsecase uploadStageDocumentUsecase(Ref ref) {
-  return UploadStageDocumentUsecase(
-    ref.watch(projectTrackingRepositoryProvider),
-  );
-}
-
-@riverpod
 class ProjectTrackingNotifier extends _$ProjectTrackingNotifier {
   @override
-  Future<ProjectTrackingEntity> build(String projectId) {
-    return ref.watch(getProjectTrackingUsecaseProvider).call(projectId);
+  Future<ProjectTrackingEntity> build(String projectCode) {
+    return ref.watch(getProjectTrackingUsecaseProvider).call(projectCode);
   }
 
-  /// Mock upload: menambahkan dokumen hasil "upload" ke tahap terkait tanpa
-  /// memuat ulang seluruh timeline.
-  Future<StageDocumentEntity> uploadDocument({required int stageId}) async {
-    final stage = state.value?.stageById(stageId);
-    final fileName = 'Lampiran ${(stage?.documentCount ?? 0) + 1}.pdf';
-
-    final document = await ref
-        .read(uploadStageDocumentUsecaseProvider)
-        .call(projectId: projectId, stageId: stageId, fileName: fileName);
-
-    if (ref.mounted) {
-      final current = state.value;
-      if (current != null) {
-        state = AsyncData(
-          current.addDocument(stageId: stageId, document: document),
-        );
-      }
-    }
-
-    return document;
+  Future<void> refresh() async {
+    final usecase = ref.read(getProjectTrackingUsecaseProvider);
+    final result = await AsyncValue.guard<ProjectTrackingEntity>(
+      () => usecase.call(projectCode),
+    );
+    if (!ref.mounted) return;
+    state = result;
   }
 }

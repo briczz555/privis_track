@@ -1,39 +1,115 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:privis_track/core/constants/project_status.dart';
 import 'package:privis_track/features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import 'package:privis_track/features/dashboard/data/repositories/dashboard_repository_impl.dart';
-import 'package:privis_track/core/constants/project_status.dart';
+
+class _FakeDashboardDataSource implements IDashboardRemoteDataSource {
+  _FakeDashboardDataSource({required this.dashboard, required this.projects});
+
+  final Map<String, dynamic> dashboard;
+  final Map<String, dynamic> projects;
+
+  @override
+  Future<Map<String, dynamic>> fetchDashboard() async => dashboard;
+
+  @override
+  Future<Map<String, dynamic>> fetchProjects({
+    int page = 1,
+    int limit = 100,
+    ProjectStatus? status,
+    String? search,
+  }) async => projects;
+}
+
+Map<String, dynamic> _projectJson(String code) => {
+  'id': 'uuid-$code',
+  'code': code,
+  'name': 'E-Commerce App',
+  'client': {'id': 'client-uuid', 'name': 'PT. ABC Retail'},
+  'status': 'in_progress',
+  'current_stage': 4,
+  'current_stage_title': 'Development',
+  'completed_stages': 3,
+  'progress_percent': 38,
+  'document_count': 7,
+  'due_date': '2026-11-20',
+  'updated_at': '2026-11-10T10:12:00.000Z',
+};
+
+Map<String, dynamic> _dashboardJson() => {
+  'generated_at': '2026-11-11T00:00:00.000Z',
+  'total_projects': 3,
+  'portfolio': [
+    {'status': 'in_progress', 'count': 1, 'percentage': 33.3},
+    {'status': 'on_hold', 'count': 1, 'percentage': 33.3},
+    {'status': 'completed', 'count': 1, 'percentage': 33.4},
+  ],
+  'active_projects': [_projectJson('PRJ-001')],
+  'activities': [
+    {
+      'id': 'activity-1',
+      'type': 'document_uploaded',
+      'actor': {'id': 'u-1', 'name': 'Finance', 'division': 'Finance'},
+      'action': 'mengunggah',
+      'target': 'BAST 1',
+      'project': {
+        'id': 'uuid-PRJ-001',
+        'code': 'PRJ-001',
+        'name': 'E-Commerce App',
+      },
+      'created_at': '2026-11-11T00:00:00.000Z',
+    },
+  ],
+};
+
+Map<String, dynamic> _projectsJson() => {
+  'data': [_projectJson('PRJ-001')],
+  'meta': {'page': 1, 'limit': 100, 'total': 1, 'total_pages': 1},
+};
 
 void main() {
-  test('repository memetakan payload dummy menjadi entity domain', () async {
-    final repository = DashboardRepositoryImpl(
-      const DashboardRemoteDataSource(latency: Duration.zero),
-    );
+  final repository = DashboardRepositoryImpl(
+    _FakeDashboardDataSource(
+      dashboard: _dashboardJson(),
+      projects: _projectsJson(),
+    ),
+  );
 
+  test('memetakan dashboard API ke entity', () async {
     final dashboard = await repository.getDashboard();
 
-    expect(dashboard.totalProjects, 8);
-    expect(dashboard.activeProjects, hasLength(4));
-    expect(dashboard.portfolioByStatus[ProjectStatus.inProgress], 4);
-    expect(dashboard.portfolioByStatus[ProjectStatus.completed], 2);
+    expect(dashboard.totalProjects, 3);
+    expect(dashboard.portfolio, hasLength(3));
+    expect(dashboard.portfolioByStatus[ProjectStatus.inProgress], 1);
     expect(dashboard.portfolioByStatus[ProjectStatus.onHold], 1);
-    expect(dashboard.portfolioByStatus[ProjectStatus.notStarted], 1);
+    expect(dashboard.portfolioByStatus[ProjectStatus.completed], 1);
 
-    final ecommerce = dashboard.projects.firstWhere(
-      (project) => project.id == 'PRJ-001',
-    );
-    expect(ecommerce.name, 'E-Commerce App');
-    expect(ecommerce.client, 'PT. ABC Retail');
-    expect(ecommerce.status, ProjectStatus.inProgress);
-    expect(ecommerce.currentStageTitle, 'Development');
-    expect(ecommerce.progressPercent, 50);
-    expect(ecommerce.documentCount, 7);
-    expect(ecommerce.dueDate, DateTime(2026, 11, 20));
+    expect(dashboard.activeProjects, hasLength(1));
+    final project = dashboard.activeProjects.first;
+    expect(project.code, 'PRJ-001');
+    expect(project.client, 'PT. ABC Retail');
+    expect(project.completedStages, 3);
+    expect(project.progressPercent, 38);
+    expect(project.progress, closeTo(0.38, 0.001));
+    expect(project.documentCount, 7);
+    expect(project.dueDate, DateTime(2026, 11, 20));
 
-    expect(dashboard.activities, hasLength(6));
-    expect(dashboard.activities.first.actor, 'Rina');
-    expect(
-      dashboard.activities.first.occurredAt.isBefore(DateTime.now()),
-      isTrue,
-    );
+    expect(dashboard.activities, hasLength(1));
+    final activity = dashboard.activities.first;
+    expect(activity.type, 'document_uploaded');
+    expect(activity.actor, 'Finance');
+    expect(activity.division, 'Finance');
+    expect(activity.projectCode, 'PRJ-001');
+  });
+
+  test('memetakan daftar proyek dan metadata pagination', () async {
+    final list = await repository.getProjects();
+
+    expect(list.projects, hasLength(1));
+    expect(list.page, 1);
+    expect(list.limit, 100);
+    expect(list.total, 1);
+    expect(list.totalPages, 1);
+    expect(list.projects.first.status, ProjectStatus.inProgress);
   });
 }

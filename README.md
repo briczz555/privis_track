@@ -16,6 +16,7 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
 - **Tambah/Edit Proyek** (`/projects/new`, `/projects/:projectCode/edit`, admin/PM):
   kode otomatis, 8 tahap otomatis, tanggal mulai/tenggat, dan data klien.
   Klien bersifat shared; perubahan kontak berlaku untuk semua proyek klien itu.
+  Form ini juga dipakai untuk memasukkan proyek lama; tidak ada hapus/arsip proyek.
 - **Pengaturan**: profil user, **ganti password**, dan logout.
 - **Kelola User** (`/settings/users`, admin): daftar akun, tambah user, ubah
   nama/role/divisi, aktif/nonaktifkan, dan reset password.

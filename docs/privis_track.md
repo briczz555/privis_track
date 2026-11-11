@@ -15,6 +15,8 @@
 Aplikasi internal (*in-house tool*) yang dirancang khusus untuk tim *software house* guna melacak progres proyek klien melalui 8 tahap *Software Development Life Cycle* (SDLC).
 Aplikasi ini berfungsi sebagai **pusat arsip dokumen** agar seluruh anggota tim lintas divisi (PM, Developer, Finance) memiliki transparansi status proyek secara *real-time*.
 
+Aplikasi juga dipakai untuk **mendokumentasikan proyek lama yang sudah selesai**, bukan hanya proyek baru. Karena itu proyek bersifat arsip permanen: tidak ada fitur hapus/arsip proyek.
+
 ## 2. Project Scope & Phasing
 
 ### 2.1. Fase 1 — ✅ Selesai
@@ -121,6 +123,8 @@ Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
 - Klien bersifat **shared**: perubahan kontak berlaku untuk semua proyek milik klien yang sama (ditampilkan sebagai catatan di form).
 - Hanya admin/PM yang melihat tombol tambah/edit; backend menolak role lain dengan `403`.
 - Setelah simpan, dashboard, daftar proyek, dan detail proyek disegarkan.
+- Form yang sama dipakai untuk **memasukkan proyek lama** (tanggal lampau). Progres tahap dapat ditandai dari timeline setelah proyek dibuat.
+- Tidak ada hapus/arsip proyek: seluruh proyek disimpan permanen sebagai arsip.
 
 ---
 
@@ -296,6 +300,7 @@ snapshot baru selesai ditulis).
 - Realtime websocket.
 - Antrean aksi tulis offline (upload/PATCH saat tanpa jaringan).
 - Audit log aksi admin.
+- Hapus/arsip proyek: aplikasi bersifat arsip permanen; proyek lama tetap disimpan.
 - Restore dokumen yang sudah dihapus.
 
 ## 8. Roadmap & Definition of Done

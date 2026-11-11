@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -52,6 +53,15 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
   bool _isUploading = false;
   String? _downloadingId;
   String? _deletingId;
+  String? _feedback;
+  bool _feedbackIsError = false;
+  Timer? _feedbackTimer;
+
+  @override
+  void dispose() {
+    _feedbackTimer?.cancel();
+    super.dispose();
+  }
 
   Future<void> _upload() async {
     if (_isUploading) return;
@@ -67,11 +77,10 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
 
     if (!mounted) return;
     if (bytes.length > _maxUploadBytes) {
-      _showMessage('Ukuran file maksimum 20 MB.');
+      _showMessage('Ukuran file maksimum 20 MB.', isError: true);
       return;
     }
 
-    final messenger = ScaffoldMessenger.of(context);
     setState(() => _isUploading = true);
 
     try {
@@ -84,14 +93,10 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
           );
 
       if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text('${document.name} berhasil diunggah.')),
-      );
+      _showMessage('${document.name} berhasil diunggah.');
     } catch (error) {
       if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text(readableErrorMessage(error))),
-      );
+      _showMessage(readableErrorMessage(error), isError: true);
     } finally {
       if (mounted) setState(() => _isUploading = false);
     }
@@ -100,7 +105,6 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
   Future<void> _download(StageDocumentEntity document) async {
     if (_downloadingId != null) return;
 
-    final messenger = ScaffoldMessenger.of(context);
     setState(() => _downloadingId = document.id);
 
     try {
@@ -115,29 +119,37 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
 
       final result = await OpenFilex.open(file.path);
       if (result.type != ResultType.done) {
-        messenger.showSnackBar(
-          SnackBar(
-            content: Text(
-              result.message.isEmpty
-                  ? 'Tidak ada aplikasi untuk membuka file.'
-                  : result.message,
-            ),
-          ),
+        if (!mounted) return;
+        _showMessage(
+          result.message.isEmpty
+              ? 'Tidak ada aplikasi untuk membuka file.'
+              : result.message,
+          isError: true,
         );
       }
     } catch (error) {
       if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text(readableErrorMessage(error))),
-      );
+      _showMessage(readableErrorMessage(error), isError: true);
     } finally {
       if (mounted) setState(() => _downloadingId = null);
     }
   }
 
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+  /// Umpan balik ditampilkan inline di dalam sheet. SnackBar biasa tertutup
+  /// modal bottom sheet karena dirender oleh Scaffold di belakangnya.
+  void _showMessage(String message, {bool isError = false}) {
+    _feedbackTimer?.cancel();
+
+    if (!mounted) return;
+    setState(() {
+      _feedback = message;
+      _feedbackIsError = isError;
+    });
+
+    _feedbackTimer = Timer(const Duration(seconds: 6), () {
+      if (!mounted) return;
+      setState(() => _feedback = null);
+    });
   }
 
   Future<void> _delete(StageDocumentEntity document) async {
@@ -171,7 +183,6 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
 
     if (!mounted || confirmed != true) return;
 
-    final messenger = ScaffoldMessenger.of(context);
     setState(() => _deletingId = document.id);
 
     try {
@@ -180,14 +191,10 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
           .deleteDocument(stageId: widget.stageId, documentId: document.id);
 
       if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text('${document.name} berhasil dihapus.')),
-      );
+      _showMessage('${document.name} berhasil dihapus.');
     } catch (error) {
       if (!mounted) return;
-      messenger.showSnackBar(
-        SnackBar(content: Text(readableErrorMessage(error))),
-      );
+      _showMessage(readableErrorMessage(error), isError: true);
     } finally {
       if (mounted) setState(() => _deletingId = null);
     }
@@ -282,6 +289,10 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
+            if (_feedback != null) ...[
+              _FeedbackBanner(message: _feedback!, isError: _feedbackIsError),
+              const SizedBox(height: AppSpacing.md),
+            ],
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
@@ -338,6 +349,57 @@ class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FeedbackBanner extends StatelessWidget {
+  const _FeedbackBanner({required this.message, required this.isError});
+
+  final String message;
+  final bool isError;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = isError ? theme.colorScheme.error : AppColors.success;
+
+    return Semantics(
+      liveRegion: true,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          border: Border.all(color: color.withValues(alpha: 0.35)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              isError
+                  ? Icons.error_outline_rounded
+                  : Icons.check_circle_outline_rounded,
+              size: 18,
+              color: color,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                message,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: color,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
         ),

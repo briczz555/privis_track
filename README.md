@@ -16,8 +16,7 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
 - **Pengaturan**: profil user, **ganti password**, dan logout.
 - Data diambil dari backend `privis_track_api` di VPS.
 
-Belum tersedia: manajemen user (tambah/nonaktifkan akun) dan hardening backend
-(rate limit login, Swagger runtime, validasi magic-bytes).
+Belum tersedia: manajemen user (tambah/nonaktifkan akun, reset password oleh admin).
 
 ## Backend
 

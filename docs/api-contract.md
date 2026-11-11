@@ -1,6 +1,6 @@
 # PriVis Track — API Contract (Draft Fase 2)
 
-**Status:** Draft — auth, endpoint baca, dokumen (upload/download/hapus), PATCH proyek/tahap, dan ganti password sudah diimplementasikan di `privis_track_api` (11 Nov 2026).
+**Status:** Draft — auth, endpoint baca, dokumen (upload/download/hapus), PATCH proyek/tahap, ganti password, serta hardening (rate limit, Swagger, magic-bytes, akun layanan MinIO) sudah diimplementasikan di `privis_track_api` (11 Nov 2026).
 **Versi API:** `v1`
 **Kontrak mesin:** [`openapi.yaml`](openapi.yaml) (OpenAPI 3.0.3)
 
@@ -13,7 +13,7 @@
 | `GET /dashboard`, `GET /projects`, `GET /projects/{code}`, `GET /activities` | ✅ |
 | `PATCH /projects/{code}`, `PATCH .../stages/{stage_no}` | ✅ |
 | Upload/download/hapus dokumen | ✅ |
-| Swagger runtime & rate limiting | ⏳ |
+| Swagger runtime (`/docs`) & rate limit aplikasi | ✅ |
 
 ## Keputusan desain (disetujui)
 
@@ -339,16 +339,19 @@ Soft delete (`deleted_at`), role `admin`/`pm` (finance untuk dokumen finance bil
 ## 7. Upload & download
 
 - Maksimum 20 MB (`MAX_UPLOAD_MB`), divalidasi juga di NPM (`client_max_body_size 25m`) dan Cloudflare (100 MB free plan).
-- MIME divalidasi dari magic bytes; ekstensi `.fig` dikecualikan dan divalidasi lewat whitelist ekstensi.
+- Signature file divalidasi dari magic bytes untuk semua tipe: PDF (`%PDF-`), PNG/JPEG, DOC/XLS (container OLE), DOCX/XLSX/FIG (container ZIP). CSV ditolak bila mengandung byte NUL pada bagian awal.
+- Isi file yang tidak cocok dengan ekstensinya → `415 unsupported_media_type`.
 - Nama file disanitasi; object key memakai UUID; bucket privat.
 - Download melalui API (stream), bukan signed URL.
 - Opsional lanjutan: antivirus scan sebelum dokumen dapat diunduh.
 
 ## 8. Rate limit, proxy, cache
 
-- Cloudflare WAF: `/v1/auth/login` maks 5/menit/IP; `/v1/*` 120/menit/IP (opsional).
+- Rate limit di aplikasi: 120 request/menit/IP untuk seluruh API dan 5 percobaan login/menit/IP.
+- Cloudflare WAF (opsional, lapisan tambahan): `/v1/auth/login` 5/menit/IP; `/v1/*` 120/menit/IP.
 - Backend memakai `CF-Connecting-IP` (fallback `X-Forwarded-For`) dan `trust proxy`.
-- Respons 429 menyertakan `Retry-After`.
+- Respons 429 memakai kode `rate_limited` dan menyertakan `Retry-After`.
+- Dokumentasi interaktif tersedia di `/docs` (OpenAPI di `/docs-json`); matikan dengan `SWAGGER_ENABLED=false`.
 - Cache bypass Cloudflare untuk `/v1/*`; auth & dashboard `no-store`.
 
 ## 9. Perubahan yang diperlukan di aplikasi (saat wiring)

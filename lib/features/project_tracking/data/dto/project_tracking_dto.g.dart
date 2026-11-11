@@ -20,6 +20,8 @@ _ProjectTrackingDto _$ProjectTrackingDtoFromJson(Map<String, dynamic> json) =>
       stages: (json['stages'] as List<dynamic>)
           .map((e) => ProjectStageDto.fromJson(e as Map<String, dynamic>))
           .toList(),
+      startDate: json['start_date'] as String?,
+      dueDate: json['due_date'] as String?,
       updatedAt: json['updated_at'] as String,
     );
 
@@ -35,5 +37,7 @@ Map<String, dynamic> _$ProjectTrackingDtoToJson(_ProjectTrackingDto instance) =>
       'completed_stages': instance.completedStages,
       'progress_percent': instance.progressPercent,
       'stages': instance.stages,
+      'start_date': instance.startDate,
+      'due_date': instance.dueDate,
       'updated_at': instance.updatedAt,
     };

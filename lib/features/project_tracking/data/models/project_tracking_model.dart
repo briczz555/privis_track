@@ -22,24 +22,27 @@ sealed class ProjectTrackingModel with _$ProjectTrackingModel {
     required int completedStages,
     required int progressPercent,
     required List<ProjectStageModel> stages,
+    DateTime? startDate,
+    DateTime? dueDate,
     required DateTime updatedAt,
   }) = _ProjectTrackingModel;
 
-  factory ProjectTrackingModel.fromDto(ProjectTrackingDto dto) =>
-      ProjectTrackingModel(
-        id: dto.id,
-        code: dto.code,
-        name: dto.name,
-        client: ClientInfoModel.fromDto(dto.client),
-        status: projectStatusFromApi(dto.status),
-        currentStage: dto.currentStage,
-        completedStages: dto.completedStages,
-        progressPercent: dto.progressPercent,
-        stages: dto.stages
-            .map(ProjectStageModel.fromDto)
-            .toList(growable: false),
-        updatedAt: DateTime.parse(dto.updatedAt),
-      );
+  factory ProjectTrackingModel.fromDto(
+    ProjectTrackingDto dto,
+  ) => ProjectTrackingModel(
+    id: dto.id,
+    code: dto.code,
+    name: dto.name,
+    client: ClientInfoModel.fromDto(dto.client),
+    status: projectStatusFromApi(dto.status),
+    currentStage: dto.currentStage,
+    completedStages: dto.completedStages,
+    progressPercent: dto.progressPercent,
+    stages: dto.stages.map(ProjectStageModel.fromDto).toList(growable: false),
+    startDate: dto.startDate == null ? null : DateTime.parse(dto.startDate!),
+    dueDate: dto.dueDate == null ? null : DateTime.parse(dto.dueDate!),
+    updatedAt: DateTime.parse(dto.updatedAt),
+  );
 
   ProjectTrackingEntity toEntity() => ProjectTrackingEntity(
     id: id,
@@ -51,6 +54,8 @@ sealed class ProjectTrackingModel with _$ProjectTrackingModel {
     completedStages: completedStages,
     progressPercent: progressPercent,
     stages: stages.map((stage) => stage.toEntity()).toList(growable: false),
+    startDate: startDate,
+    dueDate: dueDate,
     updatedAt: updatedAt,
   );
 }

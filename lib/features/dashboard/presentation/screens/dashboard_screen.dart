@@ -11,6 +11,9 @@ import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
 import '../../../../core/widgets/offline_banner.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../auth/domain/entities/auth_role.dart';
+import '../../../auth/presentation/providers/auth_controller.dart';
+import '../../../project_management/presentation/project_form_launcher.dart';
 import '../../domain/entities/dashboard_entity.dart';
 import '../providers/dashboard_provider.dart';
 import '../widgets/activity_feed_tile.dart';
@@ -28,6 +31,8 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboard = ref.watch(dashboardProvider);
     final data = dashboard.value;
+    final role = ref.watch(authControllerProvider).value?.user.role;
+    final canManage = role == AuthRole.admin || role == AuthRole.pm;
 
     // Saat refresh gagal, data lama tetap ditampilkan — beri tahu user lewat
     // SnackBar supaya kegagalan tidak terlihat seperti data terbaru.
@@ -40,6 +45,13 @@ class DashboardScreen extends ConsumerWidget {
     });
 
     return Scaffold(
+      floatingActionButton: canManage
+          ? FloatingActionButton.extended(
+              onPressed: () => startCreateProject(context, ref),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Proyek Baru'),
+            )
+          : null,
       body: SafeArea(
         child: switch (data) {
           final data? => RefreshIndicator(
@@ -194,7 +206,7 @@ class _DashboardContent extends StatelessWidget {
               ),
             ),
           ),
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xl)),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
       ],
     );
   }

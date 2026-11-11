@@ -52,6 +52,7 @@ Fitur berikut lahir dari kebutuhan operasional dan sudah diimplementasikan:
 | Upload/download/hapus dokumen ke MinIO (maks. 20 MB) | Melengkapi *document vault* agar benar-benar menjadi arsip |
 | PATCH tahap & status proyek (admin/PM) | Progres harus bisa diperbarui dari aplikasi |
 | Ganti password + manajemen user | Akun seed tidak boleh dipakai permanen |
+| Buat/edit proyek & kontak klien | Proyek baru dan koreksi data klien tidak boleh bergantung pada seed |
 | Rate limit, Swagger `/docs`, validasi magic-bytes, akun layanan MinIO | Kesiapan produksi |
 
 ### 2.4. Fase 3 — ⏳ Berikutnya
@@ -112,6 +113,15 @@ Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
 - Cache dibersihkan saat login/logout; tidak ada antrean aksi tulis offline.
 - Rencana migrasi ke bulk sync saat data membesar ada di bagian 6.1.
 
+### 4.6. Manajemen Proyek (`lib/features/project_management/`, admin/PM)
+
+- **Tambah proyek** (`/projects/new`): nama, tanggal mulai, tenggat, pilih klien yang sudah ada atau buat klien baru (nama perusahaan, alamat, PIC, jabatan, WhatsApp).
+- Kode `PRJ-###` dibuat otomatis; 8 tahap SDLC langsung dibuat dengan status `not_started`; aktivitas `project_created` tercatat.
+- **Edit proyek** (`/projects/:projectCode/edit`): nama, tanggal, dan kontak klien. Status/tahap tetap lewat aksi di halaman tracking.
+- Klien bersifat **shared**: perubahan kontak berlaku untuk semua proyek milik klien yang sama (ditampilkan sebagai catatan di form).
+- Hanya admin/PM yang melihat tombol tambah/edit; backend menolak role lain dengan `403`.
+- Setelah simpan, dashboard, daftar proyek, dan detail proyek disegarkan.
+
 ---
 
 ## 5. Technical Specifications (Clean Architecture)
@@ -168,7 +178,7 @@ AI Developer atau tim *engineer* **harus** mematuhi aturan *hook* berikut:
 
 - Base URL produksi: `https://privis.briczz.my.id/v1`.
 - Kontrak lengkap: [`api-contract.md`](api-contract.md) dan [`openapi.yaml`](openapi.yaml); Swagger runtime di `/docs`.
-- Modul: `auth`, `users`, `projects`, `documents`, `dashboard`, `activities`, `health`.
+- Modul: `auth`, `users`, `clients`, `projects`, `documents`, `dashboard`, `activities`, `health`.
 - Auth: JWT access 15 menit + refresh token opaque (rotasi, hash di server).
 - Dokumen disimpan di MinIO privat; unduhan melalui stream API (bukan signed URL).
 - Semua endpoint selain health/login/refresh/logout memerlukan Bearer token.
@@ -300,6 +310,12 @@ snapshot baru selesai ditulis).
 - [x] Hardening: rate limit, Swagger, magic-bytes, akun layanan MinIO.
 - [x] Cache offline Drift + indikator data luring.
 - [x] Test dan dokumentasi cache offline (unit test fallback, integration test Drift di perangkat, migrasi `v1_to_v2.md`).
+
+### Pasca-Fase 2 — ✅ Gap operasional
+
+- [x] Buat proyek baru: kode otomatis, 8 tahap SDLC, tanggal, klien existing/baru, activity log.
+- [x] Edit nama/tanggal proyek dan kontak klien (klien shared).
+- [x] `GET /v1/clients` untuk dropdown klien.
 
 ### Fase 3 — Backlog
 

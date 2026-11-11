@@ -13,6 +13,7 @@ import '../../../../core/widgets/offline_banner.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../auth/domain/entities/auth_role.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
+import '../../../project_management/presentation/project_form_launcher.dart';
 import '../../domain/entities/project_stage_entity.dart';
 import '../../domain/entities/project_tracking_entity.dart';
 import '../providers/project_tracking_provider.dart';
@@ -131,6 +132,12 @@ class _ProjectTrackingScreenState extends ConsumerState<ProjectTrackingScreen> {
           ],
         ),
         actions: [
+          if (canEdit && project != null)
+            IconButton(
+              tooltip: 'Edit proyek',
+              onPressed: () => startEditProject(context, ref, project),
+              icon: const Icon(Icons.edit_outlined),
+            ),
           if (canEdit)
             PopupMenuButton<ProjectStatus>(
               tooltip: 'Ubah status proyek',

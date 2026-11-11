@@ -271,6 +271,26 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
+  /clients:
+    get:
+      tags: [Projects]
+      summary: Daftar klien yang sudah ada (dropdown proyek)
+      responses:
+        '200':
+          description: Daftar klien
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClientSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
   /projects:
     get:
       tags: [Projects]
@@ -296,6 +316,33 @@ paths:
                 $ref: '#/components/schemas/ProjectListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [Projects]
+      summary: Buat proyek baru beserta 8 tahap SDLC (pm/admin)
+      description: |
+        Isi salah satu `client_id` (klien existing) atau `client` (klien baru).
+        Kode PRJ-### dibuat otomatis; status awal not_started.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+      responses:
+        '201':
+          description: Proyek dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
 
   /projects/{project_code}:
     get:
@@ -316,7 +363,7 @@ paths:
           $ref: '#/components/responses/NotFound'
     patch:
       tags: [Projects]
-      summary: Ubah status / tahap aktif / due date proyek (pm/admin)
+      summary: Ubah nama/tanggal/status/klien proyek (pm/admin)
       parameters:
         - $ref: '#/components/parameters/ProjectCode'
       requestBody:
@@ -977,6 +1024,11 @@ components:
         document_count:
           type: integer
           example: 7
+        start_date:
+          type: string
+          format: date
+          nullable: true
+          example: '2026-10-01'
         due_date:
           type: string
           format: date
@@ -1074,6 +1126,14 @@ components:
           maxItems: 8
           items:
             $ref: '#/components/schemas/ProjectStage'
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
         updated_at:
           type: string
           format: date-time
@@ -1211,20 +1271,71 @@ components:
           items:
             $ref: '#/components/schemas/Activity'
 
+    ClientInput:
+      type: object
+      required: [name, address, contact_name, contact_role, phone]
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        address:
+          type: string
+          maxLength: 255
+        contact_name:
+          type: string
+          maxLength: 120
+        contact_role:
+          type: string
+          maxLength: 120
+        phone:
+          type: string
+          maxLength: 30
+
+    CreateProjectRequest:
+      type: object
+      required: [name]
+      description: Isi salah satu `client_id` (existing) atau `client` (baru).
+      properties:
+        name:
+          type: string
+          maxLength: 150
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        client_id:
+          type: string
+          format: uuid
+        client:
+          $ref: '#/components/schemas/ClientInput'
+
     ProjectUpdateRequest:
       type: object
       minProperties: 1
       properties:
+        name:
+          type: string
+          maxLength: 150
         status:
           $ref: '#/components/schemas/ProjectStatus'
         current_stage:
           type: integer
           minimum: 0
           maximum: 8
+        start_date:
+          type: string
+          format: date
+          nullable: true
         due_date:
           type: string
           format: date
           nullable: true
+        client:
+          $ref: '#/components/schemas/ClientInput'
 
     StageUpdateRequest:
       type: object

@@ -14,6 +14,7 @@
 | `PATCH /projects/{code}`, `PATCH .../stages/{stage_no}` | ✅ |
 | Upload/download/hapus dokumen | ✅ |
 | Manajemen user (admin) | ✅ |
+| Buat/edit proyek & kontak klien | ✅ |
 | Swagger runtime (`/docs`) & rate limit aplikasi | ✅ |
 
 ## Keputusan desain (disetujui)
@@ -78,7 +79,7 @@ Konfigurasi yang menyertai kontrak ini:
 | Role | Hak akses |
 |---|---|
 | `admin` | Semua endpoint, kelola user |
-| `pm` | Data proyek, ubah status/tahap, hapus dokumen |
+| `pm` | Data proyek, buat/edit proyek & klien, ubah status/tahap, hapus dokumen |
 | `developer` | Baca proyek/tahap/dokumen, unggah dokumen teknis |
 | `qa` | Baca proyek/tahap/dokumen, unggah dokumen QA/UAT |
 | `finance` | Baca proyek, unggah dokumen finance |
@@ -193,6 +194,44 @@ Batasan: `active_projects` maksimum 10 (urut `due_date` terdekat), `activities` 
 
 ### 6.3 Projects
 
+#### `GET /clients`
+
+Daftar klien yang sudah ada (`id`, `name`), urut nama. Dipakai untuk dropdown saat membuat proyek. Semua user terautentikasi.
+
+#### `POST /projects`
+
+Role `admin`/`pm`. Body:
+
+```json
+{
+  "name": "Aplikasi Baru",
+  "start_date": "2026-11-12",
+  "due_date": "2027-01-31",
+  "client_id": "a1b2..."
+}
+```
+
+atau buat klien baru sekaligus:
+
+```json
+{
+  "name": "Aplikasi Baru",
+  "client": {
+    "name": "PT Klien Baru",
+    "address": "Jl. Contoh No. 1",
+    "contact_name": "Dewi",
+    "contact_role": "Manager",
+    "phone": "+62 812-0000-0000"
+  }
+}
+```
+
+- `client_id` dan `client` tidak boleh diisi bersamaan.
+- Kode `PRJ-###` dibuat otomatis; 8 tahap SDLC langsung dibuat.
+- Status awal `not_started`, `current_stage` 0; `due_date` tidak boleh sebelum `start_date`.
+- Tercatat sebagai aktivitas `project_created`.
+- Respons `201` ProjectDetail.
+
 #### `GET /projects`
 
 Query: `status`, `search`, `client_id`, `page` (default 1), `limit` (default 20, max 100), `sort` (default `updated_at:desc`). Urutan wajib punya tiebreaker `id` agar pagination stabil.
@@ -218,6 +257,7 @@ Query: `status`, `search`, `client_id`, `page` (default 1), `limit` (default 20,
   "completed_stages": 3,
   "progress_percent": 38,
   "document_count": 7,
+  "start_date": "2026-10-01",
   "due_date": "2026-11-20",
   "updated_at": "2026-11-05T10:12:00Z"
 }
@@ -265,6 +305,8 @@ Contoh: `/projects/PRJ-001`. Respons `ProjectDetail` (8 tahap + dokumen di-embed
       ]
     }
   ],
+  "start_date": "2026-10-01",
+  "due_date": "2026-11-20",
   "updated_at": "2026-11-05T10:12:00Z"
 }
 ```
@@ -276,11 +318,24 @@ Dokumen yang sudah dihapus (`deleted_at` terisi) tidak boleh muncul di `document
 Role `pm`/`admin`. Body (semua opsional, minimal satu field):
 
 ```json
-{ "status": "on_hold", "current_stage": 4, "due_date": "2026-12-01" }
+{
+  "name": "E-Commerce App v2",
+  "start_date": "2026-10-01",
+  "due_date": "2026-12-01",
+  "client": {
+    "name": "PT. ABC Retail",
+    "address": "Jl. Jenderal Sudirman Kav. 52-53, Jakarta Selatan 12190",
+    "contact_name": "Dewi Lestari",
+    "contact_role": "IT Manager",
+    "phone": "+62 812-3456-7890"
+  }
+}
 ```
 
 - `status` mengubah status manual; tidak mengubah `completed_stages`.
 - `current_stage` hanya untuk override tampilan tahap aktif (0..8).
+- `start_date`/`due_date` boleh `null` untuk menghapus; `due_date` tidak boleh sebelum `start_date`.
+- Data `client` bersifat shared: perubahan berlaku untuk semua proyek milik klien tersebut.
 - Perubahan dicatat sebagai aktivitas `project_updated`.
 - Respons `200` ProjectSummary.
 

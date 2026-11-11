@@ -13,6 +13,9 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
   document vault dengan **upload, download, dan hapus** (PDF, DOC/DOCX, XLS/XLSX,
   CSV, PNG/JPG, FIG; maks. 20 MB), serta aksi PM/admin untuk menandai selesai
   tahap dan mengubah status proyek.
+- **Tambah/Edit Proyek** (`/projects/new`, `/projects/:projectCode/edit`, admin/PM):
+  kode otomatis, 8 tahap otomatis, tanggal mulai/tenggat, dan data klien.
+  Klien bersifat shared; perubahan kontak berlaku untuk semua proyek klien itu.
 - **Pengaturan**: profil user, **ganti password**, dan logout.
 - **Kelola User** (`/settings/users`, admin): daftar akun, tambah user, ubah
   nama/role/divisi, aktif/nonaktifkan, dan reset password.

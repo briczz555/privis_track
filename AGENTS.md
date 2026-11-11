@@ -63,6 +63,10 @@ Aturan yang tidak boleh dilanggar:
 - `features/user_management/` — halaman **Kelola User** (khusus admin): daftar user,
   tambah, ubah nama/role/divisi, aktif/nonaktifkan, dan reset password.
   Route: `/settings/users`.
+- `features/project_management/` — form **Tambah/Edit Proyek** (admin/PM): nama,
+  tanggal mulai/tenggat, pilih klien existing atau buat klien baru, edit kontak
+  klien. Route: `/projects/new`, `/projects/:projectCode/edit`.
+  Klien shared: perubahan kontak berlaku untuk semua proyek klien tersebut.
 
 Helper lintas fitur di `core/`: `constants/project_status.dart`,
 `constants/sdlc_stages.dart`, `extensions/project_status_style.dart`,

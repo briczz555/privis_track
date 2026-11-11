@@ -13,6 +13,9 @@ import 'package:privis_track/features/project_tracking/domain/entities/project_t
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_entity.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_type.dart';
 import 'package:privis_track/features/project_tracking/domain/repositories/project_tracking_repository.dart';
+import 'package:privis_track/features/project_management/domain/entities/client_form_entity.dart';
+import 'package:privis_track/features/project_management/domain/entities/client_option_entity.dart';
+import 'package:privis_track/features/project_management/domain/repositories/project_management_repository.dart';
 import 'package:privis_track/features/user_management/domain/entities/managed_user_entity.dart';
 import 'package:privis_track/features/user_management/domain/repositories/user_management_repository.dart';
 
@@ -207,6 +210,56 @@ class FakeUserManagementRepository implements UserManagementRepository {
     required String newPassword,
   }) async {
     resetCalls += 1;
+  }
+}
+
+class FakeProjectManagementRepository implements ProjectManagementRepository {
+  FakeProjectManagementRepository({
+    List<ClientOptionEntity>? clients,
+    this.createdCode = 'PRJ-009',
+  }) : clients = clients ?? const [];
+
+  final List<ClientOptionEntity> clients;
+  String createdCode;
+  int createCalls = 0;
+  int updateCalls = 0;
+  String? lastCreatedName;
+  ClientFormEntity? lastNewClient;
+  String? lastClientId;
+  String? lastUpdatedCode;
+  String? lastUpdatedName;
+  ClientFormEntity? lastUpdatedClient;
+
+  @override
+  Future<List<ClientOptionEntity>> getClients() async => clients;
+
+  @override
+  Future<String> createProject({
+    required String name,
+    DateTime? startDate,
+    DateTime? dueDate,
+    String? clientId,
+    ClientFormEntity? newClient,
+  }) async {
+    createCalls += 1;
+    lastCreatedName = name;
+    lastClientId = clientId;
+    lastNewClient = newClient;
+    return createdCode;
+  }
+
+  @override
+  Future<void> updateProject({
+    required String code,
+    required String name,
+    DateTime? startDate,
+    DateTime? dueDate,
+    required ClientFormEntity client,
+  }) async {
+    updateCalls += 1;
+    lastUpdatedCode = code;
+    lastUpdatedName = name;
+    lastUpdatedClient = client;
   }
 }
 

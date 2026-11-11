@@ -5,6 +5,8 @@ import '../../features/auth/presentation/screens/settings_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/dashboard/presentation/screens/all_projects_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../../features/project_management/presentation/screens/project_form_screen.dart';
+import '../../features/project_tracking/domain/entities/project_tracking_entity.dart';
 import '../../features/project_tracking/presentation/screens/project_tracking_screen.dart';
 import '../../features/user_management/presentation/screens/user_management_screen.dart';
 
@@ -18,6 +20,8 @@ abstract class AppRoutes {
   static const settings = 'settings';
   static const dashboard = 'dashboard';
   static const allProjects = 'all-projects';
+  static const projectCreate = 'project-create';
+  static const projectEdit = 'project-edit';
   static const projectTracking = 'project-tracking';
   static const userManagement = 'user-management';
 }
@@ -58,12 +62,29 @@ final List<GoRoute> appRoutes = [
     builder: (context, state) => const AllProjectsScreen(),
   ),
 
+  // ----- project_management -----
+  GoRoute(
+    path: '/projects/new',
+    name: AppRoutes.projectCreate,
+    builder: (context, state) => const ProjectFormScreen(),
+  ),
+
   // ----- project_tracking -----
   GoRoute(
     path: '/projects/:projectCode',
     name: AppRoutes.projectTracking,
     builder: (context, state) => ProjectTrackingScreen(
       projectCode: state.pathParameters['projectCode']!,
+    ),
+  ),
+  GoRoute(
+    path: '/projects/:projectCode/edit',
+    name: AppRoutes.projectEdit,
+    builder: (context, state) => ProjectFormScreen(
+      projectCode: state.pathParameters['projectCode']!,
+      initialProject: state.extra is ProjectTrackingEntity
+          ? state.extra as ProjectTrackingEntity
+          : null,
     ),
   ),
 ];

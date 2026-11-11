@@ -19,6 +19,8 @@ sealed class ProjectTrackingDto with _$ProjectTrackingDto {
     @JsonKey(name: 'completed_stages') required int completedStages,
     @JsonKey(name: 'progress_percent') required int progressPercent,
     required List<ProjectStageDto> stages,
+    @JsonKey(name: 'start_date') String? startDate,
+    @JsonKey(name: 'due_date') String? dueDate,
     @JsonKey(name: 'updated_at') required String updatedAt,
   }) = _ProjectTrackingDto;
 

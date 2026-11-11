@@ -12,6 +12,9 @@ import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
 import '../../../../core/widgets/offline_banner.dart';
+import '../../../auth/domain/entities/auth_role.dart';
+import '../../../auth/presentation/providers/auth_controller.dart';
+import '../../../project_management/presentation/project_form_launcher.dart';
 import '../../domain/entities/project_entity.dart';
 import '../../domain/entities/project_list_entity.dart';
 import '../providers/dashboard_provider.dart';
@@ -35,6 +38,8 @@ class _AllProjectsScreenState extends ConsumerState<AllProjectsScreen> {
   Widget build(BuildContext context) {
     final projects = ref.watch(allProjectsProvider);
     final data = projects.value;
+    final role = ref.watch(authControllerProvider).value?.user.role;
+    final canManage = role == AuthRole.admin || role == AuthRole.pm;
 
     ref.listen(allProjectsProvider, (previous, next) {
       if (next.hasValue && next.hasError) {
@@ -46,6 +51,13 @@ class _AllProjectsScreenState extends ConsumerState<AllProjectsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Semua Proyek')),
+      floatingActionButton: canManage
+          ? FloatingActionButton.extended(
+              onPressed: () => startCreateProject(context, ref),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('Proyek Baru'),
+            )
+          : null,
       body: SafeArea(
         top: false,
         child: data != null
@@ -197,7 +209,7 @@ class _AllProjectsContent extends StatelessWidget {
                   const SizedBox(height: AppSpacing.md),
             ),
           ),
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xl)),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
       ],
     );
   }

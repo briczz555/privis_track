@@ -23,6 +23,8 @@ sealed class ProjectTrackingEntity with _$ProjectTrackingEntity {
     required int completedStages,
     required int progressPercent,
     required List<ProjectStageEntity> stages,
+    DateTime? startDate,
+    DateTime? dueDate,
     required DateTime updatedAt,
     @Default(false) bool isFromCache,
     DateTime? cachedAt,

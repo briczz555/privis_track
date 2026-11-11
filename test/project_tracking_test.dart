@@ -5,9 +5,11 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:privis_track/core/theme/app_theme.dart';
+import 'package:privis_track/features/auth/presentation/providers/auth_controller.dart';
 import 'package:privis_track/features/project_tracking/data/datasources/project_tracking_remote_data_source.dart';
 import 'package:privis_track/features/project_tracking/data/repositories/project_tracking_repository_impl.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_type.dart';
+import 'package:privis_track/core/constants/project_status.dart';
 import 'package:privis_track/features/project_tracking/presentation/providers/project_tracking_provider.dart';
 import 'package:privis_track/features/project_tracking/presentation/screens/project_tracking_screen.dart';
 
@@ -45,6 +47,19 @@ class _FakeProjectDataSource implements IProjectTrackingRemoteDataSource {
   @override
   Future<Uint8List> downloadDocument(String documentId) async =>
       Uint8List.fromList([1, 2, 3]);
+
+  @override
+  Future<void> updateStage({
+    required String projectCode,
+    required int stageId,
+    required bool isCompleted,
+  }) async {}
+
+  @override
+  Future<void> updateProjectStatus({
+    required String projectCode,
+    required ProjectStatus status,
+  }) async {}
 }
 
 Map<String, dynamic> _projectPayload() => {
@@ -130,6 +145,9 @@ Map<String, dynamic> _projectPayload() => {
 
 Widget _app(Widget home) => ProviderScope(
   overrides: [
+    authRepositoryProvider.overrideWith(
+      (ref) => FakeAuthRepository(session: testSession),
+    ),
     projectTrackingRepositoryProvider.overrideWith(
       (ref) => FakeProjectTrackingRepository(testTracking),
     ),
@@ -204,6 +222,15 @@ void main() {
       expect(find.text('DOCUMENT VAULT'), findsOneWidget);
       expect(find.text('Unggah dokumen'), findsOneWidget);
       expect(find.textContaining('read-only'), findsNothing);
+    });
+
+    testWidgets('admin dapat menandai tahap selesai', (tester) async {
+      await pumpScreen(tester);
+
+      await tester.tap(find.byTooltip('Tandai selesai').first);
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('ditandai selesai'), findsOneWidget);
     });
 
     testWidgets('document vault menampilkan dokumen tahap', (tester) async {

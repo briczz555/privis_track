@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import '../../../../core/constants/project_status.dart';
 import '../entities/project_tracking_entity.dart';
 import '../entities/stage_document_entity.dart';
 
@@ -14,4 +15,15 @@ abstract interface class ProjectTrackingRepository {
   });
 
   Future<Uint8List> downloadDocument(String documentId);
+
+  Future<void> updateStage({
+    required String projectCode,
+    required int stageId,
+    required bool isCompleted,
+  });
+
+  Future<void> updateProjectStatus({
+    required String projectCode,
+    required ProjectStatus status,
+  });
 }

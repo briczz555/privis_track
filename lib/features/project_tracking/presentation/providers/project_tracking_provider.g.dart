@@ -202,6 +202,103 @@ final class DownloadDocumentUsecaseProvider
 String _$downloadDocumentUsecaseHash() =>
     r'c7fdb68b8501e7c2b6bd3216b48229199329eece';
 
+@ProviderFor(updateStageUsecase)
+final updateStageUsecaseProvider = UpdateStageUsecaseProvider._();
+
+final class UpdateStageUsecaseProvider
+    extends
+        $FunctionalProvider<
+          UpdateStageUsecase,
+          UpdateStageUsecase,
+          UpdateStageUsecase
+        >
+    with $Provider<UpdateStageUsecase> {
+  UpdateStageUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'updateStageUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateStageUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<UpdateStageUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  UpdateStageUsecase create(Ref ref) {
+    return updateStageUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UpdateStageUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UpdateStageUsecase>(value),
+    );
+  }
+}
+
+String _$updateStageUsecaseHash() =>
+    r'9ba6241eddae7bf5e3c2f91e374b5d169218adcf';
+
+@ProviderFor(updateProjectStatusUsecase)
+final updateProjectStatusUsecaseProvider =
+    UpdateProjectStatusUsecaseProvider._();
+
+final class UpdateProjectStatusUsecaseProvider
+    extends
+        $FunctionalProvider<
+          UpdateProjectStatusUsecase,
+          UpdateProjectStatusUsecase,
+          UpdateProjectStatusUsecase
+        >
+    with $Provider<UpdateProjectStatusUsecase> {
+  UpdateProjectStatusUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'updateProjectStatusUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateProjectStatusUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<UpdateProjectStatusUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  UpdateProjectStatusUsecase create(Ref ref) {
+    return updateProjectStatusUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UpdateProjectStatusUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UpdateProjectStatusUsecase>(value),
+    );
+  }
+}
+
+String _$updateProjectStatusUsecaseHash() =>
+    r'c6a6b79df601e6d177b31054a27703fe1d2495c7';
+
 @ProviderFor(ProjectTrackingNotifier)
 final projectTrackingProvider = ProjectTrackingNotifierFamily._();
 
@@ -246,7 +343,7 @@ final class ProjectTrackingNotifierProvider
 }
 
 String _$projectTrackingNotifierHash() =>
-    r'3338231c2001b162be2316f9539d24fda1c0371f';
+    r'491feda52cbf945ae78e419c0befe3beb5156022';
 
 final class ProjectTrackingNotifierFamily extends $Family
     with

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 
+import '../../../../core/constants/project_status.dart';
 import '../../../../core/network/exceptions/network_exception.dart';
 import '../../domain/entities/project_tracking_entity.dart';
 import '../../domain/entities/stage_document_entity.dart';
@@ -57,6 +58,38 @@ class ProjectTrackingRepositoryImpl implements ProjectTrackingRepository {
   Future<Uint8List> downloadDocument(String documentId) async {
     try {
       return await _remote.downloadDocument(documentId);
+    } on DioException catch (error) {
+      throw mapDioException(error);
+    }
+  }
+
+  @override
+  Future<void> updateStage({
+    required String projectCode,
+    required int stageId,
+    required bool isCompleted,
+  }) async {
+    try {
+      await _remote.updateStage(
+        projectCode: projectCode,
+        stageId: stageId,
+        isCompleted: isCompleted,
+      );
+    } on DioException catch (error) {
+      throw mapDioException(error);
+    }
+  }
+
+  @override
+  Future<void> updateProjectStatus({
+    required String projectCode,
+    required ProjectStatus status,
+  }) async {
+    try {
+      await _remote.updateProjectStatus(
+        projectCode: projectCode,
+        status: status,
+      );
     } on DioException catch (error) {
       throw mapDioException(error);
     }

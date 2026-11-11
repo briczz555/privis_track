@@ -14,7 +14,7 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
   PNG/JPG, FIG; maks. 20 MB).
 - Data diambil dari backend `privis_track_api` di VPS.
 
-Belum tersedia: ubah status proyek/tahap, ganti password, hapus dokumen dari UI.
+Belum tersedia: ganti password, hapus dokumen dari UI, dan manajemen user.
 
 ## Backend
 

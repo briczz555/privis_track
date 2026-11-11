@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 
+import '../../../../core/constants/project_status.dart';
+
 abstract interface class IProjectTrackingRemoteDataSource {
   Future<Map<String, dynamic>> fetchProject(String projectCode);
 
@@ -13,6 +15,17 @@ abstract interface class IProjectTrackingRemoteDataSource {
   });
 
   Future<Uint8List> downloadDocument(String documentId);
+
+  Future<void> updateStage({
+    required String projectCode,
+    required int stageId,
+    required bool isCompleted,
+  });
+
+  Future<void> updateProjectStatus({
+    required String projectCode,
+    required ProjectStatus status,
+  });
 }
 
 class ProjectTrackingRemoteDataSource
@@ -62,6 +75,29 @@ class ProjectTrackingRemoteDataSource
     );
 
     return Uint8List.fromList(response.data ?? const []);
+  }
+
+  @override
+  Future<void> updateStage({
+    required String projectCode,
+    required int stageId,
+    required bool isCompleted,
+  }) async {
+    await _dio.patch<void>(
+      'projects/$projectCode/stages/$stageId',
+      data: {'is_completed': isCompleted},
+    );
+  }
+
+  @override
+  Future<void> updateProjectStatus({
+    required String projectCode,
+    required ProjectStatus status,
+  }) async {
+    await _dio.patch<void>(
+      'projects/$projectCode',
+      data: {'status': projectStatusToApi(status)},
+    );
   }
 }
 

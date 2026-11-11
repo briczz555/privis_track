@@ -56,7 +56,8 @@ Aturan yang tidak boleh dilanggar:
 - `features/dashboard/` — dashboard API (portfolio, proyek aktif, aktivitas) dan
   halaman **Semua Proyek** (`/projects`) dengan filter status.
 - `features/project_tracking/` — timeline 8 tahap (semua clickable, no step-lock),
-  ringkasan progres, kontak klien, document vault (upload/download).
+  ringkasan progres, kontak klien, document vault (upload/download), aksi PM/admin
+  untuk menandai selesai/membuka tahap dan mengubah status proyek.
   Route: `/projects/:projectCode`.
 
 Helper lintas fitur di `core/`: `constants/project_status.dart`,

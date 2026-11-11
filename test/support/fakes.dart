@@ -105,4 +105,17 @@ class FakeProjectTrackingRepository implements ProjectTrackingRepository {
   Future<Uint8List> downloadDocument(String documentId) async {
     return Uint8List.fromList([1, 2, 3]);
   }
+
+  @override
+  Future<void> updateStage({
+    required String projectCode,
+    required int stageId,
+    required bool isCompleted,
+  }) async {}
+
+  @override
+  Future<void> updateProjectStatus({
+    required String projectCode,
+    required ProjectStatus status,
+  }) async {}
 }

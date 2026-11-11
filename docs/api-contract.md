@@ -10,7 +10,7 @@
 |---|---|
 | Auth (`login`, `refresh`, `logout`, `me`) | ✅ |
 | `GET /dashboard`, `GET /projects`, `GET /projects/{code}`, `GET /activities` | ✅ |
-| `PATCH /projects/{code}`, `PATCH .../stages/{stage_no}` | ⏳ |
+| `PATCH /projects/{code}`, `PATCH .../stages/{stage_no}` | ✅ |
 | Upload/download/hapus dokumen | ✅ |
 | Swagger runtime & rate limiting | ⏳ |
 

@@ -16,6 +16,9 @@ class StageTimelineTile extends StatelessWidget {
     required this.isFirst,
     required this.isLast,
     required this.onTap,
+    this.canEdit = false,
+    this.isUpdating = false,
+    this.onToggleCompleted,
   });
 
   final ProjectStageEntity stage;
@@ -23,6 +26,9 @@ class StageTimelineTile extends StatelessWidget {
   final bool isFirst;
   final bool isLast;
   final VoidCallback onTap;
+  final bool canEdit;
+  final bool isUpdating;
+  final VoidCallback? onToggleCompleted;
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +158,29 @@ class StageTimelineTile extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: AppSpacing.sm),
+                        if (isUpdating)
+                          const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        else if (canEdit && onToggleCompleted != null)
+                          IconButton(
+                            tooltip: isCompleted
+                                ? 'Buka kembali tahap'
+                                : 'Tandai selesai',
+                            visualDensity: VisualDensity.compact,
+                            onPressed: onToggleCompleted,
+                            icon: Icon(
+                              isCompleted
+                                  ? Icons.undo_rounded
+                                  : Icons.check_circle_outline_rounded,
+                              size: 20,
+                              color: isCompleted
+                                  ? AppColors.success
+                                  : secondaryText,
+                            ),
+                          ),
                         Icon(
                           Icons.chevron_right_rounded,
                           size: 20,

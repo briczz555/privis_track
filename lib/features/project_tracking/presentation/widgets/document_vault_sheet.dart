@@ -1,5 +1,11 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_shapes.dart';
@@ -7,11 +13,26 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/error_message.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
+import '../../domain/entities/stage_document_entity.dart';
 import '../providers/project_tracking_provider.dart';
 import 'document_list_tile.dart';
 
-/// Bottom sheet arsip dokumen per tahap SDLC (read-only).
-class DocumentVaultSheet extends ConsumerWidget {
+const _maxUploadBytes = 20 * 1024 * 1024;
+const _allowedExtensions = [
+  'pdf',
+  'doc',
+  'docx',
+  'xls',
+  'xlsx',
+  'csv',
+  'png',
+  'jpg',
+  'jpeg',
+  'fig',
+];
+
+/// Bottom sheet arsip dokumen per tahap SDLC + upload/download.
+class DocumentVaultSheet extends ConsumerStatefulWidget {
   const DocumentVaultSheet({
     super.key,
     required this.projectCode,
@@ -22,10 +43,105 @@ class DocumentVaultSheet extends ConsumerWidget {
   final int stageId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DocumentVaultSheet> createState() => _DocumentVaultSheetState();
+}
+
+class _DocumentVaultSheetState extends ConsumerState<DocumentVaultSheet> {
+  bool _isUploading = false;
+  String? _downloadingId;
+
+  Future<void> _upload() async {
+    if (_isUploading) return;
+
+    final picked = await FilePicker.pickFile(
+      type: FileType.custom,
+      allowedExtensions: _allowedExtensions,
+    );
+
+    if (!mounted || picked == null) return;
+
+    final bytes = await picked.readAsBytes();
+
+    if (!mounted) return;
+    if (bytes.length > _maxUploadBytes) {
+      _showMessage('Ukuran file maksimum 20 MB.');
+      return;
+    }
+
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _isUploading = true);
+
+    try {
+      final document = await ref
+          .read(projectTrackingProvider(widget.projectCode).notifier)
+          .uploadDocument(
+            stageId: widget.stageId,
+            fileName: picked.name,
+            bytes: bytes,
+          );
+
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text('${document.name} berhasil diunggah.')),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(readableErrorMessage(error))),
+      );
+    } finally {
+      if (mounted) setState(() => _isUploading = false);
+    }
+  }
+
+  Future<void> _download(StageDocumentEntity document) async {
+    if (_downloadingId != null) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _downloadingId = document.id);
+
+    try {
+      final bytes = await ref
+          .read(projectTrackingProvider(widget.projectCode).notifier)
+          .downloadDocument(document.id);
+
+      final directory = await getTemporaryDirectory();
+      final safeName = document.name.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+      final file = File(p.join(directory.path, safeName));
+      await file.writeAsBytes(bytes, flush: true);
+
+      final result = await OpenFilex.open(file.path);
+      if (result.type != ResultType.done) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              result.message.isEmpty
+                  ? 'Tidak ada aplikasi untuk membuka file.'
+                  : result.message,
+            ),
+          ),
+        );
+      }
+    } catch (error) {
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(content: Text(readableErrorMessage(error))),
+      );
+    } finally {
+      if (mounted) setState(() => _downloadingId = null);
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final projectState = ref.watch(projectTrackingProvider(projectCode));
-    final stage = projectState.value?.stageById(stageId);
+    final projectState = ref.watch(projectTrackingProvider(widget.projectCode));
+    final stage = projectState.value?.stageById(widget.stageId);
     final secondaryText = theme.colorScheme.onSurface.withValues(alpha: 0.55);
 
     if (stage == null) {
@@ -35,7 +151,8 @@ class DocumentVaultSheet extends ConsumerWidget {
           child: AppErrorState(
             title: 'Gagal memuat dokumen',
             message: readableErrorMessage(projectState.error!),
-            onRetry: () => ref.invalidate(projectTrackingProvider(projectCode)),
+            onRetry: () =>
+                ref.invalidate(projectTrackingProvider(widget.projectCode)),
           ),
         );
       }
@@ -107,35 +224,24 @@ class DocumentVaultSheet extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: AppSpacing.md),
-            Container(
+            SizedBox(
               width: double.infinity,
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.06),
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.18),
-                ),
+              child: FilledButton.icon(
+                onPressed: _isUploading ? null : _upload,
+                icon: _isUploading
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.upload_file_rounded, size: 18),
+                label: Text(_isUploading ? 'Mengunggah...' : 'Unggah dokumen'),
               ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.info_outline_rounded,
-                    size: 16,
-                    color: AppColors.primary,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      'Arsip dokumen saat ini read-only. Fitur unggah & unduh '
-                      'menyusul di iterasi berikutnya.',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: secondaryText,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              'PDF, DOC/DOCX, XLS/XLSX, CSV, PNG/JPG, FIG · maks. 20 MB',
+              style: theme.textTheme.bodySmall?.copyWith(color: secondaryText),
             ),
             const SizedBox(height: AppSpacing.md),
             if (stage.documents.isEmpty)
@@ -148,8 +254,14 @@ class DocumentVaultSheet extends ConsumerWidget {
                   itemCount: stage.documents.length,
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: AppSpacing.sm),
-                  itemBuilder: (context, index) =>
-                      DocumentListTile(document: stage.documents[index]),
+                  itemBuilder: (context, index) {
+                    final document = stage.documents[index];
+                    return DocumentListTile(
+                      document: document,
+                      isBusy: _downloadingId == document.id,
+                      onOpen: () => _download(document),
+                    );
+                  },
                 ),
               ),
             const SizedBox(height: AppSpacing.sm),
@@ -198,6 +310,12 @@ class _EmptyVault extends StatelessWidget {
             'Belum ada dokumen pada tahap ini.',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 2),
+          Text(
+            'Gunakan tombol di atas untuk mengunggah arsip.',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodySmall?.copyWith(color: secondaryText),
           ),
         ],
       ),

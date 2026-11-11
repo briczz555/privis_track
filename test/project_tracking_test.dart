@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:privis_track/core/theme/app_theme.dart';
 import 'package:privis_track/features/project_tracking/data/datasources/project_tracking_remote_data_source.dart';
@@ -22,6 +25,26 @@ class _FakeProjectDataSource implements IProjectTrackingRemoteDataSource {
     requestedCode = projectCode;
     return payload;
   }
+
+  @override
+  Future<Map<String, dynamic>> uploadDocument({
+    required String projectCode,
+    required int stageId,
+    required String fileName,
+    required Uint8List bytes,
+  }) async => {
+    'id': 'uploaded-doc',
+    'name': fileName,
+    'type': 'pdf',
+    'mime_type': 'application/pdf',
+    'size_bytes': bytes.length,
+    'uploaded_by': {'id': 'u-1', 'name': 'Rina', 'division': 'PM'},
+    'uploaded_at': '2026-11-11T00:00:00.000Z',
+  };
+
+  @override
+  Future<Uint8List> downloadDocument(String documentId) async =>
+      Uint8List.fromList([1, 2, 3]);
 }
 
 Map<String, dynamic> _projectPayload() => {
@@ -179,8 +202,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('DOCUMENT VAULT'), findsOneWidget);
-      expect(find.textContaining('read-only'), findsOneWidget);
-      expect(find.text('Unggah dokumen (mock)'), findsNothing);
+      expect(find.text('Unggah dokumen'), findsOneWidget);
+      expect(find.textContaining('read-only'), findsNothing);
     });
 
     testWidgets('document vault menampilkan dokumen tahap', (tester) async {

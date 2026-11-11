@@ -1,4 +1,4 @@
-# PriVis Track
+﻿# PriVis Track
 
 Aplikasi internal untuk melacak progres proyek klien melalui 8 tahap SDLC sekaligus
 menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
@@ -6,14 +6,15 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
 ## Status
 
 - Fondasi `core/`: theme, GoRouter, Dio, error mapping, Drift, date/error utils.
-- **Auth**: login JWT, refresh token rotation, secure storage, redirect guard.
+- **Auth**: login JWT, refresh rotation, secure storage, redirect guard, logout.
 - **Dashboard**: donut chart portofolio, proyek berjalan, activity feed dari API.
 - **Semua Proyek** (`/projects`): daftar semua proyek + filter status.
 - **Project Tracking** (`/projects/:projectCode`): timeline 8 tahap, kontak klien,
-  document vault (read-only).
+  document vault dengan **upload & download** (PDF, DOC/DOCX, XLS/XLSX, CSV,
+  PNG/JPG, FIG; maks. 20 MB).
 - Data diambil dari backend `privis_track_api` di VPS.
 
-Belum tersedia: upload/download dokumen, ubah status tahap/proyek, ganti password.
+Belum tersedia: ubah status proyek/tahap, ganti password, hapus dokumen dari UI.
 
 ## Backend
 
@@ -50,9 +51,9 @@ Login memakai akun internal yang dibuat lewat seed backend.
 lib/
 ├── core/                 # navigation, network, auth session cache, theme, storage
 ├── features/
-│   ├── auth/             # login, session, JWT refresh
+│   ├── auth/             # login, session, JWT refresh, pengaturan akun
 │   ├── dashboard/        # dashboard + semua proyek
-│   └── project_tracking/ # timeline + document vault
+│   └── project_tracking/ # timeline + document vault (upload/download)
 └── main.dart
 ```
 
@@ -66,5 +67,6 @@ flutter test
 Catatan build:
 - Android/iOS adalah target utama.
 - Untuk build desktop Windows, aktifkan **Developer Mode** agar Flutter bisa membuat
-  symlink plugin (`flutter_secure_storage`, `sqlite3_flutter_libs`).
-- `flutter_secure_storage` menyimpan token di secure storage perangkat.
+  symlink plugin.
+- Repo ini menyetel `kotlin.incremental=false` sebagai workaround cache Kotlin
+  Windows yang gagal ditutup saat build plugin.

@@ -1,6 +1,6 @@
 # PriVis Track — API Contract (Draft Fase 2)
 
-**Status:** Draft — auth dan endpoint baca sudah diimplementasikan di `privis_track_api` (10 Nov 2026). Endpoint tulis (PATCH) dan dokumen (upload/download) belum.
+**Status:** Draft — auth, endpoint baca, dan dokumen (upload/download/hapus) sudah diimplementasikan di `privis_track_api` (11 Nov 2026). Endpoint tulis (PATCH) belum.
 **Versi API:** `v1`
 **Kontrak mesin:** [`openapi.yaml`](openapi.yaml) (OpenAPI 3.0.3)
 
@@ -11,7 +11,7 @@
 | Auth (`login`, `refresh`, `logout`, `me`) | ✅ |
 | `GET /dashboard`, `GET /projects`, `GET /projects/{code}`, `GET /activities` | ✅ |
 | `PATCH /projects/{code}`, `PATCH .../stages/{stage_no}` | ⏳ |
-| Upload/download dokumen | ⏳ |
+| Upload/download/hapus dokumen | ✅ |
 | Swagger runtime & rate limiting | ⏳ |
 
 ## Keputusan desain (disetujui)

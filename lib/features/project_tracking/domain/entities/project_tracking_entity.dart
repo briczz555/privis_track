@@ -4,6 +4,7 @@ import '../../../../core/constants/project_status.dart';
 import '../../../../core/constants/sdlc_stages.dart';
 import 'client_info_entity.dart';
 import 'project_stage_entity.dart';
+import 'stage_document_entity.dart';
 
 part 'project_tracking_entity.freezed.dart';
 
@@ -41,4 +42,18 @@ sealed class ProjectTrackingEntity with _$ProjectTrackingEntity {
 
   bool isCurrentStage(ProjectStageEntity stage) =>
       stage.id == currentStage && !stage.isCompleted;
+
+  ProjectTrackingEntity addDocument({
+    required int stageId,
+    required StageDocumentEntity document,
+  }) {
+    return copyWith(
+      stages: [
+        for (final stage in stages)
+          stage.id == stageId
+              ? stage.copyWith(documents: [...stage.documents, document])
+              : stage,
+      ],
+    );
+  }
 }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:privis_track/core/constants/project_status.dart';
 import 'package:privis_track/core/network/exceptions/network_exception.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_session_entity.dart';
@@ -6,6 +8,8 @@ import 'package:privis_track/features/dashboard/domain/entities/dashboard_entity
 import 'package:privis_track/features/dashboard/domain/entities/project_list_entity.dart';
 import 'package:privis_track/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/project_tracking_entity.dart';
+import 'package:privis_track/features/project_tracking/domain/entities/stage_document_entity.dart';
+import 'package:privis_track/features/project_tracking/domain/entities/stage_document_type.dart';
 import 'package:privis_track/features/project_tracking/domain/repositories/project_tracking_repository.dart';
 
 import 'fixtures.dart';
@@ -79,5 +83,26 @@ class FakeProjectTrackingRepository implements ProjectTrackingRepository {
   Future<ProjectTrackingEntity> getProject(String projectCode) async {
     calls += 1;
     return project;
+  }
+
+  @override
+  Future<StageDocumentEntity> uploadDocument({
+    required String projectCode,
+    required int stageId,
+    required String fileName,
+    required Uint8List bytes,
+  }) async {
+    return StageDocumentEntity(
+      id: 'uploaded-doc',
+      name: fileName,
+      type: StageDocumentType.pdf,
+      uploadedBy: 'Admin PriVis',
+      uploadedAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<Uint8List> downloadDocument(String documentId) async {
+    return Uint8List.fromList([1, 2, 3]);
   }
 }

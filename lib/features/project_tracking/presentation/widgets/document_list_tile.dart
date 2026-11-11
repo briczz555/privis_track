@@ -8,9 +8,16 @@ import 'document_type_style.dart';
 
 /// Baris dokumen di dalam document vault.
 class DocumentListTile extends StatelessWidget {
-  const DocumentListTile({super.key, required this.document});
+  const DocumentListTile({
+    super.key,
+    required this.document,
+    this.onOpen,
+    this.isBusy = false,
+  });
 
   final StageDocumentEntity document;
+  final VoidCallback? onOpen;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
@@ -61,20 +68,16 @@ class DocumentListTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'Unduh dokumen (segera)',
+            tooltip: 'Unduh dokumen',
             visualDensity: VisualDensity.compact,
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Fitur unduh dokumen belum tersedia.'),
-                ),
-              );
-            },
-            icon: Icon(
-              Icons.open_in_new_rounded,
-              size: 18,
-              color: secondaryText,
-            ),
+            onPressed: isBusy ? null : onOpen,
+            icon: isBusy
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Icon(Icons.download_rounded, size: 18, color: secondaryText),
           ),
         ],
       ),

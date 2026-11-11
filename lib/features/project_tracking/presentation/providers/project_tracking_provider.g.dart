@@ -105,6 +105,103 @@ final class GetProjectTrackingUsecaseProvider
 String _$getProjectTrackingUsecaseHash() =>
     r'5143743f2d6759de0c5d46f0099005b089fc162f';
 
+@ProviderFor(uploadStageDocumentUsecase)
+final uploadStageDocumentUsecaseProvider =
+    UploadStageDocumentUsecaseProvider._();
+
+final class UploadStageDocumentUsecaseProvider
+    extends
+        $FunctionalProvider<
+          UploadStageDocumentUsecase,
+          UploadStageDocumentUsecase,
+          UploadStageDocumentUsecase
+        >
+    with $Provider<UploadStageDocumentUsecase> {
+  UploadStageDocumentUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'uploadStageDocumentUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$uploadStageDocumentUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<UploadStageDocumentUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  UploadStageDocumentUsecase create(Ref ref) {
+    return uploadStageDocumentUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UploadStageDocumentUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UploadStageDocumentUsecase>(value),
+    );
+  }
+}
+
+String _$uploadStageDocumentUsecaseHash() =>
+    r'946687e53337dc94410fc09e4cdab8c09cccea34';
+
+@ProviderFor(downloadDocumentUsecase)
+final downloadDocumentUsecaseProvider = DownloadDocumentUsecaseProvider._();
+
+final class DownloadDocumentUsecaseProvider
+    extends
+        $FunctionalProvider<
+          DownloadDocumentUsecase,
+          DownloadDocumentUsecase,
+          DownloadDocumentUsecase
+        >
+    with $Provider<DownloadDocumentUsecase> {
+  DownloadDocumentUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'downloadDocumentUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$downloadDocumentUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<DownloadDocumentUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  DownloadDocumentUsecase create(Ref ref) {
+    return downloadDocumentUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DownloadDocumentUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DownloadDocumentUsecase>(value),
+    );
+  }
+}
+
+String _$downloadDocumentUsecaseHash() =>
+    r'c7fdb68b8501e7c2b6bd3216b48229199329eece';
+
 @ProviderFor(ProjectTrackingNotifier)
 final projectTrackingProvider = ProjectTrackingNotifierFamily._();
 
@@ -149,7 +246,7 @@ final class ProjectTrackingNotifierProvider
 }
 
 String _$projectTrackingNotifierHash() =>
-    r'2b7a0f121eee5669a3cd26f50f737f06b2881bf4';
+    r'3338231c2001b162be2316f9539d24fda1c0371f';
 
 final class ProjectTrackingNotifierFamily extends $Family
     with

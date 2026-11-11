@@ -1,4 +1,4 @@
-# PriVis Track — panduan agen
+﻿# PriVis Track — panduan agen
 
 Aplikasi internal (*in-house*) untuk melacak progres proyek klien lewat 8 tahap SDLC
 sekaligus menjadi arsip dokumen tim. Platform: Flutter (Android & iOS).
@@ -42,19 +42,21 @@ Aturan yang tidak boleh dilanggar:
   (override `--dart-define=API_BASE_URL=...`).
 - Kontrak: `docs/api-contract.md` + `docs/openapi.yaml`.
 - Endpoint yang dipakai app: `/auth/login`, `/auth/refresh`, `/auth/logout`, `/me`,
-  `/dashboard`, `/projects`, `/projects/{code}`, `/activities`.
+  `/dashboard`, `/projects`, `/projects/{code}`, `/activities`, upload/list/download
+  dokumen.
 - Auth: JWT access 15 menit, refresh rotation; token disimpan dengan
   `flutter_secure_storage` lewat `core/auth/auth_session_cache.dart` + `features/auth/`.
 - `AuthInterceptor` menambahkan Bearer token dan mencoba refresh sekali saat 401.
-- Dokumen masih read-only: upload/download belum tersedia di backend.
+- Dokumen: upload multipart (maks 20 MB, tipe tertentu), download via API stream,
+  soft delete admin/pm.
 
 ## Status fitur
 
-- `features/auth/` — login, restore sesi, refresh token, logout.
+- `features/auth/` — login, restore sesi, refresh token, logout, halaman pengaturan.
 - `features/dashboard/` — dashboard API (portfolio, proyek aktif, aktivitas) dan
   halaman **Semua Proyek** (`/projects`) dengan filter status.
 - `features/project_tracking/` — timeline 8 tahap (semua clickable, no step-lock),
-  ringkasan progres, kontak klien, document vault read-only.
+  ringkasan progres, kontak klien, document vault (upload/download).
   Route: `/projects/:projectCode`.
 
 Helper lintas fitur di `core/`: `constants/project_status.dart`,

@@ -1,7 +1,18 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 
 abstract interface class IProjectTrackingRemoteDataSource {
   Future<Map<String, dynamic>> fetchProject(String projectCode);
+
+  Future<Map<String, dynamic>> uploadDocument({
+    required String projectCode,
+    required int stageId,
+    required String fileName,
+    required Uint8List bytes,
+  });
+
+  Future<Uint8List> downloadDocument(String documentId);
 }
 
 class ProjectTrackingRemoteDataSource
@@ -17,4 +28,61 @@ class ProjectTrackingRemoteDataSource
     );
     return response.data ?? const {};
   }
+
+  @override
+  Future<Map<String, dynamic>> uploadDocument({
+    required String projectCode,
+    required int stageId,
+    required String fileName,
+    required Uint8List bytes,
+  }) async {
+    final formData = FormData.fromMap({
+      'file': MultipartFile.fromBytes(
+        bytes,
+        filename: fileName,
+        contentType: _contentTypeFor(fileName),
+      ),
+      'name': fileName,
+    });
+
+    final response = await _dio.post<Map<String, dynamic>>(
+      'projects/$projectCode/stages/$stageId/documents',
+      data: formData,
+      options: Options(contentType: 'multipart/form-data'),
+    );
+
+    return response.data ?? const {};
+  }
+
+  @override
+  Future<Uint8List> downloadDocument(String documentId) async {
+    final response = await _dio.get<List<int>>(
+      'documents/$documentId/download',
+      options: Options(responseType: ResponseType.bytes),
+    );
+
+    return Uint8List.fromList(response.data ?? const []);
+  }
+}
+
+DioMediaType _contentTypeFor(String fileName) {
+  final extension = fileName.split('.').last.toLowerCase();
+
+  return switch (extension) {
+    'pdf' => DioMediaType('application', 'pdf'),
+    'doc' => DioMediaType('application', 'msword'),
+    'docx' => DioMediaType(
+      'application',
+      'vnd.openxmlformats-officedocument.wordprocessingml.document',
+    ),
+    'xls' => DioMediaType('application', 'vnd.ms-excel'),
+    'xlsx' => DioMediaType(
+      'application',
+      'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    ),
+    'csv' => DioMediaType('text', 'csv'),
+    'png' => DioMediaType('image', 'png'),
+    'jpg' || 'jpeg' => DioMediaType('image', 'jpeg'),
+    _ => DioMediaType('application', 'octet-stream'),
+  };
 }

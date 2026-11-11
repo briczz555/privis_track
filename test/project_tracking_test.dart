@@ -1,15 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:privis_track/core/constants/project_status.dart';
+import 'package:privis_track/core/network/exceptions/network_exception.dart';
 import 'package:privis_track/core/theme/app_theme.dart';
 import 'package:privis_track/features/auth/presentation/providers/auth_controller.dart';
 import 'package:privis_track/features/project_tracking/data/datasources/project_tracking_remote_data_source.dart';
 import 'package:privis_track/features/project_tracking/data/repositories/project_tracking_repository_impl.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/stage_document_type.dart';
-import 'package:privis_track/core/constants/project_status.dart';
 import 'package:privis_track/features/project_tracking/presentation/providers/project_tracking_provider.dart';
 import 'package:privis_track/features/project_tracking/presentation/screens/project_tracking_screen.dart';
 
@@ -17,13 +18,20 @@ import 'support/fakes.dart';
 import 'support/fixtures.dart';
 
 class _FakeProjectDataSource implements IProjectTrackingRemoteDataSource {
-  _FakeProjectDataSource(this.payload);
+  _FakeProjectDataSource(this.payload, {this.offline = false});
 
   final Map<String, dynamic> payload;
+  final bool offline;
   String? requestedCode;
+
+  DioException _offlineError() => DioException(
+    requestOptions: RequestOptions(path: '/projects'),
+    type: DioExceptionType.connectionError,
+  );
 
   @override
   Future<Map<String, dynamic>> fetchProject(String projectCode) async {
+    if (offline) throw _offlineError();
     requestedCode = projectCode;
     return payload;
   }
@@ -162,7 +170,10 @@ void main() {
   group('ProjectTrackingRepository', () {
     test('memetakan payload API ke entity', () async {
       final remote = _FakeProjectDataSource(_projectPayload());
-      final repository = ProjectTrackingRepositoryImpl(remote);
+      final repository = ProjectTrackingRepositoryImpl(
+        remote,
+        MemorySnapshotCache(),
+      );
 
       final project = await repository.getProject('PRJ-001');
 
@@ -177,6 +188,42 @@ void main() {
       expect(project.client.phone, '+62 812-3456-7890');
       expect(project.stages.first.documents.first.type, StageDocumentType.pdf);
       expect(project.stages.first.documents.first.uploadedBy, 'Rina');
+    });
+
+    test('memakai snapshot cache saat koneksi gagal', () async {
+      final cache = MemorySnapshotCache();
+      final online = ProjectTrackingRepositoryImpl(
+        _FakeProjectDataSource(_projectPayload()),
+        cache,
+      );
+
+      final fresh = await online.getProject('PRJ-001');
+      expect(fresh.isFromCache, isFalse);
+      expect(cache.snapshots.containsKey('project:PRJ-001'), isTrue);
+
+      final offline = ProjectTrackingRepositoryImpl(
+        _FakeProjectDataSource(_projectPayload(), offline: true),
+        cache,
+      );
+      final cached = await offline.getProject('PRJ-001');
+
+      expect(cached.isFromCache, isTrue);
+      expect(cached.cachedAt, isNotNull);
+      expect(cached.code, 'PRJ-001');
+      expect(cached.stages, hasLength(8));
+      expect(cached.client.name, 'PT. ABC Retail');
+    });
+
+    test('tanpa cache, kegagalan koneksi tetap dilempar', () async {
+      final repository = ProjectTrackingRepositoryImpl(
+        _FakeProjectDataSource(_projectPayload(), offline: true),
+        MemorySnapshotCache(),
+      );
+
+      await expectLater(
+        repository.getProject('PRJ-001'),
+        throwsA(isA<NoConnectionException>()),
+      );
     });
   });
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:privis_track/core/storage/cache_store.dart';
 import 'package:privis_track/core/theme/app_theme.dart';
 import 'package:privis_track/features/auth/presentation/providers/auth_controller.dart';
 import 'package:privis_track/features/auth/presentation/screens/login_screen.dart';
@@ -12,7 +13,10 @@ import 'support/fakes.dart';
 import 'support/fixtures.dart';
 
 Widget _app(FakeAuthRepository repository) => ProviderScope(
-  overrides: [authRepositoryProvider.overrideWith((ref) => repository)],
+  overrides: [
+    authRepositoryProvider.overrideWith((ref) => repository),
+    cacheStoreProvider.overrideWith((ref) => MemorySnapshotCache()),
+  ],
   child: MaterialApp(theme: AppTheme.light, home: const LoginScreen()),
 );
 
@@ -65,6 +69,7 @@ void main() {
           projectTrackingRepositoryProvider.overrideWith(
             (ref) => FakeProjectTrackingRepository(testTracking),
           ),
+          cacheStoreProvider.overrideWith((ref) => MemorySnapshotCache()),
         ],
         child: const PriVisApp(),
       ),

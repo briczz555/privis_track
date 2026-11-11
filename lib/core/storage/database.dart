@@ -8,15 +8,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 // Import table tiap fitur di sini seiring bertambahnya fitur, contoh:
 // import 'tables/product_list_table.dart';
+import 'tables/cache_snapshots.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(
-  tables: [
-    // Daftarkan table di sini, contoh:
-    // ProductListTable,
-  ],
-)
+@DriftDatabase(tables: [CacheSnapshots])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -24,7 +20,7 @@ class AppDatabase extends _$AppDatabase {
   /// baru, dsb), lalu tambahkan step migrasinya di [migration] dan
   /// dokumentasikan di core/storage/migrations/.
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration {
@@ -33,10 +29,9 @@ class AppDatabase extends _$AppDatabase {
         await m.createAll();
       },
       onUpgrade: (m, from, to) async {
-        // Contoh pola migration bertahap:
-        // if (from < 2) {
-        //   await m.addColumn(productListTable, productListTable.someNewColumn);
-        // }
+        if (from < 2) {
+          await m.createTable(cacheSnapshots);
+        }
       },
     );
   }

@@ -12,5 +12,7 @@ sealed class ProjectListEntity with _$ProjectListEntity {
     required int limit,
     required int total,
     required int totalPages,
+    @Default(false) bool isFromCache,
+    DateTime? cachedAt,
   }) = _ProjectListEntity;
 }

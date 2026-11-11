@@ -10,6 +10,7 @@ import '../../../../core/utils/error_message.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
+import '../../../../core/widgets/offline_banner.dart';
 import '../../domain/entities/project_entity.dart';
 import '../../domain/entities/project_list_entity.dart';
 import '../providers/dashboard_provider.dart';
@@ -116,6 +117,18 @@ class _AllProjectsContent extends StatelessWidget {
     return CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
+        if (data.isFromCache)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.sm,
+                AppSpacing.md,
+                0,
+              ),
+              child: OfflineBanner(cachedAt: data.cachedAt),
+            ),
+          ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(

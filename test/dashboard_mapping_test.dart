@@ -1,16 +1,33 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:privis_track/core/constants/project_status.dart';
+import 'package:privis_track/core/network/exceptions/network_exception.dart';
 import 'package:privis_track/features/dashboard/data/datasources/dashboard_remote_data_source.dart';
 import 'package:privis_track/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 
+import 'support/fakes.dart';
+
+DioException _offlineError() => DioException(
+  requestOptions: RequestOptions(path: '/'),
+  type: DioExceptionType.connectionError,
+);
+
 class _FakeDashboardDataSource implements IDashboardRemoteDataSource {
-  _FakeDashboardDataSource({required this.dashboard, required this.projects});
+  _FakeDashboardDataSource({
+    required this.dashboard,
+    required this.projects,
+    this.offline = false,
+  });
 
   final Map<String, dynamic> dashboard;
   final Map<String, dynamic> projects;
+  final bool offline;
 
   @override
-  Future<Map<String, dynamic>> fetchDashboard() async => dashboard;
+  Future<Map<String, dynamic>> fetchDashboard() async {
+    if (offline) throw _offlineError();
+    return dashboard;
+  }
 
   @override
   Future<Map<String, dynamic>> fetchProjects({
@@ -18,7 +35,10 @@ class _FakeDashboardDataSource implements IDashboardRemoteDataSource {
     int limit = 100,
     ProjectStatus? status,
     String? search,
-  }) async => projects;
+  }) async {
+    if (offline) throw _offlineError();
+    return projects;
+  }
 }
 
 Map<String, dynamic> _projectJson(String code) => {
@@ -68,15 +88,22 @@ Map<String, dynamic> _projectsJson() => {
 };
 
 void main() {
-  final repository = DashboardRepositoryImpl(
-    _FakeDashboardDataSource(
-      dashboard: _dashboardJson(),
-      projects: _projectsJson(),
-    ),
-  );
+  DashboardRepositoryImpl repository({
+    bool offline = false,
+    MemorySnapshotCache? cache,
+  }) {
+    return DashboardRepositoryImpl(
+      _FakeDashboardDataSource(
+        dashboard: _dashboardJson(),
+        projects: _projectsJson(),
+        offline: offline,
+      ),
+      cache ?? MemorySnapshotCache(),
+    );
+  }
 
   test('memetakan dashboard API ke entity', () async {
-    final dashboard = await repository.getDashboard();
+    final dashboard = await repository().getDashboard();
 
     expect(dashboard.totalProjects, 3);
     expect(dashboard.portfolio, hasLength(3));
@@ -103,7 +130,7 @@ void main() {
   });
 
   test('memetakan daftar proyek dan metadata pagination', () async {
-    final list = await repository.getProjects();
+    final list = await repository().getProjects();
 
     expect(list.projects, hasLength(1));
     expect(list.page, 1);
@@ -111,5 +138,27 @@ void main() {
     expect(list.total, 1);
     expect(list.totalPages, 1);
     expect(list.projects.first.status, ProjectStatus.inProgress);
+  });
+
+  test('memakai snapshot cache saat koneksi gagal', () async {
+    final cache = MemorySnapshotCache();
+    final fresh = await repository(cache: cache).getDashboard();
+
+    expect(fresh.isFromCache, isFalse);
+    expect(cache.snapshots.containsKey('dashboard'), isTrue);
+
+    final cached = await repository(offline: true, cache: cache).getDashboard();
+
+    expect(cached.isFromCache, isTrue);
+    expect(cached.cachedAt, isNotNull);
+    expect(cached.totalProjects, 3);
+    expect(cached.activeProjects.first.code, 'PRJ-001');
+  });
+
+  test('tanpa cache, kegagalan koneksi tetap dilempar', () async {
+    await expectLater(
+      repository(offline: true).getDashboard(),
+      throwsA(isA<NoConnectionException>()),
+    );
   });
 }

@@ -55,7 +55,7 @@ final class ProjectTrackingRepositoryProvider
 }
 
 String _$projectTrackingRepositoryHash() =>
-    r'ca418990d5444393e47abe4d99f3f2110d82160a';
+    r'c2c5ad7d15cbb4ca40fe591c7b05b5773539cf6d';
 
 @ProviderFor(getProjectTrackingUsecase)
 final getProjectTrackingUsecaseProvider = GetProjectTrackingUsecaseProvider._();

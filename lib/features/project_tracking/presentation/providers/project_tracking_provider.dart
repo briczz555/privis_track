@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/constants/project_status.dart';
 import '../../../../core/network/dio_provider.dart';
+import '../../../../core/storage/cache_store.dart';
 import '../../data/datasources/project_tracking_remote_data_source.dart';
 import '../../data/repositories/project_tracking_repository_impl.dart';
 import '../../domain/entities/project_tracking_entity.dart';
@@ -24,6 +25,7 @@ part 'project_tracking_provider.g.dart';
 ProjectTrackingRepository projectTrackingRepository(Ref ref) {
   return ProjectTrackingRepositoryImpl(
     ProjectTrackingRemoteDataSource(ref.watch(dioProvider)),
+    ref.watch(cacheStoreProvider),
   );
 }
 

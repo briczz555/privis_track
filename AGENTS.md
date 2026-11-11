@@ -68,7 +68,8 @@ Helper lintas fitur di `core/`: `constants/project_status.dart`,
 `constants/sdlc_stages.dart`, `extensions/project_status_style.dart`,
 `widgets/project_status_chip.dart`, `widgets/section_header.dart`,
 `widgets/app_loading_state.dart`, `widgets/app_error_state.dart`,
-`utils/date_formatter.dart`, `utils/error_message.dart`, `auth/auth_session_cache.dart`.
+`utils/date_formatter.dart`, `utils/error_message.dart`, `auth/auth_session_cache.dart`,
+`storage/cache_store.dart`, `widgets/offline_banner.dart`.
 Jangan menduplikasi helper tersebut di dalam fitur.
 
 ## Konvensi verifikasi

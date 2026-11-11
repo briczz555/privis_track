@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:privis_track/core/constants/project_status.dart';
 import 'package:privis_track/core/network/exceptions/network_exception.dart';
+import 'package:privis_track/core/storage/cache_store.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_role.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:privis_track/features/auth/domain/repositories/auth_repository.dart';
@@ -198,5 +199,33 @@ class FakeUserManagementRepository implements UserManagementRepository {
     required String newPassword,
   }) async {
     resetCalls += 1;
+  }
+}
+
+class MemorySnapshotCache implements SnapshotCache {
+  final Map<String, CachedSnapshot> snapshots = {};
+  int writeCalls = 0;
+  int clearCalls = 0;
+
+  @override
+  Future<CachedSnapshot?> read(String key) async => snapshots[key];
+
+  @override
+  Future<void> write({
+    required String key,
+    required String payload,
+    DateTime? updatedAt,
+  }) async {
+    writeCalls += 1;
+    snapshots[key] = CachedSnapshot(
+      payload: payload,
+      updatedAt: updatedAt ?? DateTime.utc(2026, 11, 12, 8),
+    );
+  }
+
+  @override
+  Future<void> clear() async {
+    clearCalls += 1;
+    snapshots.clear();
   }
 }

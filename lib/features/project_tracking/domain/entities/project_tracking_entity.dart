@@ -24,6 +24,8 @@ sealed class ProjectTrackingEntity with _$ProjectTrackingEntity {
     required int progressPercent,
     required List<ProjectStageEntity> stages,
     required DateTime updatedAt,
+    @Default(false) bool isFromCache,
+    DateTime? cachedAt,
   }) = _ProjectTrackingEntity;
 
   static const int totalStages = kSdlcStageCount;

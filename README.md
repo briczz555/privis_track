@@ -16,6 +16,8 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
 - **Pengaturan**: profil user, **ganti password**, dan logout.
 - **Kelola User** (`/settings/users`, admin): daftar akun, tambah user, ubah
   nama/role/divisi, aktif/nonaktifkan, dan reset password.
+- **Cache offline** (Drift): dashboard, daftar proyek, dan tracking menampilkan
+  snapshot terakhir + banner "data luring" saat koneksi gagal.
 - Data diambil dari backend `privis_track_api` di VPS.
 
 Belum tersedia: audit log aksi admin dan antivirus scan dokumen.
@@ -66,6 +68,9 @@ lib/
 ```bash
 flutter analyze
 flutter test
+
+# Uji cache Drift di perangkat/emulator (butuh device aktif)
+flutter test integration_test/cache_store_test.dart -d <device-id>
 ```
 
 Catatan build:

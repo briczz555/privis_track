@@ -8,6 +8,7 @@ import '../../../../core/auth/auth_session_cache.dart';
 import '../../../../core/network/auth_dio_provider.dart';
 import '../../../../core/network/dio_provider.dart';
 import '../../../../core/network/exceptions/network_exception.dart';
+import '../../../../core/storage/cache_store.dart';
 import '../../data/datasources/auth_account_remote_data_source.dart';
 import '../../data/datasources/auth_local_data_source.dart';
 import '../../data/datasources/auth_remote_data_source.dart';
@@ -111,7 +112,11 @@ class AuthController extends _$AuthController {
     if (!ref.mounted) return;
 
     final session = result.value;
-    if (session != null) _syncCache(session);
+    if (session != null) {
+      await _clearSnapshotCache();
+      if (!ref.mounted) return;
+      _syncCache(session);
+    }
     state = result;
   }
 
@@ -140,6 +145,7 @@ class AuthController extends _$AuthController {
 
     // Redirect ke login segera; revoke token ke server berjalan best-effort.
     _clearSessionState();
+    await _clearSnapshotCache();
     await ref.read(authRepositoryProvider).logout();
   }
 
@@ -203,5 +209,14 @@ class AuthController extends _$AuthController {
   void _clearSessionState() {
     ref.read(authSessionCacheProvider).clear();
     if (ref.mounted) state = const AsyncData(null);
+  }
+
+  /// Cache data lintas akun harus dibersihkan saat login/logout.
+  Future<void> _clearSnapshotCache() async {
+    try {
+      await ref.read(cacheStoreProvider).clear();
+    } catch (_) {
+      // Cache bersifat best-effort; jangan menggagalkan auth.
+    }
   }
 }

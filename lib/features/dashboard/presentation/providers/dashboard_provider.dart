@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/network/dio_provider.dart';
+import '../../../../core/storage/cache_store.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
 import '../../data/repositories/dashboard_repository_impl.dart';
 import '../../domain/entities/dashboard_entity.dart';
@@ -19,6 +20,7 @@ part 'dashboard_provider.g.dart';
 DashboardRepository dashboardRepository(Ref ref) {
   return DashboardRepositoryImpl(
     DashboardRemoteDataSource(ref.watch(dioProvider)),
+    ref.watch(cacheStoreProvider),
   );
 }
 

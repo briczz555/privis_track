@@ -17,6 +17,8 @@ sealed class DashboardEntity with _$DashboardEntity {
     required List<PortfolioSliceEntity> portfolio,
     required List<ProjectEntity> activeProjects,
     required List<ActivityEntity> activities,
+    @Default(false) bool isFromCache,
+    DateTime? cachedAt,
   }) = _DashboardEntity;
 
   Map<ProjectStatus, int> get portfolioByStatus => {

@@ -55,7 +55,7 @@ final class DashboardRepositoryProvider
 }
 
 String _$dashboardRepositoryHash() =>
-    r'9498c1f4ad2d0c93d05f75a8d3a7ce72a43f98e4';
+    r'8d08bd9b2ea01c15cccaa8756bce93c1bc223d2a';
 
 @ProviderFor(getDashboardUsecase)
 final getDashboardUsecaseProvider = GetDashboardUsecaseProvider._();

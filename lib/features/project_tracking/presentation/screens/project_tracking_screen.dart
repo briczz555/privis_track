@@ -8,6 +8,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/error_message.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
+import '../../../../core/widgets/offline_banner.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../auth/domain/entities/auth_role.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
@@ -222,6 +223,18 @@ class _ProjectTrackingContent extends StatelessWidget {
     return CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
+        if (project.isFromCache)
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.md,
+                AppSpacing.md,
+                0,
+              ),
+              child: OfflineBanner(cachedAt: project.cachedAt),
+            ),
+          ),
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(

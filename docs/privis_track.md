@@ -2,10 +2,10 @@
 
 **Project Name:** PriVis Track
 **Project Description:** Internal Project Tracking & Document Archive App
-**Phase:** Fase 2 – Backend & API Integration (berjalan)
+**Phase:** Fase 3 – Operasional & Skala (Fase 2 selesai)
 **Platform:** Mobile App (Flutter / Android & iOS)
 **Base Architecture:** [briczz555/flutter-clean-starter](https://github.com/briczz555/flutter-clean-starter)
-**Document Status:** Approved — diperbarui 12 November 2026 sesuai implementasi
+**Document Status:** Approved — diperbarui 12 November 2026 (Fase 2 selesai)
 **Repositori:** `privis_track` (Flutter) · `privis_track_api` (NestJS)
 
 ---
@@ -26,7 +26,7 @@ Aplikasi ini berfungsi sebagai **pusat arsip dokumen** agar seluruh anggota tim 
 
 Dummy data sudah sepenuhnya diganti API nyata pada Fase 2.
 
-### 2.2. Fase 2 — 🟡 Berjalan
+### 2.2. Fase 2 — ✅ Selesai
 
 | Item | Status |
 |---|---|
@@ -34,11 +34,13 @@ Dummy data sudah sepenuhnya diganti API nyata pada Fase 2.
 | Integrasi Dio `remote_data_source` ke API sesungguhnya | ✅ |
 | Auth JWT, role, dokumen, PATCH tahap/proyek, ganti password, manajemen user | ✅ |
 | Hardening backend (rate limit, Swagger, magic-bytes, akun layanan MinIO) | ✅ |
-| Penyimpanan luring Drift di `core/storage/` (cache baca) | ⏳ |
+| Penyimpanan luring Drift di `core/storage/` (cache baca) | ✅ |
 
-**Sisa Fase 2:** cache offline Drift untuk data baca (dashboard, daftar proyek, detail
-tracking), fallback saat jaringan gagal, dan indikator data luring. Antrean tulis
-offline (upload/PATCH) **tidak** termasuk cakupan Fase 2.
+**Hasil Fase 2:** cache offline read-only untuk dashboard, daftar proyek, dan detail
+tracking sudah aktif. Saat koneksi gagal/timeout, aplikasi menampilkan snapshot
+terakhir beserta label "data luring"; error autentikasi/izin tidak memakai cache.
+Cache dibersihkan saat login/logout. Antrean tulis offline (upload/PATCH) tetap
+di luar cakupan.
 
 ### 2.3. Tambahan di luar PRD awal
 
@@ -52,7 +54,7 @@ Fitur berikut lahir dari kebutuhan operasional dan sudah diimplementasikan:
 | Ganti password + manajemen user | Akun seed tidak boleh dipakai permanen |
 | Rate limit, Swagger `/docs`, validasi magic-bytes, akun layanan MinIO | Kesiapan produksi |
 
-### 2.4. Fase 3 — ⏳ Operasional & skala
+### 2.4. Fase 3 — ⏳ Berikutnya
 
 - Backup offsite otomatis (PostgreSQL + MinIO) dan monitoring uptime.
 - Pagination UI untuk lebih dari 100 proyek.
@@ -100,11 +102,12 @@ Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
 - Nonaktif dan reset password mencabut seluruh sesi user tersebut.
 - Admin tidak dapat menonaktifkan atau menurunkan role akun sendiri; minimal satu admin aktif harus tersisa.
 
-### 4.5. Cache Offline (`rencana Fase 2`)
+### 4.5. Cache Offline (`lib/core/storage/`)
 
-- Cache baca memakai Drift di `core/storage/`.
-- Saat jaringan gagal, tampilkan data terakhir beserta waktu pembaruan dan label "data luring".
-- Cache dibersihkan saat logout; tidak ada antrean aksi tulis offline.
+- Snapshot JSON data baca disimpan di Drift (`cache_snapshots`).
+- Saat jaringan gagal/timeout, tampilkan data terakhir beserta waktu pembaruan dan label "data luring".
+- Hanya error koneksi/timeout yang memakai cache; error 401/403/404 tetap ditampilkan.
+- Cache dibersihkan saat login/logout; tidak ada antrean aksi tulis offline.
 
 ---
 
@@ -121,7 +124,7 @@ Pengembangan **wajib** mengikuti pola **Feature-first + Clean Architecture** ses
 | Data Modeling | Freezed + JSON Serializable (`sealed class` wajib) |
 | Routing | GoRouter (terpusat di `core/navigation/`) |
 | Network | Dio ke API nyata, `mapDioException()` di repository |
-| Local cache | Drift (sudah terpasang, belum dipakai — sisa Fase 2) |
+| Local cache | Drift (snapshot baca: dashboard, proyek, tracking) |
 | Backend | NestJS 12, Prisma 6, PostgreSQL 16, MinIO (S3-compatible) |
 | Deployment | Docker Compose di VPS, Cloudflare Tunnel → Nginx Proxy Manager |
 
@@ -180,7 +183,13 @@ Data **tidak boleh** di-hardcode di presentation layer.
 
 Contoh payload nyata ada di [`api-contract.md`](api-contract.md) dan dapat diuji langsung melalui Swagger `/docs`.
 
-**Rencana cache offline:** simpan snapshot data baca per fitur di Drift beserta `updated_at`. Repository mencoba jaringan terlebih dahulu; jika gagal karena koneksi/timeout, gunakan snapshot dan tandai data sebagai luring. Cache dihapus saat logout atau ketika pengguna berganti akun.
+**Cache offline (sudah aktif):** snapshot JSON data baca disimpan di Drift
+(`cache_snapshots`) dengan `updated_at`. Repository mencoba jaringan terlebih
+dahulu; jika gagal karena koneksi/timeout, snapshot dipakai dan entity ditandai
+`isFromCache` sehingga UI menampilkan banner data luring. Error autentikasi,
+izin, atau validasi tidak memakai cache. Cache dihapus saat login/logout agar
+data tidak berpindah akun. Key cache: `dashboard`,
+`projects:page=...:limit=...:status=...:search=...`, dan `project:<code>`.
 
 ## 7. Di Luar Cakupan
 
@@ -193,7 +202,7 @@ Contoh payload nyata ada di [`api-contract.md`](api-contract.md) dan dapat diuji
 
 ## 8. Roadmap & Definition of Done
 
-### Fase 2 — Definition of Done
+### Fase 2 — Definition of Done (tercapai)
 
 - [x] Backend REST API berjalan di VPS dan terhubung PostgreSQL + MinIO.
 - [x] Auth, role, dan seluruh endpoint baca terintegrasi di Flutter.
@@ -201,8 +210,8 @@ Contoh payload nyata ada di [`api-contract.md`](api-contract.md) dan dapat diuji
 - [x] Update tahap & status proyek dari aplikasi.
 - [x] Ganti password dan manajemen user oleh admin.
 - [x] Hardening: rate limit, Swagger, magic-bytes, akun layanan MinIO.
-- [ ] Cache offline Drift + indikator data luring.
-- [ ] Test dan dokumentasi cache offline.
+- [x] Cache offline Drift + indikator data luring.
+- [x] Test dan dokumentasi cache offline (unit test fallback, integration test Drift di perangkat, migrasi `v1_to_v2.md`).
 
 ### Fase 3 — Backlog
 

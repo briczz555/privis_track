@@ -9,6 +9,8 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
 - **Auth**: login JWT, refresh rotation, secure storage, redirect guard, logout.
 - **Dashboard**: donut chart portofolio, proyek berjalan, activity feed dari API.
 - **Semua Proyek** (`/projects`): daftar semua proyek + filter status.
+  Pagination server-side (muat otomatis saat scroll) dan kembali ke halaman
+  tujuan setelah login.
 - **Project Tracking** (`/projects/:projectCode`): timeline 8 tahap, kontak klien,
   document vault dengan **upload, download, dan hapus** (PDF, DOC/DOCX, XLS/XLSX,
   CSV, PNG/JPG, FIG; maks. 20 MB), serta aksi PM/admin untuk menandai selesai

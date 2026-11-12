@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../core/constants/project_status.dart';
 import '../../../../core/network/dio_provider.dart';
 import '../../../../core/storage/cache_store.dart';
 import '../../data/datasources/dashboard_remote_data_source.dart';
@@ -81,15 +82,72 @@ class DashboardNotifier extends _$DashboardNotifier {
 
 @riverpod
 class AllProjectsNotifier extends _$AllProjectsNotifier {
+  bool _loadingMore = false;
+  String? _statusApi;
+
+  ProjectStatus? get _status =>
+      _statusApi == null ? null : projectStatusFromApi(_statusApi!);
+
   @override
-  Future<ProjectListEntity> build() {
-    return ref.watch(getProjectsUsecaseProvider).call();
+  Future<ProjectListEntity> build(String? statusApi) {
+    _statusApi = statusApi;
+    return ref.watch(getProjectsUsecaseProvider).call(status: _status);
   }
 
   Future<void> refresh() async {
     final usecase = ref.read(getProjectsUsecaseProvider);
-    final result = await AsyncValue.guard<ProjectListEntity>(usecase.call);
+    final result = await AsyncValue.guard<ProjectListEntity>(
+      () => usecase.call(status: _status),
+    );
     if (!ref.mounted) return;
     state = result;
+  }
+
+  Future<void> loadMore() async {
+    if (_loadingMore) return;
+
+    final current = state.value;
+    if (current == null ||
+        current.isLoadingMore ||
+        current.page >= current.totalPages) {
+      return;
+    }
+
+    _loadingMore = true;
+    state = AsyncData(current.copyWith(isLoadingMore: true));
+
+    try {
+      final next = await ref
+          .read(getProjectsUsecaseProvider)
+          .call(page: current.page + 1, limit: current.limit, status: _status);
+
+      if (!ref.mounted) return;
+
+      final latest = state.value ?? current;
+      state = AsyncData(
+        latest.copyWith(
+          projects: [...latest.projects, ...next.projects],
+          page: next.page,
+          limit: next.limit,
+          total: next.total,
+          totalPages: next.totalPages,
+          statusCounts: next.statusCounts.isNotEmpty
+              ? next.statusCounts
+              : latest.statusCounts,
+          isFromCache: latest.isFromCache || next.isFromCache,
+          cachedAt: next.cachedAt ?? latest.cachedAt,
+          isLoadingMore: false,
+        ),
+      );
+    } catch (_) {
+      if (!ref.mounted) return;
+      final latest = state.value;
+      if (latest != null) {
+        state = AsyncData(latest.copyWith(isLoadingMore: false));
+      }
+      rethrow;
+    } finally {
+      _loadingMore = false;
+    }
   }
 }

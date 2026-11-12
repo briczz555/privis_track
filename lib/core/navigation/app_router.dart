@@ -11,6 +11,40 @@ class RouterRefreshNotifier extends ChangeNotifier {
   void notify() => notifyListeners();
 }
 
+/// Menentukan redirect auth. Dipisah agar mudah diuji.
+String? resolveAuthRedirect({
+  required bool isLoading,
+  required bool loggedIn,
+  required String path,
+  required Uri uri,
+}) {
+  final isLogin = path == '/login';
+  final isSplash = path == '/splash';
+
+  // Selama sesi masih dipulihkan, tetap di halaman saat ini.
+  if (isLoading) return null;
+
+  if (!loggedIn) {
+    if (isLogin) return null;
+    if (isSplash) return '/login';
+    return '/login?from=${Uri.encodeComponent(uri.toString())}';
+  }
+
+  if (isLogin || isSplash) {
+    final from = uri.queryParameters['from'];
+    if (from != null &&
+        from.startsWith('/') &&
+        !from.startsWith('//') &&
+        !from.startsWith('/login') &&
+        !from.startsWith('/splash')) {
+      return from;
+    }
+    return '/';
+  }
+
+  return null;
+}
+
 /// Instance GoRouter tunggal untuk seluruh aplikasi.
 /// File ini hanya mengonsumsi `appRoutes` dari routes.dart — JANGAN
 /// mendefinisikan GoRoute individual langsung di sini.
@@ -27,21 +61,13 @@ GoRouter appRouter(Ref ref) {
     refreshListenable: refresh,
     redirect: (context, state) {
       final auth = ref.read(authControllerProvider);
-      final path = state.matchedLocation;
-      final isLogin = path == '/login';
-      final isSplash = path == '/splash';
 
-      // Selama sesi masih dipulihkan, tetap di halaman saat ini.
-      if (auth.isLoading) return null;
-
-      final loggedIn = auth.value != null;
-
-      if (!loggedIn) {
-        return isLogin ? null : '/login';
-      }
-
-      if (isLogin || isSplash) return '/';
-      return null;
+      return resolveAuthRedirect(
+        isLoading: auth.isLoading,
+        loggedIn: auth.value != null,
+        path: state.matchedLocation,
+        uri: state.uri,
+      );
     },
     routes: appRoutes,
     errorBuilder: (context, state) => Scaffold(

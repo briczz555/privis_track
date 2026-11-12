@@ -7,6 +7,7 @@ import 'package:privis_track/features/auth/domain/entities/auth_role.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:privis_track/features/auth/domain/repositories/auth_repository.dart';
 import 'package:privis_track/features/dashboard/domain/entities/dashboard_entity.dart';
+import 'package:privis_track/features/dashboard/domain/entities/project_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/project_list_entity.dart';
 import 'package:privis_track/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:privis_track/features/project_tracking/domain/entities/project_tracking_entity.dart';
@@ -76,6 +77,8 @@ class FakeDashboardRepository implements DashboardRepository {
 
   final DashboardEntity dashboard;
   final ProjectListEntity projectList;
+  int getProjectsCalls = 0;
+  final List<int> requestedPages = [];
 
   @override
   Future<DashboardEntity> getDashboard() async => dashboard;
@@ -86,7 +89,28 @@ class FakeDashboardRepository implements DashboardRepository {
     int limit = 100,
     ProjectStatus? status,
     String? search,
-  }) async => projectList;
+  }) async {
+    getProjectsCalls += 1;
+    requestedPages.add(page);
+
+    final filtered = status == null
+        ? projectList.projects
+        : projectList.projects
+              .where((project) => project.status == status)
+              .toList(growable: false);
+    final start = (page - 1) * limit;
+    final pageItems = start >= filtered.length
+        ? const <ProjectEntity>[]
+        : filtered.skip(start).take(limit).toList(growable: false);
+
+    return projectList.copyWith(
+      projects: pageItems,
+      page: page,
+      limit: limit,
+      total: filtered.length,
+      totalPages: limit <= 0 ? 0 : (filtered.length / limit).ceil(),
+    );
+  }
 }
 
 class FakeProjectTrackingRepository implements ProjectTrackingRepository {

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../core/constants/project_status.dart';
 import '../../domain/entities/project_list_entity.dart';
 import '../dto/project_list_dto.dart';
 import 'pagination_meta_model.dart';
@@ -29,5 +30,9 @@ sealed class ProjectListModel with _$ProjectListModel {
     limit: meta.limit,
     total: meta.total,
     totalPages: meta.totalPages,
+    statusCounts: {
+      for (final entry in meta.statusCounts.entries)
+        projectStatusFromApi(entry.key): entry.value,
+    },
   );
 }

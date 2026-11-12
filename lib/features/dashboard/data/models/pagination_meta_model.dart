@@ -11,6 +11,7 @@ sealed class PaginationMetaModel with _$PaginationMetaModel {
     required int limit,
     required int total,
     required int totalPages,
+    @Default(<String, int>{}) Map<String, int> statusCounts,
   }) = _PaginationMetaModel;
 
   factory PaginationMetaModel.fromDto(PaginationMetaDto dto) =>
@@ -19,5 +20,6 @@ sealed class PaginationMetaModel with _$PaginationMetaModel {
         limit: dto.limit,
         total: dto.total,
         totalPages: dto.totalPages,
+        statusCounts: dto.statusCounts,
       );
 }

@@ -84,7 +84,18 @@ Map<String, dynamic> _dashboardJson() => {
 
 Map<String, dynamic> _projectsJson() => {
   'data': [_projectJson('PRJ-001')],
-  'meta': {'page': 1, 'limit': 100, 'total': 1, 'total_pages': 1},
+  'meta': {
+    'page': 1,
+    'limit': 100,
+    'total': 1,
+    'total_pages': 1,
+    'status_counts': {
+      'not_started': 0,
+      'in_progress': 1,
+      'on_hold': 1,
+      'completed': 1,
+    },
+  },
 };
 
 void main() {
@@ -138,6 +149,9 @@ void main() {
     expect(list.total, 1);
     expect(list.totalPages, 1);
     expect(list.projects.first.status, ProjectStatus.inProgress);
+    expect(list.statusCounts[ProjectStatus.inProgress], 1);
+    expect(list.statusCounts[ProjectStatus.onHold], 1);
+    expect(list.statusCounts[ProjectStatus.completed], 1);
   });
 
   test('memakai snapshot cache saat koneksi gagal', () async {

@@ -55,7 +55,8 @@ Aturan yang tidak boleh dilanggar:
 - `features/auth/` — login, restore sesi, refresh token, logout, ganti password,
   halaman pengaturan.
 - `features/dashboard/` — dashboard API (portfolio, proyek aktif, aktivitas) dan
-  halaman **Semua Proyek** (`/projects`) dengan filter status.
+  halaman **Semua Proyek** (`/projects`) dengan filter status + pagination
+  server-side (infinite scroll).
 - `features/project_tracking/` — timeline 8 tahap (semua clickable, no step-lock),
   ringkasan progres, kontak klien, document vault (upload/download/hapus), aksi PM/admin
   untuk menandai selesai/membuka tahap dan mengubah status proyek.

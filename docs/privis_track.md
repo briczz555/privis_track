@@ -325,7 +325,7 @@ snapshot baru selesai ditulis).
 ### Fase 3 — Backlog
 
 1. Backup offsite otomatis + monitoring uptime — 🟡 skrip `scripts/backup.sh` dan `scripts/monitor.sh` siap; tinggal konfigurasi rclone, cron, dan uji restore di VPS.
-2. Pagination Semua Proyek >100 dan deep-link setelah login.
+2. Pagination Semua Proyek >100 dan deep-link setelah login — ✅ pagination server-side + infinite scroll, filter status di server, redirect kembali ke halaman tujuan setelah login.
 3. Antivirus scan dokumen.
 4. Audit log aksi admin.
 5. Opsional: migrasi cache offline ke bulk sync `GET /v1/sync` bila data membesar (lihat bagian 6.1).

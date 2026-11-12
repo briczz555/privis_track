@@ -1154,6 +1154,16 @@ components:
         total_pages:
           type: integer
           example: 1
+        status_counts:
+          type: object
+          additionalProperties:
+            type: integer
+          description: Jumlah proyek per status tanpa filter status
+          example:
+            not_started: 1
+            in_progress: 4
+            on_hold: 1
+            completed: 2
 
     ProjectListResponse:
       type: object

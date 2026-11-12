@@ -239,9 +239,22 @@ Query: `status`, `search`, `client_id`, `page` (default 1), `limit` (default 20,
 ```json
 {
   "data": [ { "...": "ProjectSummary" } ],
-  "meta": { "page": 1, "limit": 20, "total": 8, "total_pages": 1 }
+  "meta": {
+    "page": 1,
+    "limit": 20,
+    "total": 8,
+    "total_pages": 1,
+    "status_counts": {
+      "not_started": 1,
+      "in_progress": 4,
+      "on_hold": 1,
+      "completed": 2
+    }
+  }
 }
 ```
+
+`status_counts` menghitung seluruh proyek **tanpa filter status** (tetap mengikuti `search`/`client_id`), sehingga chip filter tetap akurat saat daftar memakai pagination.
 
 `ProjectSummary`:
 

@@ -10,6 +10,9 @@ sealed class PaginationMetaDto with _$PaginationMetaDto {
     required int limit,
     required int total,
     @JsonKey(name: 'total_pages') required int totalPages,
+    @JsonKey(name: 'status_counts')
+    @Default(<String, int>{})
+    Map<String, int> statusCounts,
   }) = _PaginationMetaDto;
 
   factory PaginationMetaDto.fromJson(Map<String, dynamic> json) =>

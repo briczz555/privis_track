@@ -198,34 +198,79 @@ abstract class _$DashboardNotifier extends $AsyncNotifier<DashboardEntity> {
 }
 
 @ProviderFor(AllProjectsNotifier)
-final allProjectsProvider = AllProjectsNotifierProvider._();
+final allProjectsProvider = AllProjectsNotifierFamily._();
 
 final class AllProjectsNotifierProvider
     extends $AsyncNotifierProvider<AllProjectsNotifier, ProjectListEntity> {
-  AllProjectsNotifierProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'allProjectsProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  AllProjectsNotifierProvider._({
+    required AllProjectsNotifierFamily super.from,
+    required String? super.argument,
+  }) : super(
+         retry: null,
+         name: r'allProjectsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$allProjectsNotifierHash();
 
+  @override
+  String toString() {
+    return r'allProjectsProvider'
+        ''
+        '($argument)';
+  }
+
   @$internal
   @override
   AllProjectsNotifier create() => AllProjectsNotifier();
+
+  @override
+  bool operator ==(Object other) {
+    return other is AllProjectsNotifierProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$allProjectsNotifierHash() =>
-    r'2a6a24732777d5d1d81ad34439030b2a767c1193';
+    r'794be283d3eb2e62db844828d85871a1113d113c';
+
+final class AllProjectsNotifierFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          AllProjectsNotifier,
+          AsyncValue<ProjectListEntity>,
+          ProjectListEntity,
+          FutureOr<ProjectListEntity>,
+          String?
+        > {
+  AllProjectsNotifierFamily._()
+    : super(
+        retry: null,
+        name: r'allProjectsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  AllProjectsNotifierProvider call(String? statusApi) =>
+      AllProjectsNotifierProvider._(argument: statusApi, from: this);
+
+  @override
+  String toString() => r'allProjectsProvider';
+}
 
 abstract class _$AllProjectsNotifier extends $AsyncNotifier<ProjectListEntity> {
-  FutureOr<ProjectListEntity> build();
+  late final _$args = ref.$arg as String?;
+  String? get statusApi => _$args;
+
+  FutureOr<ProjectListEntity> build(String? statusApi);
   @$mustCallSuper
   @override
   WhenComplete runBuild() {
@@ -239,6 +284,6 @@ abstract class _$AllProjectsNotifier extends $AsyncNotifier<ProjectListEntity> {
               Object?,
               Object?
             >;
-    return element.handleCreate(ref, build);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

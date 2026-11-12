@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../core/constants/project_status.dart';
 import 'project_entity.dart';
 
 part 'project_list_entity.freezed.dart';
@@ -12,6 +13,8 @@ sealed class ProjectListEntity with _$ProjectListEntity {
     required int limit,
     required int total,
     required int totalPages,
+    @Default(<ProjectStatus, int>{}) Map<ProjectStatus, int> statusCounts,
+    @Default(false) bool isLoadingMore,
     @Default(false) bool isFromCache,
     DateTime? cachedAt,
   }) = _ProjectListEntity;

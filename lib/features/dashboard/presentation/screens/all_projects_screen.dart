@@ -15,13 +15,12 @@ import '../../../../core/widgets/offline_banner.dart';
 import '../../../auth/domain/entities/auth_role.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../../project_management/presentation/project_form_launcher.dart';
-import '../../domain/entities/project_entity.dart';
 import '../../domain/entities/project_list_entity.dart';
 import '../providers/dashboard_provider.dart';
 import '../widgets/project_card.dart';
 import '../widgets/project_filter_bar.dart';
 
-/// Daftar seluruh proyek (semua status) dengan filter.
+/// Daftar seluruh proyek dengan filter status dan pagination server-side.
 class AllProjectsScreen extends ConsumerStatefulWidget {
   const AllProjectsScreen({super.key});
 
@@ -31,17 +30,39 @@ class AllProjectsScreen extends ConsumerStatefulWidget {
 
 class _AllProjectsScreenState extends ConsumerState<AllProjectsScreen> {
   ProjectStatus? _selectedStatus;
+  bool _isLoadingMore = false;
 
-  Future<void> _refresh() => ref.read(allProjectsProvider.notifier).refresh();
+  String? get _statusApi =>
+      _selectedStatus == null ? null : projectStatusToApi(_selectedStatus!);
+
+  Future<void> _refresh() {
+    return ref.read(allProjectsProvider(_statusApi).notifier).refresh();
+  }
+
+  Future<void> _loadMore() async {
+    if (_isLoadingMore) return;
+    _isLoadingMore = true;
+
+    try {
+      await ref.read(allProjectsProvider(_statusApi).notifier).loadMore();
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(readableErrorMessage(error))));
+    } finally {
+      _isLoadingMore = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final projects = ref.watch(allProjectsProvider);
+    final provider = allProjectsProvider(_statusApi);
+    final projects = ref.watch(provider);
     final data = projects.value;
     final role = ref.watch(authControllerProvider).value?.user.role;
     final canManage = role == AuthRole.admin || role == AuthRole.pm;
 
-    ref.listen(allProjectsProvider, (previous, next) {
+    ref.listen(provider, (previous, next) {
       if (next.hasValue && next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(readableErrorMessage(next.error!))),
@@ -61,13 +82,21 @@ class _AllProjectsScreenState extends ConsumerState<AllProjectsScreen> {
       body: SafeArea(
         top: false,
         child: data != null
-            ? RefreshIndicator(
-                onRefresh: _refresh,
-                child: _AllProjectsContent(
-                  data: data,
-                  selectedStatus: _selectedStatus,
-                  onStatusSelected: (status) =>
-                      setState(() => _selectedStatus = status),
+            ? NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification.metrics.extentAfter < 300) {
+                    _loadMore();
+                  }
+                  return false;
+                },
+                child: RefreshIndicator(
+                  onRefresh: _refresh,
+                  child: _AllProjectsContent(
+                    data: data,
+                    selectedStatus: _selectedStatus,
+                    onStatusSelected: (status) =>
+                        setState(() => _selectedStatus = status),
+                  ),
                 ),
               )
             : projects.hasError
@@ -98,39 +127,31 @@ class _AllProjectsContent extends StatelessWidget {
   final ProjectStatus? selectedStatus;
   final ValueChanged<ProjectStatus?> onStatusSelected;
 
-  int _statusPriority(ProjectStatus status) => switch (status) {
-    ProjectStatus.inProgress => 0,
-    ProjectStatus.onHold => 1,
-    ProjectStatus.notStarted => 2,
-    ProjectStatus.completed => 3,
-  };
+  Map<ProjectStatus, int> _countsByStatus() {
+    if (data.statusCounts.isNotEmpty) return data.statusCounts;
 
-  List<ProjectEntity> _visibleProjects() {
-    final sorted = [...data.projects]
-      ..sort((a, b) {
-        final byStatus = _statusPriority(a.status)
-            .compareTo(_statusPriority(b.status));
-        if (byStatus != 0) return byStatus;
-        return b.progressPercent.compareTo(a.progressPercent);
-      });
-
-    final selected = selectedStatus;
-    if (selected == null) return sorted;
-    return sorted
-        .where((project) => project.status == selected)
-        .toList(growable: false);
+    // Fallback untuk respons lama yang belum mengirim status_counts.
+    final counts = {for (final status in ProjectStatus.values) status: 0};
+    for (final project in data.projects) {
+      counts[project.status] = (counts[project.status] ?? 0) + 1;
+    }
+    return counts;
   }
 
-  Map<ProjectStatus, int> _countsByStatus() => {
-    for (final status in ProjectStatus.values)
-      status: data.projects.where((project) => project.status == status).length,
-  };
+  String _countLabel() {
+    final loaded = data.projects.length;
+    final total = data.total;
+    final selected = selectedStatus;
+    final suffix = selected == null ? '' : ' · ${selected.label}';
+
+    if (loaded >= total) return '$total proyek$suffix';
+    return '$loaded dari $total proyek$suffix';
+  }
 
   @override
   Widget build(BuildContext context) {
-    final projects = _visibleProjects();
-    final total = data.total;
-    final selected = selectedStatus;
+    final projects = data.projects;
+    final theme = Theme.of(context);
 
     return CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
@@ -157,7 +178,7 @@ class _AllProjectsContent extends StatelessWidget {
             ),
             child: ProjectFilterBar(
               counts: _countsByStatus(),
-              selected: selected,
+              selected: selectedStatus,
               onSelected: onStatusSelected,
             ),
           ),
@@ -171,12 +192,9 @@ class _AllProjectsContent extends StatelessWidget {
               AppSpacing.md,
             ),
             child: Text(
-              selected == null
-                  ? '$total proyek'
-                  : '${projects.length} dari $total proyek · ${selected.label}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface
-                    .withValues(alpha: 0.55),
+              _countLabel(),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.55),
               ),
             ),
           ),
@@ -207,6 +225,19 @@ class _AllProjectsContent extends StatelessWidget {
               },
               separatorBuilder: (context, index) =>
                   const SizedBox(height: AppSpacing.md),
+            ),
+          ),
+        if (data.isLoadingMore)
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(AppSpacing.md),
+              child: Center(
+                child: SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
             ),
           ),
         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),

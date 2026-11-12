@@ -12,6 +12,11 @@ _PaginationMetaDto _$PaginationMetaDtoFromJson(Map<String, dynamic> json) =>
       limit: (json['limit'] as num).toInt(),
       total: (json['total'] as num).toInt(),
       totalPages: (json['total_pages'] as num).toInt(),
+      statusCounts:
+          (json['status_counts'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, (e as num).toInt()),
+          ) ??
+          const <String, int>{},
     );
 
 Map<String, dynamic> _$PaginationMetaDtoToJson(_PaginationMetaDto instance) =>
@@ -20,4 +25,5 @@ Map<String, dynamic> _$PaginationMetaDtoToJson(_PaginationMetaDto instance) =>
       'limit': instance.limit,
       'total': instance.total,
       'total_pages': instance.totalPages,
+      'status_counts': instance.statusCounts,
     };

@@ -142,6 +142,12 @@ final testProjectList = ProjectListEntity(
   limit: 100,
   total: testProjects.length,
   totalPages: 1,
+  statusCounts: const {
+    ProjectStatus.inProgress: 1,
+    ProjectStatus.onHold: 1,
+    ProjectStatus.notStarted: 0,
+    ProjectStatus.completed: 1,
+  },
 );
 
 final testManagedUsers = [

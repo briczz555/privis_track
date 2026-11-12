@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PaginationMetaDto {
 
- int get page; int get limit; int get total;@JsonKey(name: 'total_pages') int get totalPages;
+ int get page; int get limit; int get total;@JsonKey(name: 'total_pages') int get totalPages;@JsonKey(name: 'status_counts') Map<String, int> get statusCounts;
 /// Create a copy of PaginationMetaDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $PaginationMetaDtoCopyWith<PaginationMetaDto> get copyWith => _$PaginationMetaDt
 @override
 bool operator ==(Object other) {
   final _this = this as PaginationMetaDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaginationMetaDto&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.totalPages, _this.totalPages) || other.totalPages == _this.totalPages));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PaginationMetaDto&&(identical(other.page, _this.page) || other.page == _this.page)&&(identical(other.limit, _this.limit) || other.limit == _this.limit)&&(identical(other.total, _this.total) || other.total == _this.total)&&(identical(other.totalPages, _this.totalPages) || other.totalPages == _this.totalPages)&&const DeepCollectionEquality().equals(other.statusCounts, _this.statusCounts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as PaginationMetaDto;
-  return Object.hash(runtimeType,_this.page,_this.limit,_this.total,_this.totalPages);
+  return Object.hash(runtimeType,_this.page,_this.limit,_this.total,_this.totalPages,const DeepCollectionEquality().hash(_this.statusCounts));
 }
 
 @override
 String toString() {
   final _this = this as PaginationMetaDto;
-  return 'PaginationMetaDto(page: ${_this.page}, limit: ${_this.limit}, total: ${_this.total}, totalPages: ${_this.totalPages})';
+  return 'PaginationMetaDto(page: ${_this.page}, limit: ${_this.limit}, total: ${_this.total}, totalPages: ${_this.totalPages}, statusCounts: ${_this.statusCounts})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $PaginationMetaDtoCopyWith<$Res>  {
   factory $PaginationMetaDtoCopyWith(PaginationMetaDto value, $Res Function(PaginationMetaDto) _then) = _$PaginationMetaDtoCopyWithImpl;
 @useResult
 $Res call({
- int page, int limit, int total,@JsonKey(name: 'total_pages') int totalPages
+ int page, int limit, int total,@JsonKey(name: 'total_pages') int totalPages,@JsonKey(name: 'status_counts') Map<String, int> statusCounts
 });
 
 
@@ -71,13 +71,14 @@ class _$PaginationMetaDtoCopyWithImpl<$Res>
 
 /// Create a copy of PaginationMetaDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? page = null,Object? limit = null,Object? total = null,Object? totalPages = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? page = null,Object? limit = null,Object? total = null,Object? totalPages = null,Object? statusCounts = null,}) {
   return _then(PaginationMetaDto(
 page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
 as int,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
-as int,
+as int,statusCounts: null == statusCounts ? _self.statusCounts : statusCounts // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
   ));
 }
 
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int page,  int limit,  int total, @JsonKey(name: 'total_pages')  int totalPages)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int page,  int limit,  int total, @JsonKey(name: 'total_pages')  int totalPages, @JsonKey(name: 'status_counts')  Map<String, int> statusCounts)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PaginationMetaDto() when $default != null:
-return $default(_that.page,_that.limit,_that.total,_that.totalPages);case _:
+return $default(_that.page,_that.limit,_that.total,_that.totalPages,_that.statusCounts);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.page,_that.limit,_that.total,_that.totalPages);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int page,  int limit,  int total, @JsonKey(name: 'total_pages')  int totalPages)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int page,  int limit,  int total, @JsonKey(name: 'total_pages')  int totalPages, @JsonKey(name: 'status_counts')  Map<String, int> statusCounts)  $default,) {final _that = this;
 switch (_that) {
 case _PaginationMetaDto():
-return $default(_that.page,_that.limit,_that.total,_that.totalPages);}
+return $default(_that.page,_that.limit,_that.total,_that.totalPages,_that.statusCounts);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -197,10 +198,10 @@ return $default(_that.page,_that.limit,_that.total,_that.totalPages);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int page,  int limit,  int total, @JsonKey(name: 'total_pages')  int totalPages)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int page,  int limit,  int total, @JsonKey(name: 'total_pages')  int totalPages, @JsonKey(name: 'status_counts')  Map<String, int> statusCounts)?  $default,) {final _that = this;
 switch (_that) {
 case _PaginationMetaDto() when $default != null:
-return $default(_that.page,_that.limit,_that.total,_that.totalPages);case _:
+return $default(_that.page,_that.limit,_that.total,_that.totalPages,_that.statusCounts);case _:
   return null;
 
 }
@@ -212,13 +213,20 @@ return $default(_that.page,_that.limit,_that.total,_that.totalPages);case _:
 @JsonSerializable()
 
 class _PaginationMetaDto implements PaginationMetaDto {
-  const _PaginationMetaDto({required this.page, required this.limit, required this.total, @JsonKey(name: 'total_pages') required this.totalPages});
+  const _PaginationMetaDto({required this.page, required this.limit, required this.total, @JsonKey(name: 'total_pages') required this.totalPages, @JsonKey(name: 'status_counts')  Map<String, int> statusCounts = const <String, int>{}}): _statusCounts = statusCounts;
   factory _PaginationMetaDto.fromJson(Map<String, dynamic> json) => _$PaginationMetaDtoFromJson(json);
 
 @override final  int page;
 @override final  int limit;
 @override final  int total;
 @override@JsonKey(name: 'total_pages') final  int totalPages;
+ final  Map<String, int> _statusCounts;
+@override@JsonKey(name: 'status_counts') Map<String, int> get statusCounts {
+  if (_statusCounts is EqualUnmodifiableMapView) return _statusCounts;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_statusCounts);
+}
+
 
 /// Create a copy of PaginationMetaDto
 /// with the given fields replaced by the non-null parameter values.
@@ -233,18 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaginationMetaDto&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.total, total) || other.total == total)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PaginationMetaDto&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.total, total) || other.total == total)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&const DeepCollectionEquality().equals(other.statusCounts, _statusCounts));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,page,limit,total,totalPages);
+    return Object.hash(runtimeType,page,limit,total,totalPages,const DeepCollectionEquality().hash(_statusCounts));
 }
 
 @override
 String toString() {
-    return 'PaginationMetaDto(page: $page, limit: $limit, total: $total, totalPages: $totalPages)';
+    return 'PaginationMetaDto(page: $page, limit: $limit, total: $total, totalPages: $totalPages, statusCounts: $statusCounts)';
 }
 
 
@@ -255,7 +263,7 @@ abstract mixin class _$PaginationMetaDtoCopyWith<$Res> implements $PaginationMet
   factory _$PaginationMetaDtoCopyWith(_PaginationMetaDto value, $Res Function(_PaginationMetaDto) _then) = __$PaginationMetaDtoCopyWithImpl;
 @override @useResult
 $Res call({
- int page, int limit, int total,@JsonKey(name: 'total_pages') int totalPages
+ int page, int limit, int total,@JsonKey(name: 'total_pages') int totalPages,@JsonKey(name: 'status_counts') Map<String, int> statusCounts
 });
 
 
@@ -272,13 +280,14 @@ class __$PaginationMetaDtoCopyWithImpl<$Res>
 
 /// Create a copy of PaginationMetaDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? page = null,Object? limit = null,Object? total = null,Object? totalPages = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? page = null,Object? limit = null,Object? total = null,Object? totalPages = null,Object? statusCounts = null,}) {
   return _then(_PaginationMetaDto(
 page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
 as int,total: null == total ? _self.total : total // ignore: cast_nullable_to_non_nullable
 as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
-as int,
+as int,statusCounts: null == statusCounts ? _self._statusCounts : statusCounts // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
   ));
 }
 

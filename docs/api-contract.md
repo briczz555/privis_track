@@ -15,6 +15,7 @@
 | Upload/download/hapus dokumen | ✅ |
 | Manajemen user (admin) | ✅ |
 | Buat/edit proyek & kontak klien | ✅ |
+| Audit log aksi admin | ✅ |
 | Swagger runtime (`/docs`) & rate limit aplikasi | ✅ |
 
 ## Keputusan desain (disetujui)
@@ -408,7 +409,16 @@ Semua endpoint memerlukan Bearer token dengan role `admin`.
 
 `User` = `{id, name, email, role, division, is_active, created_at}`.
 
-### 6.7 Aktivitas
+### 6.7 Audit Log (khusus admin)
+
+`GET /audit-logs?page=1&limit=20&entity=&action=&search=` → `{ data: [AuditLog], meta }`.
+
+- Role `admin`. Filter opsional `entity` (`user`/`project`), `action`, dan `search` pada ringkasan/nama aktor.
+- `AuditLog` = `{id, actor_id, actor_name, actor_role, action, entity, entity_id, summary, created_at}`.
+- Aksi yang dicatat: `user.created`, `user.updated`, `user.activated`, `user.deactivated`, `user.password_reset`, `project.created`, `project.updated`.
+- Nama/role aktor disimpan sebagai snapshot; audit bersifat best-effort (kegagalan audit tidak menggagalkan aksi utama).
+
+### 6.8 Aktivitas
 
 `GET /activities?limit=20&cursor=...` → `{ data: [Activity], next_cursor }`.
 
@@ -416,7 +426,7 @@ Semua endpoint memerlukan Bearer token dengan role `admin`.
 - `limit` default 20, maksimum 100.
 - `Activity` memuat `type`, `action` (teks tampilan), `target`, `actor`, `project`, `created_at`.
 
-### 6.8 Health
+### 6.9 Health
 
 `GET /health` (tanpa `/v1`) → `{ "status": "ok" }`. Tidak menampilkan versi/uptime ke publik.
 

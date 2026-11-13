@@ -2,6 +2,8 @@ import 'package:privis_track/core/constants/project_status.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_role.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_user_entity.dart';
+import 'package:privis_track/features/audit_log/domain/entities/audit_log_entity.dart';
+import 'package:privis_track/features/audit_log/domain/entities/audit_log_page_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/activity_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/portfolio_slice_entity.dart';
@@ -148,6 +150,37 @@ final testProjectList = ProjectListEntity(
     ProjectStatus.notStarted: 0,
     ProjectStatus.completed: 1,
   },
+);
+
+final testAuditLogs = [
+  AuditLogEntity(
+    id: 'audit-1',
+    actorName: 'Admin PriVis',
+    actorRole: AuthRole.admin,
+    action: 'user.created',
+    entity: 'user',
+    entityId: 'user-9',
+    summary: 'membuat user Budi Baru (budi@privis.id)',
+    createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+  ),
+  AuditLogEntity(
+    id: 'audit-2',
+    actorName: 'Admin PriVis',
+    actorRole: AuthRole.admin,
+    action: 'project.updated',
+    entity: 'project',
+    entityId: 'project-1',
+    summary: 'memperbarui proyek PRJ-001 · E-Commerce App',
+    createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+  ),
+];
+
+final testAuditLogPage = AuditLogPageEntity(
+  logs: testAuditLogs,
+  page: 1,
+  limit: 30,
+  total: testAuditLogs.length,
+  totalPages: 1,
 );
 
 final testManagedUsers = [

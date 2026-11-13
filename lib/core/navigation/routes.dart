@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/settings_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
+import '../../features/audit_log/presentation/screens/audit_log_screen.dart';
 import '../../features/dashboard/presentation/screens/all_projects_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/project_management/presentation/screens/project_form_screen.dart';
@@ -18,6 +19,7 @@ abstract class AppRoutes {
   static const splash = 'splash';
   static const login = 'login';
   static const settings = 'settings';
+  static const auditLog = 'audit-log';
   static const dashboard = 'dashboard';
   static const allProjects = 'all-projects';
   static const projectCreate = 'project-create';
@@ -48,6 +50,11 @@ final List<GoRoute> appRoutes = [
     path: '/settings/users',
     name: AppRoutes.userManagement,
     builder: (context, state) => const UserManagementScreen(),
+  ),
+  GoRoute(
+    path: '/settings/audit-logs',
+    name: AppRoutes.auditLog,
+    builder: (context, state) => const AuditLogScreen(),
   ),
 
   // ----- dashboard -----

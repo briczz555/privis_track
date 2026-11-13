@@ -95,7 +95,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                if (user.role == AuthRole.admin)
+                if (user.role == AuthRole.admin) ...[
                   Card(
                     child: ListTile(
                       leading: const Icon(Icons.group_outlined),
@@ -107,6 +107,17 @@ class SettingsScreen extends ConsumerWidget {
                       onTap: () => context.pushNamed(AppRoutes.userManagement),
                     ),
                   ),
+                  const SizedBox(height: AppSpacing.md),
+                  Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.history_rounded),
+                      title: const Text('Audit Log'),
+                      subtitle: const Text('Riwayat aksi admin'),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () => context.pushNamed(AppRoutes.auditLog),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: AppSpacing.md),
                 Card(
                   child: ListTile(

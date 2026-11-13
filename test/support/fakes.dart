@@ -5,6 +5,8 @@ import 'package:privis_track/core/network/exceptions/network_exception.dart';
 import 'package:privis_track/core/storage/cache_store.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_role.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_session_entity.dart';
+import 'package:privis_track/features/audit_log/domain/entities/audit_log_page_entity.dart';
+import 'package:privis_track/features/audit_log/domain/repositories/audit_log_repository.dart';
 import 'package:privis_track/features/auth/domain/repositories/auth_repository.dart';
 import 'package:privis_track/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/project_entity.dart';
@@ -284,6 +286,22 @@ class FakeProjectManagementRepository implements ProjectManagementRepository {
     lastUpdatedCode = code;
     lastUpdatedName = name;
     lastUpdatedClient = client;
+  }
+}
+
+class FakeAuditLogRepository implements AuditLogRepository {
+  FakeAuditLogRepository(this.page);
+
+  final AuditLogPageEntity page;
+  int calls = 0;
+
+  @override
+  Future<AuditLogPageEntity> getAuditLogs({
+    int page = 1,
+    int limit = 30,
+  }) async {
+    calls += 1;
+    return this.page;
   }
 }
 

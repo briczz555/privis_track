@@ -2,10 +2,10 @@
 
 **Project Name:** PriVis Track
 **Project Description:** Internal Project Tracking & Document Archive App
-**Phase:** Fase 3 – Operasional & Skala (Fase 2 selesai)
+**Phase:** Fase 3 – ✅ Selesai
 **Platform:** Mobile App (Flutter / Android & iOS)
 **Base Architecture:** [briczz555/flutter-clean-starter](https://github.com/briczz555/flutter-clean-starter)
-**Document Status:** Approved — diperbarui 12 November 2026 (Fase 2 selesai)
+**Document Status:** Approved — diperbarui 13 November 2026 (Fase 3 selesai)
 **Repositori:** `privis_track` (Flutter) · `privis_track_api` (NestJS)
 
 ---
@@ -57,7 +57,7 @@ Fitur berikut lahir dari kebutuhan operasional dan sudah diimplementasikan:
 | Buat/edit proyek & kontak klien | Proyek baru dan koreksi data klien tidak boleh bergantung pada seed |
 | Rate limit, Swagger `/docs`, validasi magic-bytes, akun layanan MinIO | Kesiapan produksi |
 
-### 2.4. Fase 3 — ⏳ Berikutnya
+### 2.4. Fase 3 — ✅ Selesai
 
 - Backup offsite otomatis (PostgreSQL + MinIO) dan monitoring uptime.
 - Pagination UI untuk lebih dari 100 proyek.
@@ -126,6 +126,13 @@ Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
 - Setelah simpan, dashboard, daftar proyek, dan detail proyek disegarkan.
 - Form yang sama dipakai untuk **memasukkan proyek lama** (tanggal lampau). Progres tahap dapat ditandai dari timeline setelah proyek dibuat.
 - Tidak ada hapus/arsip proyek: seluruh proyek disimpan permanen sebagai arsip.
+
+### 4.7. Audit Log (`lib/features/audit_log/`, admin)
+
+- Mencatat aksi admin: buat/ubah/aktifkan/nonaktifkan user, reset password, buat/ubah proyek/klien.
+- Tabel `audit_logs` menyimpan snapshot nama/role aktor, aksi, entity, ringkasan, metadata, dan waktu.
+- Halaman **Audit Log** (`/settings/audit-logs`) menampilkan riwayat dengan pagination.
+- Pencatatan bersifat best-effort: kegagalan audit tidak menggagalkan aksi utama.
 
 ---
 
@@ -327,10 +334,12 @@ snapshot baru selesai ditulis).
 
 1. Backup offsite otomatis + monitoring uptime — ✅ skrip, rclone Google Drive, dan cron terpasang; uji restore berkala tetap disarankan.
 2. Pagination Semua Proyek >100 dan deep-link setelah login — ✅ pagination server-side + infinite scroll, filter status di server, redirect kembali ke halaman tujuan setelah login.
-3. Audit log aksi admin.
+3. Audit log aksi admin — ✅ tabel `audit_logs`, endpoint admin, dan halaman Audit Log.
 4. Opsional: migrasi cache offline ke bulk sync `GET /v1/sync` bila data membesar (lihat bagian 6.1).
 
 Antivirus scan dokumen: tidak dilanjutkan (lihat bagian 7).
+
+**Status: seluruh item Fase 3 yang disepakati sudah selesai.**
 
 ## 9. Verifikasi
 

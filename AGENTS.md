@@ -64,6 +64,8 @@ Aturan yang tidak boleh dilanggar:
 - `features/user_management/` — halaman **Kelola User** (khusus admin): daftar user,
   tambah, ubah nama/role/divisi, aktif/nonaktifkan, dan reset password.
   Route: `/settings/users`.
+- `features/audit_log/` — halaman **Audit Log** (khusus admin): riwayat aksi admin
+  dengan pagination. Route: `/settings/audit-logs`.
 - `features/project_management/` — form **Tambah/Edit Proyek** (admin/PM): nama,
   tanggal mulai/tenggat, pilih klien existing atau buat klien baru, edit kontak
   klien. Route: `/projects/new`, `/projects/:projectCode/edit`.

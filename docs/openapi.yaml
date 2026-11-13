@@ -22,6 +22,7 @@ tags:
   - name: Documents
   - name: Users
   - name: Activities
+  - name: Audit
   - name: Health
 
 paths:
@@ -533,6 +534,43 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+
+  /audit-logs:
+    get:
+      tags: [Audit]
+      summary: Riwayat aksi admin (admin)
+      description: |
+        Mencatat aksi manajemen user, proyek, dan klien. Nama/role aktor
+        disimpan sebagai snapshot.
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: entity
+          in: query
+          schema:
+            type: string
+            enum: [user, project]
+        - name: action
+          in: query
+          schema:
+            type: string
+            example: user.deactivated
+        - name: search
+          in: query
+          description: Cari pada ringkasan atau nama aktor
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar audit log
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   /activities:
     get:
@@ -1242,6 +1280,50 @@ components:
         created_at:
           type: string
           format: date-time
+
+    AuditLog:
+      type: object
+      required:
+        [id, actor_name, actor_role, action, entity, summary, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        actor_id:
+          type: string
+          format: uuid
+          nullable: true
+        actor_name:
+          type: string
+          example: Admin PriVis
+        actor_role:
+          $ref: '#/components/schemas/UserRole'
+        action:
+          type: string
+          example: user.deactivated
+        entity:
+          type: string
+          enum: [user, project]
+        entity_id:
+          type: string
+          nullable: true
+        summary:
+          type: string
+          example: menonaktifkan user Budi
+        created_at:
+          type: string
+          format: date-time
+
+    AuditLogListResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLog'
+        meta:
+          $ref: '#/components/schemas/PaginationMeta'
 
     ActivityListResponse:
       type: object

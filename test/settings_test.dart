@@ -35,6 +35,7 @@ void main() {
       expect(find.text('admin@privis.id'), findsOneWidget);
       expect(find.text('Ganti password'), findsOneWidget);
       expect(find.text('Kelola User'), findsOneWidget);
+      expect(find.text('Audit Log'), findsOneWidget);
     });
 
     testWidgets('validasi konfirmasi password di dialog', (tester) async {

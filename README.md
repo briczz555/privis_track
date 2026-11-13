@@ -28,7 +28,7 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
   otomatis di latar belakang; aksi tulis tetap butuh koneksi.
 - Data diambil dari backend `privis_track_api` di VPS.
 
-Belum tersedia: audit log aksi admin dan antivirus scan dokumen.
+Belum tersedia: audit log aksi admin.
 
 ## Backend
 

@@ -62,8 +62,9 @@ Fitur berikut lahir dari kebutuhan operasional dan sudah diimplementasikan:
 - Backup offsite otomatis (PostgreSQL + MinIO) dan monitoring uptime.
 - Pagination UI untuk lebih dari 100 proyek.
 - Deep-link: kembali ke halaman tujuan setelah login.
-- Antivirus scan dokumen sebelum dapat diunduh.
 - Audit log aksi admin (manajemen user belum masuk activity proyek).
+
+Antivirus scan dokumen diputuskan **tidak diperlukan** untuk v1 (lihat bagian 7).
 
 ## 3. Target Audience (User Personas)
 
@@ -299,8 +300,8 @@ snapshot baru selesai ditulis).
 - Multi-tenant dan akses klien.
 - Realtime websocket.
 - Antrean aksi tulis offline (upload/PATCH saat tanpa jaringan).
-- Audit log aksi admin.
 - Hapus/arsip proyek: aplikasi bersifat arsip permanen; proyek lama tetap disimpan.
+- Antivirus scan dokumen: diputuskan tidak diperlukan karena pengguna adalah tim internal dan server laptop terbatas. Mitigasi yang sudah ada: whitelist ekstensi, validasi magic-bytes, batas 20 MB, bucket privat, dan unduhan sebagai attachment. Keputusan dapat ditinjau ulang jika model ancaman berubah.
 - Restore dokumen yang sudah dihapus.
 
 ## 8. Roadmap & Definition of Done
@@ -324,11 +325,12 @@ snapshot baru selesai ditulis).
 
 ### Fase 3 — Backlog
 
-1. Backup offsite otomatis + monitoring uptime — 🟡 skrip `scripts/backup.sh` dan `scripts/monitor.sh` siap; tinggal konfigurasi rclone, cron, dan uji restore di VPS.
+1. Backup offsite otomatis + monitoring uptime — ✅ skrip, rclone Google Drive, dan cron terpasang; uji restore berkala tetap disarankan.
 2. Pagination Semua Proyek >100 dan deep-link setelah login — ✅ pagination server-side + infinite scroll, filter status di server, redirect kembali ke halaman tujuan setelah login.
-3. Antivirus scan dokumen.
-4. Audit log aksi admin.
-5. Opsional: migrasi cache offline ke bulk sync `GET /v1/sync` bila data membesar (lihat bagian 6.1).
+3. Audit log aksi admin.
+4. Opsional: migrasi cache offline ke bulk sync `GET /v1/sync` bila data membesar (lihat bagian 6.1).
+
+Antivirus scan dokumen: tidak dilanjutkan (lihat bagian 7).
 
 ## 9. Verifikasi
 

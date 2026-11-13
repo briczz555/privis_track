@@ -427,7 +427,7 @@ Semua endpoint memerlukan Bearer token dengan role `admin`.
 - Isi file yang tidak cocok dengan ekstensinya → `415 unsupported_media_type`.
 - Nama file disanitasi; object key memakai UUID; bucket privat.
 - Download melalui API (stream), bukan signed URL.
-- Opsional lanjutan: antivirus scan sebelum dokumen dapat diunduh.
+- Antivirus scan dokumen diputuskan tidak diperlukan untuk v1: pengguna adalah tim internal dan server laptop terbatas. Mitigasi: whitelist ekstensi, magic-bytes, batas 20 MB, bucket privat, unduhan sebagai attachment.
 
 ## 8. Rate limit, proxy, cache
 

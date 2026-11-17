@@ -226,6 +226,9 @@ String _labelFor(String action) => switch (action) {
   'user.password_reset' => 'Reset password',
   'project.created' => 'Proyek baru',
   'project.updated' => 'Ubah proyek',
+  'meeting.created' => 'Meeting baru',
+  'meeting.updated' => 'Ubah meeting',
+  'meeting.cancelled' => 'Meeting batal',
   _ => action,
 };
 
@@ -236,6 +239,9 @@ IconData _iconFor(String action) => switch (action) {
   'user.updated' => Icons.manage_accounts_outlined,
   'project.created' => Icons.create_new_folder_outlined,
   'project.updated' => Icons.edit_note_rounded,
+  'meeting.created' => Icons.event_available_rounded,
+  'meeting.updated' => Icons.edit_calendar_outlined,
+  'meeting.cancelled' => Icons.event_busy_rounded,
   _ => Icons.history_rounded,
 };
 
@@ -243,6 +249,8 @@ Color _accentFor(String action) {
   if (action == 'user.deactivated' || action == 'user.password_reset') {
     return AppColors.warning;
   }
+  if (action == 'meeting.cancelled') return AppColors.warning;
+  if (action.startsWith('meeting.')) return AppColors.info;
   if (action.startsWith('project.')) return AppColors.info;
   if (action.startsWith('user.')) return AppColors.primary;
   return AppColors.textSecondary;

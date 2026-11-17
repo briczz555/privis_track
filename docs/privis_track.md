@@ -2,10 +2,10 @@
 
 **Project Name:** PriVis Track
 **Project Description:** Internal Project Tracking & Document Archive App
-**Phase:** Fase 3 – ✅ Selesai
+**Phase:** Fase 3 – ✅ Selesai (Fase 4 dalam rancangan)
 **Platform:** Mobile App (Flutter / Android & iOS)
 **Base Architecture:** [briczz555/flutter-clean-starter](https://github.com/briczz555/flutter-clean-starter)
-**Document Status:** Approved — diperbarui 13 November 2026 (Fase 3 selesai)
+**Document Status:** Approved — diperbarui 17 November 2026 (Fase 3 selesai; rancangan Fase 4 menunggu review)
 **Repositori:** `privis_track` (Flutter) · `privis_track_api` (NestJS)
 
 ---
@@ -65,6 +65,20 @@ Fitur berikut lahir dari kebutuhan operasional dan sudah diimplementasikan:
 - Audit log aksi admin (manajemen user belum masuk activity proyek).
 
 Antivirus scan dokumen diputuskan **tidak diperlukan** untuk v1 (lihat bagian 7).
+
+### 2.5. Fase 4 — 📝 Rancangan: Kalender Meeting
+
+Rancangan (belum dieksekusi):
+
+- Kalender bulanan + agenda per tanggal.
+- Meeting online atau onsite (datang ke klien), dengan link/lokasi.
+- Peserta dari karyawan aktif; organizer otomatis peserta.
+- Relasi opsional ke proyek/klien, filter Semua/Saya.
+- Edit/cancel oleh organizer, admin, atau PM; audit log.
+- Zona waktu disimpan UTC, ditampilkan WIB.
+
+Detail lengkap, data model, API, arsitektur Flutter, dan keputusan yang perlu
+direview: [`phase4-calendar.md`](phase4-calendar.md).
 
 ## 3. Target Audience (User Personas)
 

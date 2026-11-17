@@ -7,6 +7,10 @@ import 'package:privis_track/features/auth/domain/entities/auth_role.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:privis_track/features/audit_log/domain/entities/audit_log_page_entity.dart';
 import 'package:privis_track/features/audit_log/domain/repositories/audit_log_repository.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_entity.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_input_entity.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/user_option_entity.dart';
+import 'package:privis_track/features/meeting_calendar/domain/repositories/meeting_repository.dart';
 import 'package:privis_track/features/auth/domain/repositories/auth_repository.dart';
 import 'package:privis_track/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/project_entity.dart';
@@ -303,6 +307,62 @@ class FakeAuditLogRepository implements AuditLogRepository {
     calls += 1;
     return this.page;
   }
+}
+
+class FakeMeetingRepository implements MeetingRepository {
+  FakeMeetingRepository({required this.meetings, this.userOptions = const []});
+
+  final List<MeetingEntity> meetings;
+  final List<UserOptionEntity> userOptions;
+  int getCalls = 0;
+  int createCalls = 0;
+  int updateCalls = 0;
+  int cancelCalls = 0;
+  MeetingInputEntity? lastInput;
+  String? lastUpdatedId;
+
+  @override
+  Future<List<MeetingEntity>> getMeetings({
+    required DateTime from,
+    required DateTime to,
+    required String scope,
+    String? projectCode,
+  }) async {
+    getCalls += 1;
+    return meetings;
+  }
+
+  @override
+  Future<MeetingEntity> getMeeting(String id) async {
+    return meetings.firstWhere((meeting) => meeting.id == id);
+  }
+
+  @override
+  Future<MeetingEntity> createMeeting(MeetingInputEntity input) async {
+    createCalls += 1;
+    lastInput = input;
+    return meetings.first;
+  }
+
+  @override
+  Future<MeetingEntity> updateMeeting(
+    String id,
+    MeetingInputEntity input,
+  ) async {
+    updateCalls += 1;
+    lastUpdatedId = id;
+    lastInput = input;
+    return meetings.first;
+  }
+
+  @override
+  Future<MeetingEntity> cancelMeeting(String id) async {
+    cancelCalls += 1;
+    return meetings.first;
+  }
+
+  @override
+  Future<List<UserOptionEntity>> getUserOptions() async => userOptions;
 }
 
 class MemorySnapshotCache implements SnapshotCache {

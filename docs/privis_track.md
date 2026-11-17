@@ -2,10 +2,10 @@
 
 **Project Name:** PriVis Track
 **Project Description:** Internal Project Tracking & Document Archive App
-**Phase:** Fase 3 – ✅ Selesai (Fase 4 dalam rancangan)
+**Phase:** Fase 4 – ✅ Selesai
 **Platform:** Mobile App (Flutter / Android & iOS)
 **Base Architecture:** [briczz555/flutter-clean-starter](https://github.com/briczz555/flutter-clean-starter)
-**Document Status:** Approved — diperbarui 17 November 2026 (Fase 3 selesai; rancangan Fase 4 menunggu review)
+**Document Status:** Approved — diperbarui 17 November 2026 (Fase 4 selesai)
 **Repositori:** `privis_track` (Flutter) · `privis_track_api` (NestJS)
 
 ---
@@ -66,9 +66,7 @@ Fitur berikut lahir dari kebutuhan operasional dan sudah diimplementasikan:
 
 Antivirus scan dokumen diputuskan **tidak diperlukan** untuk v1 (lihat bagian 7).
 
-### 2.5. Fase 4 — 📝 Rancangan: Kalender Meeting
-
-Rancangan (belum dieksekusi):
+### 2.5. Fase 4 — ✅ Selesai: Kalender Meeting
 
 - Kalender bulanan + agenda per tanggal.
 - Meeting online atau onsite (datang ke klien), dengan link/lokasi.
@@ -77,8 +75,7 @@ Rancangan (belum dieksekusi):
 - Edit/cancel oleh organizer, admin, atau PM; audit log.
 - Zona waktu disimpan UTC, ditampilkan WIB.
 
-Detail lengkap, data model, API, arsitektur Flutter, dan keputusan yang perlu
-direview: [`phase4-calendar.md`](phase4-calendar.md).
+Detail rancangan dan kontrak: [`phase4-calendar.md`](phase4-calendar.md).
 
 ## 3. Target Audience (User Personas)
 
@@ -148,6 +145,16 @@ Aplikasi ini **TIDAK** dapat diakses oleh klien. Pengguna eksklusif:
 - Halaman **Audit Log** (`/settings/audit-logs`) menampilkan riwayat dengan pagination.
 - Pencatatan bersifat best-effort: kegagalan audit tidak menggagalkan aksi utama.
 
+### 4.8. Kalender Meeting (`lib/features/meeting_calendar/`)
+
+- Kalender bulanan dengan penanda meeting dan agenda tanggal terpilih.
+- Filter **Semua/Saya**; meeting batal tetap tampil dengan status.
+- Meeting **Online** (link) atau **Onsite** (lokasi/alamat klien).
+- Peserta dari user aktif; organizer otomatis peserta.
+- Proyek opsional; klien mengikuti proyek.
+- Edit/cancel oleh organizer, admin, atau PM.
+- Entry point: ikon kalender di header Dashboard; route `/calendar`.
+
 ---
 
 ## 5. Technical Specifications (Clean Architecture)
@@ -204,7 +211,7 @@ AI Developer atau tim *engineer* **harus** mematuhi aturan *hook* berikut:
 
 - Base URL produksi: `https://privis.briczz.my.id/v1`.
 - Kontrak lengkap: [`api-contract.md`](api-contract.md) dan [`openapi.yaml`](openapi.yaml); Swagger runtime di `/docs`.
-- Modul: `auth`, `users`, `clients`, `projects`, `documents`, `dashboard`, `activities`, `health`.
+- Modul: `auth`, `users`, `clients`, `projects`, `documents`, `meetings`, `dashboard`, `activities`, `audit`, `health`.
 - Auth: JWT access 15 menit + refresh token opaque (rotasi, hash di server).
 - Dokumen disimpan di MinIO privat; unduhan melalui stream API (bukan signed URL).
 - Semua endpoint selain health/login/refresh/logout memerlukan Bearer token.
@@ -354,6 +361,17 @@ snapshot baru selesai ditulis).
 Antivirus scan dokumen: tidak dilanjutkan (lihat bagian 7).
 
 **Status: seluruh item Fase 3 yang disepakati sudah selesai.**
+
+### Fase 4 — Definition of Done (tercapai)
+
+- [x] Tabel `meetings` + `meeting_participants` dan enum mode/status.
+- [x] API meetings (list/detail/create/update/cancel) + user options.
+- [x] Permission organizer/admin/PM dan validasi peserta aktif.
+- [x] Audit log `meeting.created/updated/cancelled`.
+- [x] Kalender bulanan, agenda, filter Semua/Saya di Flutter.
+- [x] Form create/edit, participant picker, project opsional.
+- [x] Detail meeting + cancel.
+- [x] Test backend + Flutter dan APK.
 
 ## 9. Verifikasi
 

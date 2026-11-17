@@ -6,6 +6,10 @@ import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/audit_log/presentation/screens/audit_log_screen.dart';
 import '../../features/dashboard/presentation/screens/all_projects_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../../features/meeting_calendar/domain/entities/meeting_entity.dart';
+import '../../features/meeting_calendar/presentation/screens/calendar_screen.dart';
+import '../../features/meeting_calendar/presentation/screens/meeting_detail_screen.dart';
+import '../../features/meeting_calendar/presentation/screens/meeting_form_screen.dart';
 import '../../features/project_management/presentation/screens/project_form_screen.dart';
 import '../../features/project_tracking/domain/entities/project_tracking_entity.dart';
 import '../../features/project_tracking/presentation/screens/project_tracking_screen.dart';
@@ -25,6 +29,10 @@ abstract class AppRoutes {
   static const projectCreate = 'project-create';
   static const projectEdit = 'project-edit';
   static const projectTracking = 'project-tracking';
+  static const calendar = 'calendar';
+  static const meetingCreate = 'meeting-create';
+  static const meetingDetail = 'meeting-detail';
+  static const meetingEdit = 'meeting-edit';
   static const userManagement = 'user-management';
 }
 
@@ -67,6 +75,37 @@ final List<GoRoute> appRoutes = [
     path: '/projects',
     name: AppRoutes.allProjects,
     builder: (context, state) => const AllProjectsScreen(),
+  ),
+
+  // ----- meeting_calendar -----
+  GoRoute(
+    path: '/calendar',
+    name: AppRoutes.calendar,
+    builder: (context, state) => const CalendarScreen(),
+  ),
+  GoRoute(
+    path: '/calendar/new',
+    name: AppRoutes.meetingCreate,
+    builder: (context, state) => const MeetingFormScreen(),
+  ),
+  GoRoute(
+    path: '/calendar/:meetingId',
+    name: AppRoutes.meetingDetail,
+    builder: (context, state) => MeetingDetailScreen(
+      id: state.pathParameters['meetingId']!,
+      initial: state.extra is MeetingEntity
+          ? state.extra as MeetingEntity
+          : null,
+    ),
+  ),
+  GoRoute(
+    path: '/calendar/:meetingId/edit',
+    name: AppRoutes.meetingEdit,
+    builder: (context, state) => MeetingFormScreen(
+      initial: state.extra is MeetingEntity
+          ? state.extra as MeetingEntity
+          : null,
+    ),
   ),
 
   // ----- project_management -----

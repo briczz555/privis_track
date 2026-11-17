@@ -62,6 +62,12 @@ class DashboardHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.md),
+        IconButton(
+          tooltip: 'Kalender meeting',
+          onPressed: () => context.pushNamed(AppRoutes.calendar),
+          icon: const Icon(Icons.calendar_month_rounded),
+        ),
+        const SizedBox(width: AppSpacing.xs),
         Material(
           color: Colors.transparent,
           child: InkWell(

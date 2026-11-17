@@ -22,6 +22,7 @@ tags:
   - name: Documents
   - name: Users
   - name: Activities
+  - name: Meetings
   - name: Audit
   - name: Health
 
@@ -535,6 +536,151 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
+  /users/options:
+    get:
+      tags: [Users]
+      summary: Daftar user aktif untuk participant picker
+      responses:
+        '200':
+          description: User aktif
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserOption'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /meetings:
+    get:
+      tags: [Meetings]
+      summary: Daftar meeting pada rentang tanggal
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: scope
+          in: query
+          schema:
+            type: string
+            enum: [all, mine]
+            default: all
+        - name: project_code
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar meeting (maks. 500, urut start_at)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MeetingListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      tags: [Meetings]
+      summary: Buat meeting (organizer = user saat ini)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMeetingRequest'
+      responses:
+        '201':
+          description: Meeting dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /meetings/{meeting_id}:
+    get:
+      tags: [Meetings]
+      summary: Detail meeting
+      parameters:
+        - $ref: '#/components/parameters/MeetingId'
+      responses:
+        '200':
+          description: Detail meeting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Meetings]
+      summary: Ubah meeting (organizer/admin/PM)
+      parameters:
+        - $ref: '#/components/parameters/MeetingId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeetingRequest'
+      responses:
+        '200':
+          description: Meeting diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /meetings/{meeting_id}/cancel:
+    post:
+      tags: [Meetings]
+      summary: Batalkan meeting (organizer/admin/PM)
+      parameters:
+        - $ref: '#/components/parameters/MeetingId'
+      responses:
+        '200':
+          description: Meeting dibatalkan (idempoten)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
   /audit-logs:
     get:
       tags: [Audit]
@@ -616,6 +762,13 @@ components:
         type: string
         pattern: '^PRJ-[0-9]{3}$'
         example: PRJ-001
+    MeetingId:
+      name: meeting_id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     StageNo:
       name: stage_no
       in: path
@@ -1303,7 +1456,7 @@ components:
           example: user.deactivated
         entity:
           type: string
-          enum: [user, project]
+          enum: [user, project, meeting]
         entity_id:
           type: string
           nullable: true
@@ -1324,6 +1477,202 @@ components:
             $ref: '#/components/schemas/AuditLog'
         meta:
           $ref: '#/components/schemas/PaginationMeta'
+
+    UserOption:
+      type: object
+      required: [id, name, role]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        division:
+          type: string
+          nullable: true
+
+    MeetingParticipant:
+      type: object
+      required: [id, name, role]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        role:
+          $ref: '#/components/schemas/UserRole'
+        division:
+          type: string
+          nullable: true
+
+    MeetingProjectRef:
+      type: object
+      required: [id, code, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          example: PRJ-001
+        name:
+          type: string
+
+    MeetingClientRef:
+      type: object
+      required: [id, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+
+    Meeting:
+      type: object
+      required:
+        [id, title, mode, status, start_at, end_at, organizer, participants, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        agenda:
+          type: string
+          nullable: true
+        mode:
+          type: string
+          enum: [online, onsite]
+        status:
+          type: string
+          enum: [scheduled, cancelled]
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        meeting_url:
+          type: string
+          nullable: true
+        location:
+          type: string
+          nullable: true
+        project:
+          allOf:
+            - $ref: '#/components/schemas/MeetingProjectRef'
+          nullable: true
+        client:
+          allOf:
+            - $ref: '#/components/schemas/MeetingClientRef'
+          nullable: true
+        organizer:
+          $ref: '#/components/schemas/MeetingParticipant'
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/MeetingParticipant'
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    MeetingListResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Meeting'
+
+    CreateMeetingRequest:
+      type: object
+      required: [title, mode, start_at, end_at, participant_ids]
+      properties:
+        title:
+          type: string
+          maxLength: 150
+        agenda:
+          type: string
+          maxLength: 2000
+        mode:
+          type: string
+          enum: [online, onsite]
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        meeting_url:
+          type: string
+          format: uri
+          nullable: true
+        location:
+          type: string
+          maxLength: 255
+          nullable: true
+        project_code:
+          type: string
+          nullable: true
+        participant_ids:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+            format: uuid
+        notes:
+          type: string
+          maxLength: 2000
+
+    UpdateMeetingRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 150
+        agenda:
+          type: string
+          maxLength: 2000
+        mode:
+          type: string
+          enum: [online, onsite]
+        start_at:
+          type: string
+          format: date-time
+        end_at:
+          type: string
+          format: date-time
+        meeting_url:
+          type: string
+          format: uri
+          nullable: true
+        location:
+          type: string
+          maxLength: 255
+          nullable: true
+        project_code:
+          type: string
+          nullable: true
+        participant_ids:
+          type: array
+          maxItems: 50
+          items:
+            type: string
+            format: uuid
+        notes:
+          type: string
+          maxLength: 2000
 
     ActivityListResponse:
       type: object

@@ -4,6 +4,13 @@ import 'package:privis_track/features/auth/domain/entities/auth_session_entity.d
 import 'package:privis_track/features/auth/domain/entities/auth_user_entity.dart';
 import 'package:privis_track/features/audit_log/domain/entities/audit_log_entity.dart';
 import 'package:privis_track/features/audit_log/domain/entities/audit_log_page_entity.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_client_ref_entity.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_entity.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_mode.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_participant_entity.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_project_ref_entity.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_status.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/user_option_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/activity_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/dashboard_entity.dart';
 import 'package:privis_track/features/dashboard/domain/entities/portfolio_slice_entity.dart';
@@ -172,6 +179,57 @@ final testAuditLogs = [
     entityId: 'project-1',
     summary: 'memperbarui proyek PRJ-001 · E-Commerce App',
     createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+  ),
+];
+
+final testMeetingParticipants = [
+  MeetingParticipantEntity(
+    id: 'user-1',
+    name: 'Admin PriVis',
+    role: AuthRole.admin,
+    division: 'Management',
+  ),
+  MeetingParticipantEntity(
+    id: 'user-2',
+    name: 'Rina PM',
+    role: AuthRole.pm,
+    division: 'PM',
+  ),
+];
+
+final testMeeting = MeetingEntity(
+  id: 'meeting-1',
+  title: 'Meeting Mingguan',
+  agenda: 'Review progres',
+  mode: MeetingMode.online,
+  status: MeetingStatus.scheduled,
+  startAt: DateTime.now().copyWith(hour: 9, minute: 0, second: 0),
+  endAt: DateTime.now().copyWith(hour: 10, minute: 0, second: 0),
+  meetingUrl: 'https://meet.google.com/uji',
+  project: const MeetingProjectRefEntity(
+    id: 'project-1',
+    code: 'PRJ-001',
+    name: 'E-Commerce App',
+  ),
+  client: const MeetingClientRefEntity(id: 'client-1', name: 'PT. ABC Retail'),
+  organizer: testMeetingParticipants.first,
+  participants: testMeetingParticipants,
+  createdAt: DateTime.now(),
+  updatedAt: DateTime.now(),
+);
+
+final testMeetingUsers = [
+  const UserOptionEntity(
+    id: 'user-1',
+    name: 'Admin PriVis',
+    role: AuthRole.admin,
+    division: 'Management',
+  ),
+  const UserOptionEntity(
+    id: 'user-2',
+    name: 'Rina PM',
+    role: AuthRole.pm,
+    division: 'PM',
   ),
 ];
 

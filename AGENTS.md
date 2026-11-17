@@ -66,6 +66,9 @@ Aturan yang tidak boleh dilanggar:
   Route: `/settings/users`.
 - `features/audit_log/` — halaman **Audit Log** (khusus admin): riwayat aksi admin
   dengan pagination. Route: `/settings/audit-logs`.
+- `features/meeting_calendar/` — kalender meeting: grid bulanan, agenda harian,
+  form online/onsite, peserta, filter Semua/Saya. Route: `/calendar`,
+  `/calendar/new`, `/calendar/:meetingId`, `/calendar/:meetingId/edit`.
 - `features/project_management/` — form **Tambah/Edit Proyek** (admin/PM): nama,
   tanggal mulai/tenggat, pilih klien existing atau buat klien baru, edit kontak
   klien. Route: `/projects/new`, `/projects/:projectCode/edit`.

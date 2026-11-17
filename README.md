@@ -27,10 +27,12 @@ menjadi arsip dokumen tim (PM, Developer/QA, Finance). Dibangun dengan Flutter.
   Setelah dashboard dimuat online, daftar proyek dan detail (maks. 30) disiapkan
   otomatis di latar belakang; aksi tulis tetap butuh koneksi.
 - **Audit Log** (`/settings/audit-logs`, admin): riwayat aksi admin (user,
-  proyek, klien) dengan pagination.
+  proyek, klien, meeting) dengan pagination.
+- **Kalender Meeting** (`/calendar`): kalender bulanan, agenda harian, meeting
+  online/onsite, peserta, dan filter Semua/Saya.
 - Data diambil dari backend `privis_track_api` di VPS.
 
-Semua fitur Fase 2 dan Fase 3 yang disepakati sudah tersedia. Antivirus scan
+Semua fitur Fase 2–4 yang disepakati sudah tersedia. Antivirus scan
 diputuskan di luar cakupan v1 (lihat PRD bagian 7).
 
 ## Backend

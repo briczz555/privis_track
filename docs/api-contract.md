@@ -16,6 +16,7 @@
 | Manajemen user (admin) | ✅ |
 | Buat/edit proyek & kontak klien | ✅ |
 | Audit log aksi admin | ✅ |
+| Kalender meeting (online/onsite + peserta) | ✅ |
 | Swagger runtime (`/docs`) & rate limit aplikasi | ✅ |
 
 ## Keputusan desain (disetujui)
@@ -409,16 +410,65 @@ Semua endpoint memerlukan Bearer token dengan role `admin`.
 
 `User` = `{id, name, email, role, division, is_active, created_at}`.
 
+`GET /users/options` (semua user terautentikasi) → `{ "data": [{id, name, role, division}] }`.
+Hanya user aktif; dipakai untuk participant picker meeting.
+
 ### 6.7 Audit Log (khusus admin)
 
 `GET /audit-logs?page=1&limit=20&entity=&action=&search=` → `{ data: [AuditLog], meta }`.
 
 - Role `admin`. Filter opsional `entity` (`user`/`project`), `action`, dan `search` pada ringkasan/nama aktor.
 - `AuditLog` = `{id, actor_id, actor_name, actor_role, action, entity, entity_id, summary, created_at}`.
-- Aksi yang dicatat: `user.created`, `user.updated`, `user.activated`, `user.deactivated`, `user.password_reset`, `project.created`, `project.updated`.
+- Aksi yang dicatat: `user.created`, `user.updated`, `user.activated`, `user.deactivated`, `user.password_reset`, `project.created`, `project.updated`, `meeting.created`, `meeting.updated`, `meeting.cancelled`.
 - Nama/role aktor disimpan sebagai snapshot; audit bersifat best-effort (kegagalan audit tidak menggagalkan aksi utama).
 
-### 6.8 Aktivitas
+### 6.8 Meetings
+
+Semua user terautentikasi. Waktu memakai ISO 8601; server menyimpan UTC.
+
+#### `GET /meetings?from&to&scope&project_code`
+
+- `from`/`to` wajib, rentang maks. 92 hari.
+- `scope` = `all` (default) atau `mine` (organizer/peserta).
+- Respons `200 { "data": [Meeting] }`, urut `start_at asc`, maks. 500.
+
+#### `GET /meetings/{id}` → `200 Meeting` / `404`.
+
+#### `POST /meetings`
+
+```json
+{
+  "title": "Kickoff",
+  "agenda": "Pembahasan lingkup",
+  "mode": "online",
+  "start_at": "2026-11-20T02:00:00.000Z",
+  "end_at": "2026-11-20T03:00:00.000Z",
+  "meeting_url": "https://meet.google.com/...",
+  "location": null,
+  "project_code": "PRJ-001",
+  "participant_ids": ["uuid-1", "uuid-2"],
+  "notes": "..."
+}
+```
+
+- `mode` = `online` | `onsite`; durasi maks. 24 jam.
+- Online: `meeting_url` opsional (URL http/https).
+- Onsite: `location` wajib; jika kosong dan proyek punya alamat klien, server mengisinya.
+- `participant_ids` divalidasi user aktif; organizer otomatis ditambahkan.
+- `project_code` opsional.
+- Respons `201 Meeting`; audit `meeting.created`.
+
+#### `PATCH /meetings/{id}`
+
+Body sama (opsional). Hanya organizer/admin/PM. Meeting `cancelled` tidak bisa diedit. Audit `meeting.updated`.
+
+#### `POST /meetings/{id}/cancel`
+
+Organizer/admin/PM; idempoten → `200 Meeting` status `cancelled`; audit `meeting.cancelled`.
+
+`Meeting` = `{id, title, agenda, mode, status, start_at, end_at, meeting_url, location, project, client, organizer, participants, notes, created_at, updated_at}`.
+
+### 6.9 Aktivitas
 
 `GET /activities?limit=20&cursor=...` → `{ data: [Activity], next_cursor }`.
 
@@ -426,7 +476,7 @@ Semua endpoint memerlukan Bearer token dengan role `admin`.
 - `limit` default 20, maksimum 100.
 - `Activity` memuat `type`, `action` (teks tampilan), `target`, `actor`, `project`, `created_at`.
 
-### 6.9 Health
+### 6.10 Health
 
 `GET /health` (tanpa `/v1`) → `{ "status": "ok" }`. Tidak menampilkan versi/uptime ke publik.
 

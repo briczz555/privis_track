@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/error_message.dart';
+import '../../../../core/utils/wib_time.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../../dashboard/domain/entities/project_entity.dart';
 import '../../domain/entities/meeting_entity.dart';
@@ -47,7 +48,7 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
   void initState() {
     super.initState();
     final initial = widget.initial;
-    final now = DateTime.now();
+    final now = toWib(DateTime.now());
     final defaultStart = _roundUp(now.add(const Duration(hours: 1)));
 
     if (initial != null) {
@@ -56,8 +57,8 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
       _urlController.text = initial.meetingUrl ?? '';
       _locationController.text = initial.location ?? '';
       _notesController.text = initial.notes ?? '';
-      _startAt = initial.startAt;
-      _endAt = initial.endAt;
+      _startAt = toWib(initial.startAt);
+      _endAt = toWib(initial.endAt);
       _mode = initial.mode;
       _projectCode = initial.project?.code;
       _participantIds = {
@@ -199,8 +200,8 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
       title: _titleController.text.trim(),
       agenda: _agendaController.text.trim(),
       mode: _mode,
-      startAt: _startAt,
-      endAt: _endAt,
+      startAt: wibWallClockToUtc(_startAt),
+      endAt: wibWallClockToUtc(_endAt),
       meetingUrl: _mode == MeetingMode.online
           ? _urlController.text.trim()
           : null,

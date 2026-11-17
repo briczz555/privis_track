@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_shapes.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/utils/wib_time.dart';
 import '../../../user_management/presentation/widgets/user_role_style.dart';
 import '../../domain/entities/meeting_entity.dart';
 
@@ -141,9 +142,11 @@ class MeetingCard extends StatelessWidget {
   }
 }
 
-String _time(DateTime date) =>
-    '${date.hour.toString().padLeft(2, '0')}:'
-    '${date.minute.toString().padLeft(2, '0')}';
+String _time(DateTime date) {
+  final local = toWib(date);
+  return '${local.hour.toString().padLeft(2, '0')}:'
+      '${local.minute.toString().padLeft(2, '0')}';
+}
 
 String _initials(String name) {
   final words = name.trim().split(RegExp(r'\s+'));

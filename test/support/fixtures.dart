@@ -1,4 +1,5 @@
 import 'package:privis_track/core/constants/project_status.dart';
+import 'package:privis_track/core/utils/wib_time.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_role.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:privis_track/features/auth/domain/entities/auth_user_entity.dart';
@@ -203,8 +204,12 @@ final testMeeting = MeetingEntity(
   agenda: 'Review progres',
   mode: MeetingMode.online,
   status: MeetingStatus.scheduled,
-  startAt: DateTime.now().copyWith(hour: 9, minute: 0, second: 0),
-  endAt: DateTime.now().copyWith(hour: 10, minute: 0, second: 0),
+  startAt: wibWallClockToUtc(
+    DateTime(todayWib().year, todayWib().month, todayWib().day, 9),
+  ),
+  endAt: wibWallClockToUtc(
+    DateTime(todayWib().year, todayWib().month, todayWib().day, 10),
+  ),
   meetingUrl: 'https://meet.google.com/uji',
   project: const MeetingProjectRefEntity(
     id: 'project-1',

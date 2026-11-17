@@ -9,6 +9,7 @@ import '../../../../core/theme/app_shapes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/error_message.dart';
+import '../../../../core/utils/wib_time.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
 import '../../../auth/domain/entities/auth_role.dart';
@@ -146,6 +147,8 @@ class _MeetingDetailBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final secondaryText = theme.colorScheme.onSurface.withValues(alpha: 0.55);
+    final startWib = toWib(meeting.startAt);
+    final endWib = toWib(meeting.endAt);
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -196,8 +199,8 @@ class _MeetingDetailBody extends StatelessWidget {
           icon: Icons.schedule_rounded,
           label: 'Waktu',
           value:
-              '${formatLongDate(meeting.startAt)} · '
-              '${_time(meeting.startAt)}–${_time(meeting.endAt)}',
+              '${formatLongDate(startWib)} · '
+              '${_time(startWib)}–${_time(endWib)}',
         ),
         if (meeting.project != null)
           _InfoRow(

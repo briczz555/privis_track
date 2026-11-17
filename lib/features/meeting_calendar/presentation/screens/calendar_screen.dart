@@ -7,6 +7,7 @@ import '../../../../core/network/exceptions/network_exception.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/error_message.dart';
+import '../../../../core/utils/wib_time.dart';
 import '../../../../core/widgets/app_empty_state.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
@@ -30,9 +31,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
+    final now = todayWib();
     _focusedMonth = DateTime(now.year, now.month);
-    _selectedDate = DateTime(now.year, now.month, now.day);
+    _selectedDate = now;
   }
 
   DateTime get _gridStart {
@@ -43,8 +44,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   DateTime get _gridEnd => _gridStart.add(const Duration(days: 42));
 
   String get _queryKey =>
-      '${_gridStart.toUtc().toIso8601String()}|'
-      '${_gridEnd.toUtc().toIso8601String()}|$_scope|';
+      '${wibWallClockToUtc(_gridStart).toIso8601String()}|'
+      '${wibWallClockToUtc(_gridEnd).toIso8601String()}|$_scope|';
 
   void _changeMonth(int delta) {
     final target = DateTime(_focusedMonth.year, _focusedMonth.month + delta);
@@ -55,10 +56,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   void _goToday() {
-    final now = DateTime.now();
+    final now = todayWib();
     setState(() {
       _focusedMonth = DateTime(now.year, now.month);
-      _selectedDate = DateTime(now.year, now.month, now.day);
+      _selectedDate = now;
     });
   }
 
@@ -78,12 +79,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     );
     if (meeting == null || !mounted) return;
     ref.invalidate(meetingsProvider);
+    final localStart = toWib(meeting.startAt);
     setState(() {
-      _focusedMonth = DateTime(meeting.startAt.year, meeting.startAt.month);
+      _focusedMonth = DateTime(localStart.year, localStart.month);
       _selectedDate = DateTime(
-        meeting.startAt.year,
-        meeting.startAt.month,
-        meeting.startAt.day,
+        localStart.year,
+        localStart.month,
+        localStart.day,
       );
     });
   }
@@ -173,7 +175,7 @@ class _CalendarContent extends StatelessWidget {
   final ValueChanged<String> onScopeChanged;
   final ValueChanged<MeetingEntity> onOpenMeeting;
 
-  DateTime _key(DateTime date) => DateTime(date.year, date.month, date.day);
+  DateTime _key(DateTime date) => wibDateOnly(date);
 
   @override
   Widget build(BuildContext context) {
@@ -184,8 +186,13 @@ class _CalendarContent extends StatelessWidget {
       final key = _key(meeting.startAt);
       counts[key] = (counts[key] ?? 0) + 1;
     }
+    final selectedKey = DateTime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
     final selectedMeetings = meetings
-        .where((meeting) => _key(meeting.startAt) == _key(selectedDate))
+        .where((meeting) => _key(meeting.startAt) == selectedKey)
         .toList(growable: false);
 
     return Padding(

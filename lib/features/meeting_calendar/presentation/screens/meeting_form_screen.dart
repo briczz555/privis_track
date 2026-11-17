@@ -248,6 +248,11 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
       _participantIds.add(currentUserId);
     }
 
+    final loadedProjects = projects ?? const <ProjectEntity>[];
+    final hasSelectedProject =
+        _projectCode != null &&
+        loadedProjects.any((project) => project.code == _projectCode);
+
     return Scaffold(
       appBar: AppBar(title: Text(_isEdit ? 'Edit Meeting' : 'Meeting Baru')),
       body: SafeArea(
@@ -330,10 +335,15 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
                     value: _noProject,
                     child: Text('Tanpa proyek'),
                   ),
-                  for (final project in projects ?? const <ProjectEntity>[])
+                  for (final project in loadedProjects)
                     DropdownMenuItem(
                       value: project.code,
                       child: Text('${project.code} · ${project.name}'),
+                    ),
+                  if (_projectCode != null && !hasSelectedProject)
+                    DropdownMenuItem(
+                      value: _projectCode,
+                      child: Text(_projectCode!),
                     ),
                 ],
                 onChanged: _isSubmitting

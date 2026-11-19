@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/exceptions/network_exception.dart';
@@ -79,6 +81,28 @@ class MeetingRepositoryImpl implements MeetingRepository {
   Future<MeetingEntity> cancelMeeting(String id) async {
     try {
       return _meetingFromJson(await _remote.cancelMeeting(id));
+    } on DioException catch (error) {
+      throw mapDioException(error);
+    } catch (_) {
+      throw const UnknownNetworkException('Respons server tidak sesuai.');
+    }
+  }
+
+  @override
+  Future<MeetingEntity> generateMom(String id) async {
+    try {
+      return _meetingFromJson(await _remote.generateMom(id));
+    } on DioException catch (error) {
+      throw mapDioException(error);
+    } catch (_) {
+      throw const UnknownNetworkException('Respons server tidak sesuai.');
+    }
+  }
+
+  @override
+  Future<Uint8List> downloadMom(String id) async {
+    try {
+      return await _remote.downloadMom(id);
     } on DioException catch (error) {
       throw mapDioException(error);
     } catch (_) {

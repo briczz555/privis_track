@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MeetingEntity {
 
- String get id; String get title; String? get agenda; MeetingMode get mode; MeetingStatus get status; DateTime get startAt; DateTime get endAt; String? get meetingUrl; String? get location; MeetingProjectRefEntity? get project; MeetingClientRefEntity? get client; MeetingParticipantEntity get organizer; List<MeetingParticipantEntity> get participants; String? get notes; DateTime get createdAt; DateTime get updatedAt;
+ String get id; String get title; String? get agenda; MeetingMode get mode; MeetingStatus get status; DateTime get startAt; DateTime get endAt; String? get meetingUrl; String? get location; MeetingProjectRefEntity? get project; MeetingClientRefEntity? get client; MeetingParticipantEntity get organizer; List<MeetingParticipantEntity> get participants; String? get notes; MeetingMomEntity? get mom; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of MeetingEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +27,20 @@ $MeetingEntityCopyWith<MeetingEntity> get copyWith => _$MeetingEntityCopyWithImp
 @override
 bool operator ==(Object other) {
   final _this = this as MeetingEntity;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.agenda, _this.agenda) || other.agenda == _this.agenda)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.startAt, _this.startAt) || other.startAt == _this.startAt)&&(identical(other.endAt, _this.endAt) || other.endAt == _this.endAt)&&(identical(other.meetingUrl, _this.meetingUrl) || other.meetingUrl == _this.meetingUrl)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.project, _this.project) || other.project == _this.project)&&(identical(other.client, _this.client) || other.client == _this.client)&&(identical(other.organizer, _this.organizer) || other.organizer == _this.organizer)&&const DeepCollectionEquality().equals(other.participants, _this.participants)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingEntity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.agenda, _this.agenda) || other.agenda == _this.agenda)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.startAt, _this.startAt) || other.startAt == _this.startAt)&&(identical(other.endAt, _this.endAt) || other.endAt == _this.endAt)&&(identical(other.meetingUrl, _this.meetingUrl) || other.meetingUrl == _this.meetingUrl)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.project, _this.project) || other.project == _this.project)&&(identical(other.client, _this.client) || other.client == _this.client)&&(identical(other.organizer, _this.organizer) || other.organizer == _this.organizer)&&const DeepCollectionEquality().equals(other.participants, _this.participants)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.mom, _this.mom) || other.mom == _this.mom)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 
 @override
 int get hashCode {
   final _this = this as MeetingEntity;
-  return Object.hash(runtimeType,_this.id,_this.title,_this.agenda,_this.mode,_this.status,_this.startAt,_this.endAt,_this.meetingUrl,_this.location,_this.project,_this.client,_this.organizer,const DeepCollectionEquality().hash(_this.participants),_this.notes,_this.createdAt,_this.updatedAt);
+  return Object.hash(runtimeType,_this.id,_this.title,_this.agenda,_this.mode,_this.status,_this.startAt,_this.endAt,_this.meetingUrl,_this.location,_this.project,_this.client,_this.organizer,const DeepCollectionEquality().hash(_this.participants),_this.notes,_this.mom,_this.createdAt,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as MeetingEntity;
-  return 'MeetingEntity(id: ${_this.id}, title: ${_this.title}, agenda: ${_this.agenda}, mode: ${_this.mode}, status: ${_this.status}, startAt: ${_this.startAt}, endAt: ${_this.endAt}, meetingUrl: ${_this.meetingUrl}, location: ${_this.location}, project: ${_this.project}, client: ${_this.client}, organizer: ${_this.organizer}, participants: ${_this.participants}, notes: ${_this.notes}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
+  return 'MeetingEntity(id: ${_this.id}, title: ${_this.title}, agenda: ${_this.agenda}, mode: ${_this.mode}, status: ${_this.status}, startAt: ${_this.startAt}, endAt: ${_this.endAt}, meetingUrl: ${_this.meetingUrl}, location: ${_this.location}, project: ${_this.project}, client: ${_this.client}, organizer: ${_this.organizer}, participants: ${_this.participants}, notes: ${_this.notes}, mom: ${_this.mom}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -51,11 +51,11 @@ abstract mixin class $MeetingEntityCopyWith<$Res>  {
   factory $MeetingEntityCopyWith(MeetingEntity value, $Res Function(MeetingEntity) _then) = _$MeetingEntityCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? agenda, MeetingMode mode, MeetingStatus status, DateTime startAt, DateTime endAt, String? meetingUrl, String? location, MeetingProjectRefEntity? project, MeetingClientRefEntity? client, MeetingParticipantEntity organizer, List<MeetingParticipantEntity> participants, String? notes, DateTime createdAt, DateTime updatedAt
+ String id, String title, String? agenda, MeetingMode mode, MeetingStatus status, DateTime startAt, DateTime endAt, String? meetingUrl, String? location, MeetingProjectRefEntity? project, MeetingClientRefEntity? client, MeetingParticipantEntity organizer, List<MeetingParticipantEntity> participants, String? notes, MeetingMomEntity? mom, DateTime createdAt, DateTime updatedAt
 });
 
 
-$MeetingProjectRefEntityCopyWith<$Res>? get project;$MeetingClientRefEntityCopyWith<$Res>? get client;$MeetingParticipantEntityCopyWith<$Res> get organizer;
+$MeetingProjectRefEntityCopyWith<$Res>? get project;$MeetingClientRefEntityCopyWith<$Res>? get client;$MeetingParticipantEntityCopyWith<$Res> get organizer;$MeetingMomEntityCopyWith<$Res>? get mom;
 
 }
 /// @nodoc
@@ -68,7 +68,7 @@ class _$MeetingEntityCopyWithImpl<$Res>
 
 /// Create a copy of MeetingEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? agenda = freezed,Object? mode = null,Object? status = null,Object? startAt = null,Object? endAt = null,Object? meetingUrl = freezed,Object? location = freezed,Object? project = freezed,Object? client = freezed,Object? organizer = null,Object? participants = null,Object? notes = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? agenda = freezed,Object? mode = null,Object? status = null,Object? startAt = null,Object? endAt = null,Object? meetingUrl = freezed,Object? location = freezed,Object? project = freezed,Object? client = freezed,Object? organizer = null,Object? participants = null,Object? notes = freezed,Object? mom = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(MeetingEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -84,7 +84,8 @@ as MeetingProjectRefEntity?,client: freezed == client ? _self.client : client //
 as MeetingClientRefEntity?,organizer: null == organizer ? _self.organizer : organizer // ignore: cast_nullable_to_non_nullable
 as MeetingParticipantEntity,participants: null == participants ? _self.participants : participants // ignore: cast_nullable_to_non_nullable
 as List<MeetingParticipantEntity>,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,mom: freezed == mom ? _self.mom : mom // ignore: cast_nullable_to_non_nullable
+as MeetingMomEntity?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -121,6 +122,18 @@ $MeetingParticipantEntityCopyWith<$Res> get organizer {
   
   return $MeetingParticipantEntityCopyWith<$Res>(_self.organizer, (value) {
     return _then(_self.copyWith(organizer: value));
+  });
+}/// Create a copy of MeetingEntity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MeetingMomEntityCopyWith<$Res>? get mom {
+    if (_self.mom == null) {
+    return null;
+  }
+
+  return $MeetingMomEntityCopyWith<$Res>(_self.mom!, (value) {
+    return _then(_self.copyWith(mom: value));
   });
 }
 }
@@ -201,10 +214,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? agenda,  MeetingMode mode,  MeetingStatus status,  DateTime startAt,  DateTime endAt,  String? meetingUrl,  String? location,  MeetingProjectRefEntity? project,  MeetingClientRefEntity? client,  MeetingParticipantEntity organizer,  List<MeetingParticipantEntity> participants,  String? notes,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? agenda,  MeetingMode mode,  MeetingStatus status,  DateTime startAt,  DateTime endAt,  String? meetingUrl,  String? location,  MeetingProjectRefEntity? project,  MeetingClientRefEntity? client,  MeetingParticipantEntity organizer,  List<MeetingParticipantEntity> participants,  String? notes,  MeetingMomEntity? mom,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MeetingEntity() when $default != null:
-return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.mom,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -222,10 +235,10 @@ return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? agenda,  MeetingMode mode,  MeetingStatus status,  DateTime startAt,  DateTime endAt,  String? meetingUrl,  String? location,  MeetingProjectRefEntity? project,  MeetingClientRefEntity? client,  MeetingParticipantEntity organizer,  List<MeetingParticipantEntity> participants,  String? notes,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? agenda,  MeetingMode mode,  MeetingStatus status,  DateTime startAt,  DateTime endAt,  String? meetingUrl,  String? location,  MeetingProjectRefEntity? project,  MeetingClientRefEntity? client,  MeetingParticipantEntity organizer,  List<MeetingParticipantEntity> participants,  String? notes,  MeetingMomEntity? mom,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _MeetingEntity():
-return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.createdAt,_that.updatedAt);}
+return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.mom,_that.createdAt,_that.updatedAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -239,10 +252,10 @@ return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? agenda,  MeetingMode mode,  MeetingStatus status,  DateTime startAt,  DateTime endAt,  String? meetingUrl,  String? location,  MeetingProjectRefEntity? project,  MeetingClientRefEntity? client,  MeetingParticipantEntity organizer,  List<MeetingParticipantEntity> participants,  String? notes,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? agenda,  MeetingMode mode,  MeetingStatus status,  DateTime startAt,  DateTime endAt,  String? meetingUrl,  String? location,  MeetingProjectRefEntity? project,  MeetingClientRefEntity? client,  MeetingParticipantEntity organizer,  List<MeetingParticipantEntity> participants,  String? notes,  MeetingMomEntity? mom,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _MeetingEntity() when $default != null:
-return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.mom,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -254,7 +267,7 @@ return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.
 
 
 class _MeetingEntity extends MeetingEntity {
-  const _MeetingEntity({required this.id, required this.title, this.agenda, required this.mode, required this.status, required this.startAt, required this.endAt, this.meetingUrl, this.location, this.project, this.client, required this.organizer, required  List<MeetingParticipantEntity> participants, this.notes, required this.createdAt, required this.updatedAt}): _participants = participants,super._();
+  const _MeetingEntity({required this.id, required this.title, this.agenda, required this.mode, required this.status, required this.startAt, required this.endAt, this.meetingUrl, this.location, this.project, this.client, required this.organizer, required  List<MeetingParticipantEntity> participants, this.notes, this.mom, required this.createdAt, required this.updatedAt}): _participants = participants,super._();
   
 
 @override final  String id;
@@ -277,6 +290,7 @@ class _MeetingEntity extends MeetingEntity {
 }
 
 @override final  String? notes;
+@override final  MeetingMomEntity? mom;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 
@@ -290,18 +304,18 @@ _$MeetingEntityCopyWith<_MeetingEntity> get copyWith => __$MeetingEntityCopyWith
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.agenda, agenda) || other.agenda == agenda)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.meetingUrl, meetingUrl) || other.meetingUrl == meetingUrl)&&(identical(other.location, location) || other.location == location)&&(identical(other.project, project) || other.project == project)&&(identical(other.client, client) || other.client == client)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&const DeepCollectionEquality().equals(other.participants, _participants)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.agenda, agenda) || other.agenda == agenda)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.meetingUrl, meetingUrl) || other.meetingUrl == meetingUrl)&&(identical(other.location, location) || other.location == location)&&(identical(other.project, project) || other.project == project)&&(identical(other.client, client) || other.client == client)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&const DeepCollectionEquality().equals(other.participants, _participants)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.mom, mom) || other.mom == mom)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,title,agenda,mode,status,startAt,endAt,meetingUrl,location,project,client,organizer,const DeepCollectionEquality().hash(_participants),notes,createdAt,updatedAt);
+    return Object.hash(runtimeType,id,title,agenda,mode,status,startAt,endAt,meetingUrl,location,project,client,organizer,const DeepCollectionEquality().hash(_participants),notes,mom,createdAt,updatedAt);
 }
 
 @override
 String toString() {
-    return 'MeetingEntity(id: $id, title: $title, agenda: $agenda, mode: $mode, status: $status, startAt: $startAt, endAt: $endAt, meetingUrl: $meetingUrl, location: $location, project: $project, client: $client, organizer: $organizer, participants: $participants, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MeetingEntity(id: $id, title: $title, agenda: $agenda, mode: $mode, status: $status, startAt: $startAt, endAt: $endAt, meetingUrl: $meetingUrl, location: $location, project: $project, client: $client, organizer: $organizer, participants: $participants, notes: $notes, mom: $mom, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -312,11 +326,11 @@ abstract mixin class _$MeetingEntityCopyWith<$Res> implements $MeetingEntityCopy
   factory _$MeetingEntityCopyWith(_MeetingEntity value, $Res Function(_MeetingEntity) _then) = __$MeetingEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? agenda, MeetingMode mode, MeetingStatus status, DateTime startAt, DateTime endAt, String? meetingUrl, String? location, MeetingProjectRefEntity? project, MeetingClientRefEntity? client, MeetingParticipantEntity organizer, List<MeetingParticipantEntity> participants, String? notes, DateTime createdAt, DateTime updatedAt
+ String id, String title, String? agenda, MeetingMode mode, MeetingStatus status, DateTime startAt, DateTime endAt, String? meetingUrl, String? location, MeetingProjectRefEntity? project, MeetingClientRefEntity? client, MeetingParticipantEntity organizer, List<MeetingParticipantEntity> participants, String? notes, MeetingMomEntity? mom, DateTime createdAt, DateTime updatedAt
 });
 
 
-@override $MeetingProjectRefEntityCopyWith<$Res>? get project;@override $MeetingClientRefEntityCopyWith<$Res>? get client;@override $MeetingParticipantEntityCopyWith<$Res> get organizer;
+@override $MeetingProjectRefEntityCopyWith<$Res>? get project;@override $MeetingClientRefEntityCopyWith<$Res>? get client;@override $MeetingParticipantEntityCopyWith<$Res> get organizer;@override $MeetingMomEntityCopyWith<$Res>? get mom;
 
 }
 /// @nodoc
@@ -329,7 +343,7 @@ class __$MeetingEntityCopyWithImpl<$Res>
 
 /// Create a copy of MeetingEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? agenda = freezed,Object? mode = null,Object? status = null,Object? startAt = null,Object? endAt = null,Object? meetingUrl = freezed,Object? location = freezed,Object? project = freezed,Object? client = freezed,Object? organizer = null,Object? participants = null,Object? notes = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? agenda = freezed,Object? mode = null,Object? status = null,Object? startAt = null,Object? endAt = null,Object? meetingUrl = freezed,Object? location = freezed,Object? project = freezed,Object? client = freezed,Object? organizer = null,Object? participants = null,Object? notes = freezed,Object? mom = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_MeetingEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -345,7 +359,8 @@ as MeetingProjectRefEntity?,client: freezed == client ? _self.client : client //
 as MeetingClientRefEntity?,organizer: null == organizer ? _self.organizer : organizer // ignore: cast_nullable_to_non_nullable
 as MeetingParticipantEntity,participants: null == participants ? _self._participants : participants // ignore: cast_nullable_to_non_nullable
 as List<MeetingParticipantEntity>,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,mom: freezed == mom ? _self.mom : mom // ignore: cast_nullable_to_non_nullable
+as MeetingMomEntity?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -383,6 +398,18 @@ $MeetingParticipantEntityCopyWith<$Res> get organizer {
   
   return $MeetingParticipantEntityCopyWith<$Res>(_self.organizer, (value) {
     return _then(_self.copyWith(organizer: value));
+  });
+}/// Create a copy of MeetingEntity
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MeetingMomEntityCopyWith<$Res>? get mom {
+    if (_self.mom == null) {
+    return null;
+  }
+
+  return $MeetingMomEntityCopyWith<$Res>(_self.mom!, (value) {
+    return _then(_self.copyWith(mom: value));
   });
 }
 }

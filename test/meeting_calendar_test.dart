@@ -148,5 +148,57 @@ void main() {
       expect(find.byTooltip('Edit meeting'), findsNothing);
       expect(find.byTooltip('Batalkan meeting'), findsNothing);
     });
+
+    testWidgets('detail menampilkan aksi buat MoM untuk admin', (tester) async {
+      final repository = FakeMeetingRepository(
+        meetings: [testMeeting],
+        userOptions: testMeetingUsers,
+      );
+      await _pumpScreen(
+        tester,
+        home: MeetingDetailScreen(id: 'meeting-1', initial: testMeeting),
+        meetingRepository: repository,
+      );
+
+      expect(find.text('Notulen (MoM)'), findsOneWidget);
+      expect(find.text('Buat MoM'), findsOneWidget);
+
+      await tester.tap(find.text('Buat MoM'));
+      await tester.pumpAndSettle();
+
+      expect(repository.generateMomCalls, 1);
+      expect(find.text('MoM berhasil dibuat.'), findsOneWidget);
+    });
+
+    testWidgets('QA tidak melihat aksi buat MoM', (tester) async {
+      await _pumpScreen(
+        tester,
+        home: MeetingDetailScreen(id: 'meeting-1', initial: testMeeting),
+        role: AuthRole.qa,
+      );
+
+      expect(find.text('Notulen (MoM)'), findsOneWidget);
+      expect(find.text('Buat MoM'), findsNothing);
+      expect(find.text('MoM belum dibuat untuk meeting ini.'), findsOneWidget);
+    });
+
+    testWidgets('detail menampilkan MoM yang sudah dibuat', (tester) async {
+      await _pumpScreen(
+        tester,
+        home: MeetingDetailScreen(id: 'meeting-1', initial: testMeetingWithMom),
+        meetingRepository: FakeMeetingRepository(
+          meetings: [testMeetingWithMom],
+          userOptions: testMeetingUsers,
+        ),
+      );
+
+      expect(
+        find.text('MoM_PRJ-001_2026-11-20_meeting-mingguan.docx'),
+        findsOneWidget,
+      );
+      expect(find.text('Unduh'), findsOneWidget);
+      expect(find.text('Buat Ulang'), findsOneWidget);
+      expect(find.text('Buat MoM'), findsNothing);
+    });
   });
 }

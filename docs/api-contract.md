@@ -419,7 +419,7 @@ Hanya user aktif; dipakai untuk participant picker meeting.
 
 - Role `admin`. Filter opsional `entity` (`user`/`project`), `action`, dan `search` pada ringkasan/nama aktor.
 - `AuditLog` = `{id, actor_id, actor_name, actor_role, action, entity, entity_id, summary, created_at}`.
-- Aksi yang dicatat: `user.created`, `user.updated`, `user.activated`, `user.deactivated`, `user.password_reset`, `project.created`, `project.updated`, `meeting.created`, `meeting.updated`, `meeting.cancelled`.
+- Aksi yang dicatat: `user.created`, `user.updated`, `user.activated`, `user.deactivated`, `user.password_reset`, `project.created`, `project.updated`, `meeting.created`, `meeting.updated`, `meeting.cancelled`, `meeting.mom_generated`, `meeting.mom_regenerated`.
 - Nama/role aktor disimpan sebagai snapshot; audit bersifat best-effort (kegagalan audit tidak menggagalkan aksi utama).
 
 ### 6.8 Meetings
@@ -466,7 +466,28 @@ Body sama (opsional). Hanya organizer/admin/PM. Meeting `cancelled` tidak bisa d
 
 Organizer/admin/PM; idempoten → `200 Meeting` status `cancelled`; audit `meeting.cancelled`.
 
-`Meeting` = `{id, title, agenda, mode, status, start_at, end_at, meeting_url, location, project, client, organizer, participants, notes, created_at, updated_at}`.
+#### `POST /meetings/{id}/mom`
+
+Organizer/admin/PM; meeting `cancelled` → `400 bad_request`.
+
+- Membuat (atau membuat ulang) MoM berformat DOCX dari template resmi
+  `templates/mom-client.docx` di repo backend.
+- Hanya Bagian 1 (Informasi Rapat) yang terisi otomatis: proyek, klien, judul,
+  tanggal & waktu WIB, tempat/media, pimpinan rapat. Bagian peserta, agenda,
+  pembahasan/keputusan, dan tanda tangan dibiarkan kosong untuk diisi manual.
+- File disimpan di MinIO (privat) dan ditautkan ke meeting; generate ulang
+  mengganti file lama.
+- Respons `200 Meeting` (metadata `mom` terisi). Audit `meeting.mom_generated`
+  atau `meeting.mom_regenerated`.
+
+#### `GET /meetings/{id}/mom`
+
+- Semua user terautentikasi; stream DOCX dengan `Content-Disposition: attachment`.
+- `404 not_found` bila MoM belum dibuat.
+
+`Meeting` = `{id, title, agenda, mode, status, start_at, end_at, meeting_url, location, project, client, organizer, participants, notes, mom, created_at, updated_at}`.
+
+`mom` = `{file_name, size_bytes, generated_at, generated_by: {id, name}}` atau `null`.
 
 ### 6.9 Aktivitas
 

@@ -295,6 +295,102 @@ final class CancelMeetingUsecaseProvider
 String _$cancelMeetingUsecaseHash() =>
     r'5463214b64bc64486edcc8ff2f0ffb7721aaa038';
 
+@ProviderFor(generateMomUsecase)
+final generateMomUsecaseProvider = GenerateMomUsecaseProvider._();
+
+final class GenerateMomUsecaseProvider
+    extends
+        $FunctionalProvider<
+          GenerateMomUsecase,
+          GenerateMomUsecase,
+          GenerateMomUsecase
+        >
+    with $Provider<GenerateMomUsecase> {
+  GenerateMomUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'generateMomUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$generateMomUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GenerateMomUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  GenerateMomUsecase create(Ref ref) {
+    return generateMomUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GenerateMomUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GenerateMomUsecase>(value),
+    );
+  }
+}
+
+String _$generateMomUsecaseHash() =>
+    r'32c184da859de1160afee7efddc93dc73a6eba6b';
+
+@ProviderFor(downloadMomUsecase)
+final downloadMomUsecaseProvider = DownloadMomUsecaseProvider._();
+
+final class DownloadMomUsecaseProvider
+    extends
+        $FunctionalProvider<
+          DownloadMomUsecase,
+          DownloadMomUsecase,
+          DownloadMomUsecase
+        >
+    with $Provider<DownloadMomUsecase> {
+  DownloadMomUsecaseProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'downloadMomUsecaseProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$downloadMomUsecaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<DownloadMomUsecase> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  DownloadMomUsecase create(Ref ref) {
+    return downloadMomUsecase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DownloadMomUsecase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DownloadMomUsecase>(value),
+    );
+  }
+}
+
+String _$downloadMomUsecaseHash() =>
+    r'da0cbd032c3cb0442d06f267d70af843df246561';
+
 @ProviderFor(getUserOptionsUsecase)
 final getUserOptionsUsecaseProvider = GetUserOptionsUsecaseProvider._();
 

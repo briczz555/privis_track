@@ -12,6 +12,8 @@ import '../../domain/entities/user_option_entity.dart';
 import '../../domain/repositories/meeting_repository.dart';
 import '../../domain/usecases/cancel_meeting_usecase.dart';
 import '../../domain/usecases/create_meeting_usecase.dart';
+import '../../domain/usecases/download_mom_usecase.dart';
+import '../../domain/usecases/generate_mom_usecase.dart';
 import '../../domain/usecases/get_meeting_usecase.dart';
 import '../../domain/usecases/get_meetings_usecase.dart';
 import '../../domain/usecases/get_user_options_usecase.dart';
@@ -47,6 +49,16 @@ UpdateMeetingUsecase updateMeetingUsecase(Ref ref) {
 @riverpod
 CancelMeetingUsecase cancelMeetingUsecase(Ref ref) {
   return CancelMeetingUsecase(ref.watch(meetingRepositoryProvider));
+}
+
+@riverpod
+GenerateMomUsecase generateMomUsecase(Ref ref) {
+  return GenerateMomUsecase(ref.watch(meetingRepositoryProvider));
+}
+
+@riverpod
+DownloadMomUsecase downloadMomUsecase(Ref ref) {
+  return DownloadMomUsecase(ref.watch(meetingRepositoryProvider));
 }
 
 @riverpod

@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'meeting_client_ref_entity.dart';
 import 'meeting_mode.dart';
+import 'meeting_mom_entity.dart';
 import 'meeting_participant_entity.dart';
 import 'meeting_project_ref_entity.dart';
 import 'meeting_status.dart';
@@ -27,6 +28,7 @@ sealed class MeetingEntity with _$MeetingEntity {
     required MeetingParticipantEntity organizer,
     required List<MeetingParticipantEntity> participants,
     String? notes,
+    MeetingMomEntity? mom,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _MeetingEntity;

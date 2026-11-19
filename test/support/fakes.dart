@@ -318,6 +318,8 @@ class FakeMeetingRepository implements MeetingRepository {
   int createCalls = 0;
   int updateCalls = 0;
   int cancelCalls = 0;
+  int generateMomCalls = 0;
+  int downloadMomCalls = 0;
   MeetingInputEntity? lastInput;
   String? lastUpdatedId;
 
@@ -359,6 +361,18 @@ class FakeMeetingRepository implements MeetingRepository {
   Future<MeetingEntity> cancelMeeting(String id) async {
     cancelCalls += 1;
     return meetings.first;
+  }
+
+  @override
+  Future<MeetingEntity> generateMom(String id) async {
+    generateMomCalls += 1;
+    return meetings.firstWhere((meeting) => meeting.id == id);
+  }
+
+  @override
+  Future<Uint8List> downloadMom(String id) async {
+    downloadMomCalls += 1;
+    return Uint8List.fromList(const []);
   }
 
   @override

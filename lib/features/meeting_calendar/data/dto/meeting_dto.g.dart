@@ -21,6 +21,7 @@ _MeetingDto _$MeetingDtoFromJson(Map<String, dynamic> json) => _MeetingDto(
   organizer: json['organizer'] as Map<String, dynamic>,
   participants: json['participants'] as List<dynamic>? ?? const <dynamic>[],
   notes: json['notes'] as String?,
+  mom: json['mom'] as Map<String, dynamic>?,
   createdAt: DateTime.parse(json['created_at'] as String),
   updatedAt: DateTime.parse(json['updated_at'] as String),
 );
@@ -41,6 +42,7 @@ Map<String, dynamic> _$MeetingDtoToJson(_MeetingDto instance) =>
       'organizer': instance.organizer,
       'participants': instance.participants,
       'notes': instance.notes,
+      'mom': instance.mom,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
     };

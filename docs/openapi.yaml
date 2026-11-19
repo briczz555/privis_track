@@ -681,6 +681,49 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
+  /meetings/{meeting_id}/mom:
+    post:
+      tags: [Meetings]
+      summary: Buat atau buat ulang MoM DOCX dari template resmi
+      description: |
+        Hanya organizer, admin, atau PM. Hanya Bagian 1 (Informasi Rapat) yang
+        terisi otomatis; peserta, agenda, pembahasan, dan tanda tangan dibiarkan
+        kosong untuk diisi manual di Word. Generate ulang mengganti file lama.
+      parameters:
+        - $ref: '#/components/parameters/MeetingId'
+      responses:
+        '200':
+          description: MoM dibuat; metadata `mom` terisi pada meeting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Meeting'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    get:
+      tags: [Meetings]
+      summary: Unduh file MoM (DOCX)
+      parameters:
+        - $ref: '#/components/parameters/MeetingId'
+      responses:
+        '200':
+          description: File MoM
+          content:
+            application/vnd.openxmlformats-officedocument.wordprocessingml.document:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
   /audit-logs:
     get:
       tags: [Audit]
@@ -1531,6 +1574,28 @@ components:
         name:
           type: string
 
+    MeetingMom:
+      type: object
+      required: [file_name, size_bytes, generated_at, generated_by]
+      properties:
+        file_name:
+          type: string
+          example: MoM_PRJ-001_2026-11-20_kickoff-proyek.docx
+        size_bytes:
+          type: integer
+        generated_at:
+          type: string
+          format: date-time
+        generated_by:
+          type: object
+          required: [id, name]
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+
     Meeting:
       type: object
       required:
@@ -1578,6 +1643,10 @@ components:
             $ref: '#/components/schemas/MeetingParticipant'
         notes:
           type: string
+          nullable: true
+        mom:
+          allOf:
+            - $ref: '#/components/schemas/MeetingMom'
           nullable: true
         created_at:
           type: string

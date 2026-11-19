@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 
 import '../../domain/entities/meeting_input_entity.dart';
@@ -21,6 +23,10 @@ abstract interface class IMeetingRemoteDataSource {
   );
 
   Future<Map<String, dynamic>> cancelMeeting(String id);
+
+  Future<Map<String, dynamic>> generateMom(String id);
+
+  Future<Uint8List> downloadMom(String id);
 
   Future<List<Map<String, dynamic>>> fetchUserOptions();
 }
@@ -84,6 +90,22 @@ class MeetingRemoteDataSource implements IMeetingRemoteDataSource {
       'meetings/$id/cancel',
     );
     return response.data ?? const {};
+  }
+
+  @override
+  Future<Map<String, dynamic>> generateMom(String id) async {
+    final response = await _dio.post<Map<String, dynamic>>('meetings/$id/mom');
+    return response.data ?? const {};
+  }
+
+  @override
+  Future<Uint8List> downloadMom(String id) async {
+    final response = await _dio.get<List<int>>(
+      'meetings/$id/mom',
+      options: Options(responseType: ResponseType.bytes),
+    );
+
+    return Uint8List.fromList(response.data ?? const []);
   }
 
   @override

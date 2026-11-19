@@ -20,6 +20,7 @@ sealed class MeetingDto with _$MeetingDto {
     required Map<String, dynamic> organizer,
     @Default(<dynamic>[]) List<dynamic> participants,
     String? notes,
+    Map<String, dynamic>? mom,
     @JsonKey(name: 'created_at') required DateTime createdAt,
     @JsonKey(name: 'updated_at') required DateTime updatedAt,
   }) = _MeetingDto;

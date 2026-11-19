@@ -8,6 +8,7 @@ import 'package:privis_track/features/audit_log/domain/entities/audit_log_page_e
 import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_client_ref_entity.dart';
 import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_entity.dart';
 import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_mode.dart';
+import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_mom_entity.dart';
 import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_participant_entity.dart';
 import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_project_ref_entity.dart';
 import 'package:privis_track/features/meeting_calendar/domain/entities/meeting_status.dart';
@@ -223,8 +224,16 @@ final testMeeting = MeetingEntity(
   updatedAt: DateTime.now(),
 );
 
-final testMeetingUsers = [
-  const UserOptionEntity(
+final testMeetingWithMom = testMeeting.copyWith(
+  mom: MeetingMomEntity(
+    fileName: 'MoM_PRJ-001_2026-11-20_meeting-mingguan.docx',
+    sizeBytes: 17250,
+    generatedAt: DateTime.now(),
+    generatedByName: 'Admin PriVis',
+  ),
+);
+
+final testMeetingUsers = [  const UserOptionEntity(
     id: 'user-1',
     name: 'Admin PriVis',
     role: AuthRole.admin,

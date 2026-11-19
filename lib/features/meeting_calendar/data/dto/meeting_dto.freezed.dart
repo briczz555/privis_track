@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MeetingDto {
 
- String get id; String get title; String? get agenda; String get mode; String get status;@JsonKey(name: 'start_at') DateTime get startAt;@JsonKey(name: 'end_at') DateTime get endAt;@JsonKey(name: 'meeting_url') String? get meetingUrl; String? get location; Map<String, dynamic>? get project; Map<String, dynamic>? get client; Map<String, dynamic> get organizer; List<dynamic> get participants; String? get notes;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ String get id; String get title; String? get agenda; String get mode; String get status;@JsonKey(name: 'start_at') DateTime get startAt;@JsonKey(name: 'end_at') DateTime get endAt;@JsonKey(name: 'meeting_url') String? get meetingUrl; String? get location; Map<String, dynamic>? get project; Map<String, dynamic>? get client; Map<String, dynamic> get organizer; List<dynamic> get participants; String? get notes; Map<String, dynamic>? get mom;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of MeetingDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $MeetingDtoCopyWith<MeetingDto> get copyWith => _$MeetingDtoCopyWithImpl<Meeting
 @override
 bool operator ==(Object other) {
   final _this = this as MeetingDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.agenda, _this.agenda) || other.agenda == _this.agenda)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.startAt, _this.startAt) || other.startAt == _this.startAt)&&(identical(other.endAt, _this.endAt) || other.endAt == _this.endAt)&&(identical(other.meetingUrl, _this.meetingUrl) || other.meetingUrl == _this.meetingUrl)&&(identical(other.location, _this.location) || other.location == _this.location)&&const DeepCollectionEquality().equals(other.project, _this.project)&&const DeepCollectionEquality().equals(other.client, _this.client)&&const DeepCollectionEquality().equals(other.organizer, _this.organizer)&&const DeepCollectionEquality().equals(other.participants, _this.participants)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.agenda, _this.agenda) || other.agenda == _this.agenda)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.startAt, _this.startAt) || other.startAt == _this.startAt)&&(identical(other.endAt, _this.endAt) || other.endAt == _this.endAt)&&(identical(other.meetingUrl, _this.meetingUrl) || other.meetingUrl == _this.meetingUrl)&&(identical(other.location, _this.location) || other.location == _this.location)&&const DeepCollectionEquality().equals(other.project, _this.project)&&const DeepCollectionEquality().equals(other.client, _this.client)&&const DeepCollectionEquality().equals(other.organizer, _this.organizer)&&const DeepCollectionEquality().equals(other.participants, _this.participants)&&(identical(other.notes, _this.notes) || other.notes == _this.notes)&&const DeepCollectionEquality().equals(other.mom, _this.mom)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.updatedAt, _this.updatedAt) || other.updatedAt == _this.updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as MeetingDto;
-  return Object.hash(runtimeType,_this.id,_this.title,_this.agenda,_this.mode,_this.status,_this.startAt,_this.endAt,_this.meetingUrl,_this.location,const DeepCollectionEquality().hash(_this.project),const DeepCollectionEquality().hash(_this.client),const DeepCollectionEquality().hash(_this.organizer),const DeepCollectionEquality().hash(_this.participants),_this.notes,_this.createdAt,_this.updatedAt);
+  return Object.hash(runtimeType,_this.id,_this.title,_this.agenda,_this.mode,_this.status,_this.startAt,_this.endAt,_this.meetingUrl,_this.location,const DeepCollectionEquality().hash(_this.project),const DeepCollectionEquality().hash(_this.client),const DeepCollectionEquality().hash(_this.organizer),const DeepCollectionEquality().hash(_this.participants),_this.notes,const DeepCollectionEquality().hash(_this.mom),_this.createdAt,_this.updatedAt);
 }
 
 @override
 String toString() {
   final _this = this as MeetingDto;
-  return 'MeetingDto(id: ${_this.id}, title: ${_this.title}, agenda: ${_this.agenda}, mode: ${_this.mode}, status: ${_this.status}, startAt: ${_this.startAt}, endAt: ${_this.endAt}, meetingUrl: ${_this.meetingUrl}, location: ${_this.location}, project: ${_this.project}, client: ${_this.client}, organizer: ${_this.organizer}, participants: ${_this.participants}, notes: ${_this.notes}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
+  return 'MeetingDto(id: ${_this.id}, title: ${_this.title}, agenda: ${_this.agenda}, mode: ${_this.mode}, status: ${_this.status}, startAt: ${_this.startAt}, endAt: ${_this.endAt}, meetingUrl: ${_this.meetingUrl}, location: ${_this.location}, project: ${_this.project}, client: ${_this.client}, organizer: ${_this.organizer}, participants: ${_this.participants}, notes: ${_this.notes}, mom: ${_this.mom}, createdAt: ${_this.createdAt}, updatedAt: ${_this.updatedAt})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $MeetingDtoCopyWith<$Res>  {
   factory $MeetingDtoCopyWith(MeetingDto value, $Res Function(MeetingDto) _then) = _$MeetingDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String? agenda, String mode, String status,@JsonKey(name: 'start_at') DateTime startAt,@JsonKey(name: 'end_at') DateTime endAt,@JsonKey(name: 'meeting_url') String? meetingUrl, String? location, Map<String, dynamic>? project, Map<String, dynamic>? client, Map<String, dynamic> organizer, List<dynamic> participants, String? notes,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String title, String? agenda, String mode, String status,@JsonKey(name: 'start_at') DateTime startAt,@JsonKey(name: 'end_at') DateTime endAt,@JsonKey(name: 'meeting_url') String? meetingUrl, String? location, Map<String, dynamic>? project, Map<String, dynamic>? client, Map<String, dynamic> organizer, List<dynamic> participants, String? notes, Map<String, dynamic>? mom,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -71,7 +71,7 @@ class _$MeetingDtoCopyWithImpl<$Res>
 
 /// Create a copy of MeetingDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? agenda = freezed,Object? mode = null,Object? status = null,Object? startAt = null,Object? endAt = null,Object? meetingUrl = freezed,Object? location = freezed,Object? project = freezed,Object? client = freezed,Object? organizer = null,Object? participants = null,Object? notes = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? agenda = freezed,Object? mode = null,Object? status = null,Object? startAt = null,Object? endAt = null,Object? meetingUrl = freezed,Object? location = freezed,Object? project = freezed,Object? client = freezed,Object? organizer = null,Object? participants = null,Object? notes = freezed,Object? mom = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(MeetingDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -87,7 +87,8 @@ as Map<String, dynamic>?,client: freezed == client ? _self.client : client // ig
 as Map<String, dynamic>?,organizer: null == organizer ? _self.organizer : organizer // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,participants: null == participants ? _self.participants : participants // ignore: cast_nullable_to_non_nullable
 as List<dynamic>,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,mom: freezed == mom ? _self.mom : mom // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -171,10 +172,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? agenda,  String mode,  String status, @JsonKey(name: 'start_at')  DateTime startAt, @JsonKey(name: 'end_at')  DateTime endAt, @JsonKey(name: 'meeting_url')  String? meetingUrl,  String? location,  Map<String, dynamic>? project,  Map<String, dynamic>? client,  Map<String, dynamic> organizer,  List<dynamic> participants,  String? notes, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String? agenda,  String mode,  String status, @JsonKey(name: 'start_at')  DateTime startAt, @JsonKey(name: 'end_at')  DateTime endAt, @JsonKey(name: 'meeting_url')  String? meetingUrl,  String? location,  Map<String, dynamic>? project,  Map<String, dynamic>? client,  Map<String, dynamic> organizer,  List<dynamic> participants,  String? notes,  Map<String, dynamic>? mom, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MeetingDto() when $default != null:
-return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.mom,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -192,10 +193,10 @@ return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? agenda,  String mode,  String status, @JsonKey(name: 'start_at')  DateTime startAt, @JsonKey(name: 'end_at')  DateTime endAt, @JsonKey(name: 'meeting_url')  String? meetingUrl,  String? location,  Map<String, dynamic>? project,  Map<String, dynamic>? client,  Map<String, dynamic> organizer,  List<dynamic> participants,  String? notes, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String? agenda,  String mode,  String status, @JsonKey(name: 'start_at')  DateTime startAt, @JsonKey(name: 'end_at')  DateTime endAt, @JsonKey(name: 'meeting_url')  String? meetingUrl,  String? location,  Map<String, dynamic>? project,  Map<String, dynamic>? client,  Map<String, dynamic> organizer,  List<dynamic> participants,  String? notes,  Map<String, dynamic>? mom, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _MeetingDto():
-return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.createdAt,_that.updatedAt);}
+return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.mom,_that.createdAt,_that.updatedAt);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -209,10 +210,10 @@ return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? agenda,  String mode,  String status, @JsonKey(name: 'start_at')  DateTime startAt, @JsonKey(name: 'end_at')  DateTime endAt, @JsonKey(name: 'meeting_url')  String? meetingUrl,  String? location,  Map<String, dynamic>? project,  Map<String, dynamic>? client,  Map<String, dynamic> organizer,  List<dynamic> participants,  String? notes, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String? agenda,  String mode,  String status, @JsonKey(name: 'start_at')  DateTime startAt, @JsonKey(name: 'end_at')  DateTime endAt, @JsonKey(name: 'meeting_url')  String? meetingUrl,  String? location,  Map<String, dynamic>? project,  Map<String, dynamic>? client,  Map<String, dynamic> organizer,  List<dynamic> participants,  String? notes,  Map<String, dynamic>? mom, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _MeetingDto() when $default != null:
-return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.startAt,_that.endAt,_that.meetingUrl,_that.location,_that.project,_that.client,_that.organizer,_that.participants,_that.notes,_that.mom,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -224,7 +225,7 @@ return $default(_that.id,_that.title,_that.agenda,_that.mode,_that.status,_that.
 @JsonSerializable()
 
 class _MeetingDto implements MeetingDto {
-  const _MeetingDto({required this.id, required this.title, this.agenda, required this.mode, required this.status, @JsonKey(name: 'start_at') required this.startAt, @JsonKey(name: 'end_at') required this.endAt, @JsonKey(name: 'meeting_url') this.meetingUrl, this.location,  Map<String, dynamic>? project,  Map<String, dynamic>? client, required  Map<String, dynamic> organizer,  List<dynamic> participants = const <dynamic>[], this.notes, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _project = project,_client = client,_organizer = organizer,_participants = participants;
+  const _MeetingDto({required this.id, required this.title, this.agenda, required this.mode, required this.status, @JsonKey(name: 'start_at') required this.startAt, @JsonKey(name: 'end_at') required this.endAt, @JsonKey(name: 'meeting_url') this.meetingUrl, this.location,  Map<String, dynamic>? project,  Map<String, dynamic>? client, required  Map<String, dynamic> organizer,  List<dynamic> participants = const <dynamic>[], this.notes,  Map<String, dynamic>? mom, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _project = project,_client = client,_organizer = organizer,_participants = participants,_mom = mom;
   factory _MeetingDto.fromJson(Map<String, dynamic> json) => _$MeetingDtoFromJson(json);
 
 @override final  String id;
@@ -269,6 +270,15 @@ class _MeetingDto implements MeetingDto {
 }
 
 @override final  String? notes;
+ final  Map<String, dynamic>? _mom;
+@override Map<String, dynamic>? get mom {
+  final value = _mom;
+  if (value == null) return null;
+  if (_mom is EqualUnmodifiableMapView) return _mom;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
 
@@ -285,18 +295,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.agenda, agenda) || other.agenda == agenda)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.meetingUrl, meetingUrl) || other.meetingUrl == meetingUrl)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.project, _project)&&const DeepCollectionEquality().equals(other.client, _client)&&const DeepCollectionEquality().equals(other.organizer, _organizer)&&const DeepCollectionEquality().equals(other.participants, _participants)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.agenda, agenda) || other.agenda == agenda)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.meetingUrl, meetingUrl) || other.meetingUrl == meetingUrl)&&(identical(other.location, location) || other.location == location)&&const DeepCollectionEquality().equals(other.project, _project)&&const DeepCollectionEquality().equals(other.client, _client)&&const DeepCollectionEquality().equals(other.organizer, _organizer)&&const DeepCollectionEquality().equals(other.participants, _participants)&&(identical(other.notes, notes) || other.notes == notes)&&const DeepCollectionEquality().equals(other.mom, _mom)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,id,title,agenda,mode,status,startAt,endAt,meetingUrl,location,const DeepCollectionEquality().hash(_project),const DeepCollectionEquality().hash(_client),const DeepCollectionEquality().hash(_organizer),const DeepCollectionEquality().hash(_participants),notes,createdAt,updatedAt);
+    return Object.hash(runtimeType,id,title,agenda,mode,status,startAt,endAt,meetingUrl,location,const DeepCollectionEquality().hash(_project),const DeepCollectionEquality().hash(_client),const DeepCollectionEquality().hash(_organizer),const DeepCollectionEquality().hash(_participants),notes,const DeepCollectionEquality().hash(_mom),createdAt,updatedAt);
 }
 
 @override
 String toString() {
-    return 'MeetingDto(id: $id, title: $title, agenda: $agenda, mode: $mode, status: $status, startAt: $startAt, endAt: $endAt, meetingUrl: $meetingUrl, location: $location, project: $project, client: $client, organizer: $organizer, participants: $participants, notes: $notes, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'MeetingDto(id: $id, title: $title, agenda: $agenda, mode: $mode, status: $status, startAt: $startAt, endAt: $endAt, meetingUrl: $meetingUrl, location: $location, project: $project, client: $client, organizer: $organizer, participants: $participants, notes: $notes, mom: $mom, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -307,7 +317,7 @@ abstract mixin class _$MeetingDtoCopyWith<$Res> implements $MeetingDtoCopyWith<$
   factory _$MeetingDtoCopyWith(_MeetingDto value, $Res Function(_MeetingDto) _then) = __$MeetingDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String? agenda, String mode, String status,@JsonKey(name: 'start_at') DateTime startAt,@JsonKey(name: 'end_at') DateTime endAt,@JsonKey(name: 'meeting_url') String? meetingUrl, String? location, Map<String, dynamic>? project, Map<String, dynamic>? client, Map<String, dynamic> organizer, List<dynamic> participants, String? notes,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String title, String? agenda, String mode, String status,@JsonKey(name: 'start_at') DateTime startAt,@JsonKey(name: 'end_at') DateTime endAt,@JsonKey(name: 'meeting_url') String? meetingUrl, String? location, Map<String, dynamic>? project, Map<String, dynamic>? client, Map<String, dynamic> organizer, List<dynamic> participants, String? notes, Map<String, dynamic>? mom,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -324,7 +334,7 @@ class __$MeetingDtoCopyWithImpl<$Res>
 
 /// Create a copy of MeetingDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? agenda = freezed,Object? mode = null,Object? status = null,Object? startAt = null,Object? endAt = null,Object? meetingUrl = freezed,Object? location = freezed,Object? project = freezed,Object? client = freezed,Object? organizer = null,Object? participants = null,Object? notes = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? agenda = freezed,Object? mode = null,Object? status = null,Object? startAt = null,Object? endAt = null,Object? meetingUrl = freezed,Object? location = freezed,Object? project = freezed,Object? client = freezed,Object? organizer = null,Object? participants = null,Object? notes = freezed,Object? mom = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_MeetingDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -340,7 +350,8 @@ as Map<String, dynamic>?,client: freezed == client ? _self._client : client // i
 as Map<String, dynamic>?,organizer: null == organizer ? _self._organizer : organizer // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,participants: null == participants ? _self._participants : participants // ignore: cast_nullable_to_non_nullable
 as List<dynamic>,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,mom: freezed == mom ? _self._mom : mom // ignore: cast_nullable_to_non_nullable
+as Map<String, dynamic>?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

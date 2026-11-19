@@ -4,6 +4,7 @@ import '../../../auth/domain/entities/auth_role.dart';
 import '../../domain/entities/meeting_client_ref_entity.dart';
 import '../../domain/entities/meeting_entity.dart';
 import '../../domain/entities/meeting_mode.dart';
+import '../../domain/entities/meeting_mom_entity.dart';
 import '../../domain/entities/meeting_participant_entity.dart';
 import '../../domain/entities/meeting_project_ref_entity.dart';
 import '../../domain/entities/meeting_status.dart';
@@ -30,6 +31,7 @@ sealed class MeetingModel with _$MeetingModel {
     required Map<String, dynamic> organizer,
     required List<dynamic> participants,
     String? notes,
+    Map<String, dynamic>? mom,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _MeetingModel;
@@ -49,6 +51,7 @@ sealed class MeetingModel with _$MeetingModel {
     organizer: dto.organizer,
     participants: dto.participants,
     notes: dto.notes,
+    mom: dto.mom,
     createdAt: dto.createdAt,
     updatedAt: dto.updatedAt,
   );
@@ -82,8 +85,22 @@ sealed class MeetingModel with _$MeetingModel {
         .map((json) => _participant(Map<String, dynamic>.from(json)))
         .toList(growable: false),
     notes: notes,
+    mom: mom == null ? null : _mom(mom!),
     createdAt: createdAt,
     updatedAt: updatedAt,
+  );
+}
+
+MeetingMomEntity _mom(Map<String, dynamic> json) {
+  final generatedBy = Map<String, dynamic>.from(
+    json['generated_by'] as Map? ?? const {},
+  );
+
+  return MeetingMomEntity(
+    fileName: json['file_name'] as String,
+    sizeBytes: (json['size_bytes'] as num).toInt(),
+    generatedAt: DateTime.parse(json['generated_at'] as String),
+    generatedByName: generatedBy['name'] as String? ?? '-',
   );
 }
 

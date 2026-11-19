@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../../../../core/navigation/routes.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -16,6 +21,7 @@ import '../../../auth/domain/entities/auth_role.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../../user_management/presentation/widgets/user_role_style.dart';
 import '../../domain/entities/meeting_entity.dart';
+import '../../domain/entities/meeting_mom_entity.dart';
 import '../providers/meeting_provider.dart';
 
 class MeetingDetailScreen extends ConsumerStatefulWidget {
@@ -255,6 +261,7 @@ class _MeetingDetailBody extends StatelessWidget {
           const SizedBox(height: 4),
           Text(meeting.notes!, style: theme.textTheme.bodyMedium),
         ],
+        _MomSection(meeting: meeting),
         const SizedBox(height: AppSpacing.lg),
         Text(
           'Peserta (${meeting.participants.length})',
@@ -371,6 +378,229 @@ class _Badge extends StatelessWidget {
       ),
     );
   }
+}
+
+class _MomSection extends ConsumerStatefulWidget {
+  const _MomSection({required this.meeting});
+
+  final MeetingEntity meeting;
+
+  @override
+  ConsumerState<_MomSection> createState() => _MomSectionState();
+}
+
+class _MomSectionState extends ConsumerState<_MomSection> {
+  bool _isGenerating = false;
+  bool _isDownloading = false;
+
+  Future<void> _generate({required bool regenerate}) async {
+    if (_isGenerating) return;
+
+    if (regenerate) {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Buat ulang MoM?'),
+          content: const Text(
+            'File MoM yang sekarang akan diganti. Isian manual pada file lama '
+            'tidak ikut tersimpan.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: const Text('Batal'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+              child: const Text('Buat Ulang'),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !mounted) return;
+    }
+
+    setState(() => _isGenerating = true);
+    try {
+      await ref.read(generateMomUsecaseProvider).call(widget.meeting.id);
+      ref.invalidate(meetingDetailProvider(widget.meeting.id));
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            regenerate ? 'MoM berhasil dibuat ulang.' : 'MoM berhasil dibuat.',
+          ),
+        ),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(readableErrorMessage(error))));
+    } finally {
+      if (mounted) setState(() => _isGenerating = false);
+    }
+  }
+
+  Future<void> _download(MeetingMomEntity mom) async {
+    if (_isDownloading) return;
+
+    setState(() => _isDownloading = true);
+    try {
+      final bytes = await ref
+          .read(downloadMomUsecaseProvider)
+          .call(widget.meeting.id);
+
+      final directory = await getTemporaryDirectory();
+      final safeName = mom.fileName.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+      final file = File(p.join(directory.path, safeName));
+      await file.writeAsBytes(bytes, flush: true);
+
+      final result = await OpenFilex.open(file.path);
+      if (result.type != ResultType.done && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result.message.isEmpty
+                  ? 'Tidak ada aplikasi untuk membuka file.'
+                  : result.message,
+            ),
+          ),
+        );
+      }
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(readableErrorMessage(error))));
+    } finally {
+      if (mounted) setState(() => _isDownloading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final secondaryText = theme.colorScheme.onSurface.withValues(alpha: 0.55);
+    final mom = widget.meeting.mom;
+    final session = ref.watch(authControllerProvider).value;
+    final canGenerate =
+        session != null &&
+        (session.user.role == AuthRole.admin ||
+            session.user.role == AuthRole.pm ||
+            session.user.id == widget.meeting.organizer.id) &&
+        !widget.meeting.isCancelled;
+
+    final progress = const SizedBox(
+      width: 16,
+      height: 16,
+      child: CircularProgressIndicator(strokeWidth: 2),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: AppSpacing.md),
+        Text('Notulen (MoM)', style: theme.textTheme.titleSmall),
+        const SizedBox(height: AppSpacing.sm),
+        if (mom == null) ...[
+          Text(
+            canGenerate
+                ? 'Belum ada MoM. Buat dari data meeting, lalu lengkapi bagian '
+                      'peserta, agenda, dan pembahasan di Word.'
+                : 'MoM belum dibuat untuk meeting ini.',
+            style: theme.textTheme.bodySmall?.copyWith(color: secondaryText),
+          ),
+          if (canGenerate) ...[
+            const SizedBox(height: AppSpacing.sm),
+            OutlinedButton.icon(
+              onPressed: _isGenerating
+                  ? null
+                  : () => _generate(regenerate: false),
+              icon: _isGenerating
+                  ? progress
+                  : const Icon(Icons.description_outlined, size: 16),
+              label: Text(_isGenerating ? 'Membuat MoM...' : 'Buat MoM'),
+            ),
+          ],
+        ] else
+          Card(
+            margin: EdgeInsets.zero,
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.description_outlined,
+                        size: 16,
+                        color: theme.colorScheme.primary,
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Text(
+                          mom.fileName,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    '${_formatFileSize(mom.sizeBytes)} · '
+                    '${formatShortDate(toWib(mom.generatedAt))} · '
+                    '${mom.generatedByName}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: secondaryText,
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Wrap(
+                    spacing: AppSpacing.sm,
+                    runSpacing: AppSpacing.xs,
+                    children: [
+                      FilledButton.tonalIcon(
+                        onPressed: _isDownloading
+                            ? null
+                            : () => _download(mom),
+                        icon: _isDownloading
+                            ? progress
+                            : const Icon(Icons.download_rounded, size: 16),
+                        label: Text(
+                          _isDownloading ? 'Mengunduh...' : 'Unduh',
+                        ),
+                      ),
+                      if (canGenerate)
+                        TextButton(
+                          onPressed: _isGenerating
+                              ? null
+                              : () => _generate(regenerate: true),
+                          child: Text(
+                            _isGenerating ? 'Memproses...' : 'Buat Ulang',
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+String _formatFileSize(int bytes) {
+  if (bytes < 1024) return '$bytes B';
+
+  final kb = bytes / 1024;
+  if (kb < 1024) return '${kb.toStringAsFixed(1)} KB';
+
+  return '${(kb / 1024).toStringAsFixed(1)} MB';
 }
 
 String _time(DateTime date) =>

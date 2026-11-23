@@ -13,6 +13,7 @@ import '../../../../core/widgets/offline_banner.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../auth/domain/entities/auth_role.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
+import '../../../meeting_calendar/presentation/providers/meeting_provider.dart';
 import '../../../project_management/presentation/project_form_launcher.dart';
 import '../../domain/entities/dashboard_entity.dart';
 import '../providers/dashboard_provider.dart';
@@ -20,12 +21,16 @@ import '../widgets/activity_feed_tile.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/portfolio_card.dart';
 import '../widgets/project_card.dart';
+import '../widgets/today_meetings_section.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
-  Future<void> _refresh(WidgetRef ref) =>
-      ref.read(dashboardProvider.notifier).refresh();
+  Future<void> _refresh(WidgetRef ref) async {
+    // Jadwal meeting punya provider sendiri; ikut segarkan saat pull-to-refresh.
+    ref.invalidate(meetingsProvider);
+    await ref.read(dashboardProvider.notifier).refresh();
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -123,6 +128,17 @@ class _DashboardContent extends StatelessWidget {
               data: dashboard.portfolioByStatus,
               totalProjects: dashboard.totalProjects,
             ),
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.md,
+              AppSpacing.lg,
+              AppSpacing.md,
+              0,
+            ),
+            child: TodayMeetingsSection(),
           ),
         ),
         SliverToBoxAdapter(

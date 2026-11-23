@@ -85,6 +85,8 @@ class FakeDashboardRepository implements DashboardRepository {
   final ProjectListEntity projectList;
   int getProjectsCalls = 0;
   final List<int> requestedPages = [];
+  String? lastProjectsSearch;
+  int? lastProjectsLimit;
 
   @override
   Future<DashboardEntity> getDashboard() async => dashboard;
@@ -98,12 +100,19 @@ class FakeDashboardRepository implements DashboardRepository {
   }) async {
     getProjectsCalls += 1;
     requestedPages.add(page);
+    lastProjectsSearch = search;
+    lastProjectsLimit = limit;
 
-    final filtered = status == null
-        ? projectList.projects
-        : projectList.projects
-              .where((project) => project.status == status)
-              .toList(growable: false);
+    final query = search?.trim().toLowerCase() ?? '';
+    final filtered = projectList.projects
+        .where((project) => status == null || project.status == status)
+        .where(
+          (project) =>
+              query.isEmpty ||
+              project.name.toLowerCase().contains(query) ||
+              project.code.toLowerCase().contains(query),
+        )
+        .toList(growable: false);
     final start = (page - 1) * limit;
     final pageItems = start >= filtered.length
         ? const <ProjectEntity>[]
@@ -253,6 +262,8 @@ class FakeProjectManagementRepository implements ProjectManagementRepository {
   String createdCode;
   int createCalls = 0;
   int updateCalls = 0;
+  String? lastClientSearch;
+  int? lastClientLimit;
   String? lastCreatedName;
   ClientFormEntity? lastNewClient;
   String? lastClientId;
@@ -261,7 +272,24 @@ class FakeProjectManagementRepository implements ProjectManagementRepository {
   ClientFormEntity? lastUpdatedClient;
 
   @override
-  Future<List<ClientOptionEntity>> getClients() async => clients;
+  Future<List<ClientOptionEntity>> getClients({
+    String? search,
+    int? limit,
+  }) async {
+    lastClientSearch = search;
+    lastClientLimit = limit;
+
+    final query = (search ?? '').trim().toLowerCase();
+    final filtered = query.isEmpty
+        ? clients
+        : clients
+              .where((client) => client.name.toLowerCase().contains(query))
+              .toList(growable: false);
+
+    return limit == null
+        ? filtered
+        : filtered.take(limit).toList(growable: false);
+  }
 
   @override
   Future<String> createProject({

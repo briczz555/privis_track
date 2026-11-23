@@ -196,9 +196,12 @@ Batasan: `active_projects` maksimum 10 (urut `due_date` terdekat), `activities` 
 
 ### 6.3 Projects
 
-#### `GET /clients`
+#### `GET /clients?search&limit`
 
-Daftar klien yang sudah ada (`id`, `name`), urut nama. Dipakai untuk dropdown saat membuat proyek. Semua user terautentikasi.
+Daftar klien yang sudah ada (`id`, `name`), urut nama. Semua user terautentikasi.
+
+- `search` opsional: filter nama (case-insensitive, maks. 100 karakter).
+- `limit` opsional: 1–100, default 100. Aplikasi memakai `limit=5` untuk dropdown pencarian agar ringan.
 
 #### `POST /projects`
 

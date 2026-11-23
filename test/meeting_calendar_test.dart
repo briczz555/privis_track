@@ -35,6 +35,7 @@ Widget _app({
   required Widget home,
   AuthRole role = AuthRole.admin,
   FakeMeetingRepository? meetingRepository,
+  FakeDashboardRepository? dashboardRepository,
 }) {
   return ProviderScope(
     overrides: [
@@ -50,10 +51,12 @@ Widget _app({
             ),
       ),
       dashboardRepositoryProvider.overrideWith(
-        (ref) => FakeDashboardRepository(
-          dashboard: testDashboard,
-          projectList: testProjectList,
-        ),
+        (ref) =>
+            dashboardRepository ??
+            FakeDashboardRepository(
+              dashboard: testDashboard,
+              projectList: testProjectList,
+            ),
       ),
     ],
     child: MaterialApp(theme: AppTheme.light, home: home),
@@ -65,13 +68,19 @@ Future<void> _pumpScreen(
   required Widget home,
   AuthRole role = AuthRole.admin,
   FakeMeetingRepository? meetingRepository,
+  FakeDashboardRepository? dashboardRepository,
 }) async {
   tester.view.physicalSize = const Size(420, 1000);
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 
   await tester.pumpWidget(
-    _app(home: home, role: role, meetingRepository: meetingRepository),
+    _app(
+      home: home,
+      role: role,
+      meetingRepository: meetingRepository,
+      dashboardRepository: dashboardRepository,
+    ),
   );
   await tester.pumpAndSettle();
 }
@@ -119,6 +128,36 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Judul meeting wajib diisi.'), findsOneWidget);
+    });
+
+    testWidgets('pencarian proyek dibatasi 5 hasil', (tester) async {
+      final dashboardRepository = FakeDashboardRepository(
+        dashboard: testDashboard,
+        projectList: testProjectList,
+      );
+      await _pumpScreen(
+        tester,
+        home: const MeetingFormScreen(),
+        dashboardRepository: dashboardRepository,
+      );
+
+      await tester.tap(find.text('Tanpa proyek'));
+      await tester.pumpAndSettle();
+
+      expect(dashboardRepository.lastProjectsLimit, 5);
+      expect(find.text('Tanpa proyek'), findsWidgets);
+      expect(find.text('PRJ-001 · E-Commerce App'), findsOneWidget);
+
+      await tester.enterText(
+        find.byKey(const ValueKey('searchPickerQuery')),
+        'HRIS',
+      );
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pumpAndSettle();
+
+      expect(dashboardRepository.lastProjectsSearch, 'HRIS');
+      expect(find.text('PRJ-003 · HRIS Internal Portal'), findsOneWidget);
+      expect(find.text('PRJ-001 · E-Commerce App'), findsNothing);
     });
 
     testWidgets('form membuat meeting dan mengirim peserta', (tester) async {

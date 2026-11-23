@@ -5,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/network/dio_provider.dart';
 import '../../data/datasources/project_management_remote_data_source.dart';
 import '../../data/repositories/project_management_repository_impl.dart';
-import '../../domain/entities/client_option_entity.dart';
 import '../../domain/repositories/project_management_repository.dart';
 import '../../domain/usecases/create_project_usecase.dart';
 import '../../domain/usecases/get_clients_usecase.dart';
@@ -35,9 +34,4 @@ UpdateProjectDetailsUsecase updateProjectDetailsUsecase(Ref ref) {
   return UpdateProjectDetailsUsecase(
     ref.watch(projectManagementRepositoryProvider),
   );
-}
-
-@riverpod
-Future<List<ClientOptionEntity>> clientOptions(Ref ref) {
-  return ref.watch(getClientsUsecaseProvider).call();
 }

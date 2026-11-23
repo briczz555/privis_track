@@ -143,6 +143,41 @@ void main() {
       expect(repository.lastNewClient, isNull);
     });
 
+    testWidgets('pencarian klien dibatasi 5 hasil', (tester) async {
+      final repository = FakeProjectManagementRepository(
+        clients: [
+          for (var index = 1; index <= 8; index++)
+            ClientOptionEntity(id: 'client-$index', name: 'Klien $index'),
+        ],
+      );
+      await _pumpForm(tester, repository: repository);
+
+      await tester.tap(find.text('Klien baru'));
+      await tester.pumpAndSettle();
+
+      expect(repository.lastClientLimit, 5);
+      expect(find.text('Klien 1'), findsOneWidget);
+      expect(find.text('Klien 5'), findsOneWidget);
+      expect(find.text('Klien 6'), findsNothing);
+
+      await tester.enterText(
+        find.byKey(const ValueKey('searchPickerQuery')),
+        'Klien 7',
+      );
+      await tester.pump(const Duration(milliseconds: 350));
+      await tester.pumpAndSettle();
+
+      expect(repository.lastClientSearch, 'Klien 7');
+      expect(find.widgetWithText(ListTile, 'Klien 7'), findsOneWidget);
+      expect(find.text('Klien 1'), findsNothing);
+
+      await tester.tap(find.widgetWithText(ListTile, 'Klien 7'));
+      await tester.pumpAndSettle();
+
+      // Nilai terpilih tampil di field.
+      expect(find.text('Klien 7'), findsOneWidget);
+    });
+
     testWidgets('edit proyek memuat data awal dan menyimpan', (tester) async {
       final repository = FakeProjectManagementRepository();
       await _pumpForm(

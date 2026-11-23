@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import '../../domain/entities/client_form_entity.dart';
 
 abstract interface class IProjectManagementRemoteDataSource {
-  Future<List<Map<String, dynamic>>> fetchClients();
+  Future<List<Map<String, dynamic>>> fetchClients({String? search, int? limit});
 
   Future<String> createProject({
     required String name,
@@ -29,8 +29,17 @@ class ProjectManagementRemoteDataSource
   final Dio _dio;
 
   @override
-  Future<List<Map<String, dynamic>>> fetchClients() async {
-    final response = await _dio.get<Map<String, dynamic>>('clients');
+  Future<List<Map<String, dynamic>>> fetchClients({
+    String? search,
+    int? limit,
+  }) async {
+    final response = await _dio.get<Map<String, dynamic>>(
+      'clients',
+      queryParameters: {
+        if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
+        'limit': ?limit,
+      },
+    );
     final data = response.data?['data'];
 
     if (data is! List) return const [];

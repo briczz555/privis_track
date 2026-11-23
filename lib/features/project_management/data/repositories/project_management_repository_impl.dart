@@ -14,9 +14,12 @@ class ProjectManagementRepositoryImpl implements ProjectManagementRepository {
   final IProjectManagementRemoteDataSource _remote;
 
   @override
-  Future<List<ClientOptionEntity>> getClients() async {
+  Future<List<ClientOptionEntity>> getClients({
+    String? search,
+    int? limit,
+  }) async {
     try {
-      final payload = await _remote.fetchClients();
+      final payload = await _remote.fetchClients(search: search, limit: limit);
       return payload
           .map(
             (json) =>

@@ -2,7 +2,7 @@ import '../entities/client_form_entity.dart';
 import '../entities/client_option_entity.dart';
 
 abstract interface class ProjectManagementRepository {
-  Future<List<ClientOptionEntity>> getClients();
+  Future<List<ClientOptionEntity>> getClients({String? search, int? limit});
 
   Future<String> createProject({
     required String name,

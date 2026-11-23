@@ -277,6 +277,21 @@ paths:
     get:
       tags: [Projects]
       summary: Daftar klien yang sudah ada (dropdown proyek)
+      parameters:
+        - name: search
+          in: query
+          description: Filter nama klien (case-insensitive)
+          schema:
+            type: string
+            maxLength: 100
+        - name: limit
+          in: query
+          description: Jumlah maksimum hasil (1-100, default 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
       responses:
         '200':
           description: Daftar klien

@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/network/dio_provider.dart';
-import '../../../dashboard/domain/entities/project_entity.dart';
-import '../../../dashboard/presentation/providers/dashboard_provider.dart';
 import '../../data/datasources/meeting_remote_data_source.dart';
 import '../../data/repositories/meeting_repository_impl.dart';
 import '../../domain/entities/meeting_entity.dart';
@@ -88,10 +86,4 @@ Future<MeetingEntity> meetingDetail(Ref ref, String id) {
 @riverpod
 Future<List<UserOptionEntity>> meetingUserOptions(Ref ref) {
   return ref.watch(getUserOptionsUsecaseProvider).call();
-}
-
-@riverpod
-Future<List<ProjectEntity>> meetingProjectOptions(Ref ref) async {
-  final list = await ref.watch(getProjectsUsecaseProvider).call(limit: 100);
-  return list.projects;
 }

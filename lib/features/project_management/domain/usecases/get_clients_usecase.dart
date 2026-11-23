@@ -6,5 +6,6 @@ class GetClientsUsecase {
 
   final ProjectManagementRepository _repository;
 
-  Future<List<ClientOptionEntity>> call() => _repository.getClients();
+  Future<List<ClientOptionEntity>> call({String? search, int? limit}) =>
+      _repository.getClients(search: search, limit: limit);
 }

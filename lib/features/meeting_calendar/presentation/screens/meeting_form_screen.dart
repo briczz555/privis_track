@@ -5,8 +5,9 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/error_message.dart';
 import '../../../../core/utils/wib_time.dart';
+import '../../../../core/widgets/search_picker_field.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
-import '../../../dashboard/domain/entities/project_entity.dart';
+import '../../../dashboard/presentation/providers/dashboard_provider.dart';
 import '../../domain/entities/meeting_entity.dart';
 import '../../domain/entities/meeting_input_entity.dart';
 import '../../domain/entities/meeting_mode.dart';
@@ -24,8 +25,6 @@ class MeetingFormScreen extends ConsumerStatefulWidget {
 }
 
 class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
-  static const _noProject = '__none__';
-
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _agendaController = TextEditingController();
@@ -37,6 +36,7 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
   late DateTime _endAt;
   late MeetingMode _mode;
   String? _projectCode;
+  String? _projectLabel;
   late Set<String> _participantIds;
   String? _lockedParticipantId;
   bool _isSubmitting = false;
@@ -61,6 +61,9 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
       _endAt = toWib(initial.endAt);
       _mode = initial.mode;
       _projectCode = initial.project?.code;
+      _projectLabel = initial.project == null
+          ? null
+          : '${initial.project!.code} · ${initial.project!.name}';
       _participantIds = {
         for (final participant in initial.participants) participant.id,
       };
@@ -86,6 +89,20 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
     _locationController.dispose();
     _notesController.dispose();
     super.dispose();
+  }
+
+  Future<List<SearchPickerOption>> _searchProjects(String query) async {
+    final result = await ref
+        .read(getProjectsUsecaseProvider)
+        .call(search: query, limit: 5);
+
+    return [
+      for (final project in result.projects)
+        SearchPickerOption(
+          value: project.code,
+          label: '${project.code} · ${project.name}',
+        ),
+    ];
   }
 
   Future<void> _pickDateTime({required bool isStart}) async {
@@ -241,18 +258,12 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
     final theme = Theme.of(context);
     final session = ref.watch(authControllerProvider).value;
     final userOptions = ref.watch(meetingUserOptionsProvider).value;
-    final projects = ref.watch(meetingProjectOptionsProvider).value;
 
     final currentUserId = session?.user.id;
     if (!_isEdit && currentUserId != null && _lockedParticipantId == null) {
       _lockedParticipantId = currentUserId;
       _participantIds.add(currentUserId);
     }
-
-    final loadedProjects = projects ?? const <ProjectEntity>[];
-    final hasSelectedProject =
-        _projectCode != null &&
-        loadedProjects.any((project) => project.code == _projectCode);
 
     return Scaffold(
       appBar: AppBar(title: Text(_isEdit ? 'Edit Meeting' : 'Meeting Baru')),
@@ -326,32 +337,23 @@ class _MeetingFormScreenState extends ConsumerState<MeetingFormScreen> {
                   ),
                 ),
               const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<String>(
-                initialValue: _projectCode ?? _noProject,
-                decoration: const InputDecoration(
-                  labelText: 'Proyek (opsional)',
-                ),
-                items: [
-                  const DropdownMenuItem(
-                    value: _noProject,
-                    child: Text('Tanpa proyek'),
-                  ),
-                  for (final project in loadedProjects)
-                    DropdownMenuItem(
-                      value: project.code,
-                      child: Text('${project.code} · ${project.name}'),
-                    ),
-                  if (_projectCode != null && !hasSelectedProject)
-                    DropdownMenuItem(
-                      value: _projectCode,
-                      child: Text(_projectCode!),
-                    ),
+              SearchPickerField(
+                label: 'Proyek (opsional)',
+                selectedValue: _projectCode,
+                selectedLabel: _projectCode == null
+                    ? 'Tanpa proyek'
+                    : _projectLabel,
+                leadingOptions: const [
+                  SearchPickerOption(value: null, label: 'Tanpa proyek'),
                 ],
-                onChanged: _isSubmitting
-                    ? null
-                    : (value) => setState(
-                        () => _projectCode = value == _noProject ? null : value,
-                      ),
+                searchHint: 'Cari kode atau nama proyek...',
+                emptyText: 'Proyek tidak ditemukan.',
+                enabled: !_isSubmitting,
+                onSearch: _searchProjects,
+                onSelected: (option) => setState(() {
+                  _projectCode = option.value;
+                  _projectLabel = option.value == null ? null : option.label;
+                }),
               ),
               const SizedBox(height: AppSpacing.lg),
               Row(

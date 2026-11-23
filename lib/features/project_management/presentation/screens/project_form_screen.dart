@@ -8,6 +8,7 @@ import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/error_message.dart';
 import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
+import '../../../../core/widgets/search_picker_field.dart';
 import '../../../auth/domain/entities/auth_role.dart';
 import '../../../auth/presentation/providers/auth_controller.dart';
 import '../../../project_tracking/domain/entities/project_tracking_entity.dart';
@@ -40,6 +41,7 @@ class _ProjectFormScreenState extends ConsumerState<ProjectFormScreen> {
   DateTime? _startDate;
   DateTime? _dueDate;
   String? _selectedClientId;
+  String? _selectedClientName;
   bool _initialized = false;
   bool _isSubmitting = false;
   String? _error;
@@ -86,6 +88,17 @@ class _ProjectFormScreenState extends ConsumerState<ProjectFormScreen> {
     contactRole: _contactRoleController.text.trim(),
     phone: _phoneController.text.trim(),
   );
+
+  Future<List<SearchPickerOption>> _searchClients(String query) async {
+    final clients = await ref
+        .read(getClientsUsecaseProvider)
+        .call(search: query, limit: 5);
+
+    return [
+      for (final client in clients)
+        SearchPickerOption(value: client.id, label: client.name),
+    ];
+  }
 
   Future<void> _pickDate({required bool isStart}) async {
     final current = isStart ? _startDate : _dueDate;
@@ -257,10 +270,25 @@ class _ProjectFormScreenState extends ConsumerState<ProjectFormScreen> {
               ],
               const SizedBox(height: AppSpacing.sm),
               if (!_isEdit) ...[
-                _ClientSelector(
-                  selectedClientId: _selectedClientId,
-                  onChanged: (value) =>
-                      setState(() => _selectedClientId = value),
+                SearchPickerField(
+                  label: 'Pilih klien',
+                  selectedValue: _selectedClientId,
+                  selectedLabel: _selectedClientId == null
+                      ? 'Klien baru'
+                      : _selectedClientName,
+                  leadingOptions: const [
+                    SearchPickerOption(value: null, label: 'Klien baru'),
+                  ],
+                  searchHint: 'Cari nama klien...',
+                  emptyText: 'Klien tidak ditemukan.',
+                  enabled: !_isSubmitting,
+                  onSearch: _searchClients,
+                  onSelected: (option) => setState(() {
+                    _selectedClientId = option.value;
+                    _selectedClientName = option.value == null
+                        ? null
+                        : option.label;
+                  }),
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
@@ -300,49 +328,6 @@ class _ProjectFormScreenState extends ConsumerState<ProjectFormScreen> {
             label: Text(_isSubmitting ? 'Menyimpan...' : 'Simpan'),
           ),
         ),
-      ),
-    );
-  }
-}
-
-const _newClientValue = '__new_client__';
-
-class _ClientSelector extends ConsumerWidget {
-  const _ClientSelector({
-    required this.selectedClientId,
-    required this.onChanged,
-  });
-
-  final String? selectedClientId;
-  final ValueChanged<String?> onChanged;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final clients = ref.watch(clientOptionsProvider);
-
-    return clients.when(
-      loading: () => const LinearProgressIndicator(),
-      error: (error, stack) => Text(
-        'Gagal memuat daftar klien: ${readableErrorMessage(error)}',
-        style: Theme.of(context).textTheme.bodySmall
-            ?.copyWith(color: Theme.of(context).colorScheme.error),
-      ),
-      data: (options) => DropdownButtonFormField<String>(
-        initialValue: selectedClientId ?? _newClientValue,
-        decoration: const InputDecoration(labelText: 'Pilih klien'),
-        items: [
-          const DropdownMenuItem<String>(
-            value: _newClientValue,
-            child: Text('Klien baru'),
-          ),
-          for (final client in options)
-            DropdownMenuItem<String>(
-              value: client.id,
-              child: Text(client.name),
-            ),
-        ],
-        onChanged: (value) =>
-            onChanged(value == _newClientValue ? null : value),
       ),
     );
   }

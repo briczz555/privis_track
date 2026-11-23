@@ -27,4 +27,14 @@ abstract class AppColors {
 
   static const border = Color(0xFFE2E8F0);
   static const borderDark = Color(0xFF334155);
+
+  /// Onboarding pertama kali buka aplikasi. Sengaja selalu gelap mengikuti
+  /// referensi desain, terlepas dari tema terang/gelap perangkat.
+  static const onboardingStart = Color(0xFF141B4D);
+  static const onboardingEnd = Color(0xFF2A2F73);
+  static const onboardingSurface = Color(0xFF2E357F);
+  static const onboardingAccent = Color(0xFF8B9DFF);
+  static const onboardingHighlight = Color(0xFF38BDF8);
+  static const onboardingText = Color(0xFFF5F7FF);
+  static const onboardingTextMuted = Color(0xFFC3C9F2);
 }

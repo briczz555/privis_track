@@ -6,6 +6,7 @@ import 'package:privis_track/features/auth/presentation/providers/auth_controlle
 import 'package:privis_track/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:privis_track/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:privis_track/features/meeting_calendar/presentation/providers/meeting_provider.dart';
+import 'package:privis_track/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:privis_track/features/project_tracking/presentation/providers/project_tracking_provider.dart';
 import 'package:privis_track/main.dart';
 
@@ -37,6 +38,7 @@ Widget _scope({
             userOptions: testMeetingUsers,
           ),
     ),
+    initialOnboardingSeenProvider.overrideWithValue(true),
   ],
   child: child,
 );

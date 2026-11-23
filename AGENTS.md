@@ -54,6 +54,9 @@ Aturan yang tidak boleh dilanggar:
 
 - `features/auth/` — login, restore sesi, refresh token, logout, ganti password,
   halaman pengaturan.
+- `features/onboarding/` — 3 halaman pengenalan saat aplikasi baru pertama kali
+  dibuka. Status disimpan di `shared_preferences` (`onboarding_seen`); redirect
+  awal diatur di `core/navigation/app_router.dart`.
 - `features/dashboard/` — dashboard API (portfolio, proyek aktif, aktivitas) plus
   ringkasan **Meeting Hari Ini** dari API kalender, dan halaman **Semua Proyek**
   (`/projects`) dengan filter status + pagination server-side (infinite scroll).

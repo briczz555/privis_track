@@ -10,6 +10,7 @@ import '../../features/meeting_calendar/domain/entities/meeting_entity.dart';
 import '../../features/meeting_calendar/presentation/screens/calendar_screen.dart';
 import '../../features/meeting_calendar/presentation/screens/meeting_detail_screen.dart';
 import '../../features/meeting_calendar/presentation/screens/meeting_form_screen.dart';
+import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/project_management/presentation/screens/project_form_screen.dart';
 import '../../features/project_tracking/domain/entities/project_tracking_entity.dart';
 import '../../features/project_tracking/presentation/screens/project_tracking_screen.dart';
@@ -21,6 +22,7 @@ abstract class AppRoutes {
   const AppRoutes._();
 
   static const splash = 'splash';
+  static const onboarding = 'onboarding';
   static const login = 'login';
   static const settings = 'settings';
   static const auditLog = 'audit-log';
@@ -43,6 +45,11 @@ final List<GoRoute> appRoutes = [
     path: '/splash',
     name: AppRoutes.splash,
     builder: (context, state) => const SplashScreen(),
+  ),
+  GoRoute(
+    path: '/onboarding',
+    name: AppRoutes.onboarding,
+    builder: (context, state) => const OnboardingScreen(),
   ),
   GoRoute(
     path: '/login',

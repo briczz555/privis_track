@@ -90,6 +90,28 @@ void main() {
       expect(find.text('Meeting Baru'), findsOneWidget);
     });
 
+    testWidgets('kalender aman di layar landscape tanpa overflow', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(900, 420);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(_app(home: const CalendarScreen()));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Kalender'), findsOneWidget);
+      expect(find.text('Meeting Baru'), findsOneWidget);
+
+      // Header kalender lebih tinggi dari layar, jadi halaman harus bisa
+      // di-scroll sampai daftar meeting terlihat.
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Meeting Mingguan'), findsOneWidget);
+    });
+
     testWidgets('form memvalidasi judul wajib', (tester) async {
       await _pumpScreen(tester, home: const MeetingFormScreen());
 

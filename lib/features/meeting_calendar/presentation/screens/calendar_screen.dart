@@ -195,100 +195,119 @@ class _CalendarContent extends StatelessWidget {
         .where((meeting) => _key(meeting.startAt) == selectedKey)
         .toList(growable: false);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      child: Column(
-        children: [
-          Row(
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          sliver: SliverList.list(
             children: [
-              ChoiceChip(
-                label: const Text('Semua'),
-                selected: scope == 'all',
-                onSelected: (_) => onScopeChanged('all'),
+              Row(
+                children: [
+                  ChoiceChip(
+                    label: const Text('Semua'),
+                    selected: scope == 'all',
+                    onSelected: (_) => onScopeChanged('all'),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  ChoiceChip(
+                    label: const Text('Saya'),
+                    selected: scope == 'mine',
+                    onSelected: (_) => onScopeChanged('mine'),
+                  ),
+                ],
               ),
-              const SizedBox(width: AppSpacing.sm),
-              ChoiceChip(
-                label: const Text('Saya'),
-                selected: scope == 'mine',
-                onSelected: (_) => onScopeChanged('mine'),
+              const SizedBox(height: AppSpacing.sm),
+              Row(
+                children: [
+                  IconButton(
+                    tooltip: 'Bulan sebelumnya',
+                    onPressed: onPrevMonth,
+                    icon: const Icon(Icons.chevron_left_rounded),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${_monthName(focusedMonth.month)} ${focusedMonth.year}',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: 'Bulan berikutnya',
+                    onPressed: onNextMonth,
+                    icon: const Icon(Icons.chevron_right_rounded),
+                  ),
+                ],
+              ),
+              MonthCalendarGrid(
+                month: focusedMonth,
+                selectedDate: selectedDate,
+                meetingCounts: counts,
+                onSelect: onSelectDate,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              const Divider(height: 1),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.event_note_rounded,
+                      size: 16,
+                      color: secondaryText,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      formatLongDate(selectedDate),
+                      style: theme.textTheme.titleSmall,
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${selectedMeetings.length} meeting',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: secondaryText,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: [
-              IconButton(
-                tooltip: 'Bulan sebelumnya',
-                onPressed: onPrevMonth,
-                icon: const Icon(Icons.chevron_left_rounded),
-              ),
-              Expanded(
-                child: Text(
-                  '${_monthName(focusedMonth.month)} ${focusedMonth.year}',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              IconButton(
-                tooltip: 'Bulan berikutnya',
-                onPressed: onNextMonth,
-                icon: const Icon(Icons.chevron_right_rounded),
-              ),
-            ],
+        ),
+        // Padding bawah memberi ruang untuk FAB. Sliver (bukan Column +
+        // Expanded) agar halaman tetap bisa di-scroll di layar pendek seperti
+        // mode landscape tanpa RenderFlex overflow.
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            0,
+            AppSpacing.md,
+            96,
           ),
-          MonthCalendarGrid(
-            month: focusedMonth,
-            selectedDate: selectedDate,
-            meetingCounts: counts,
-            onSelect: onSelectDate,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          const Divider(height: 1),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-            child: Row(
-              children: [
-                Icon(Icons.event_note_rounded, size: 16, color: secondaryText),
-                const SizedBox(width: 6),
-                Text(
-                  formatLongDate(selectedDate),
-                  style: theme.textTheme.titleSmall,
-                ),
-                const Spacer(),
-                Text(
-                  '${selectedMeetings.length} meeting',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: secondaryText,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: selectedMeetings.isEmpty
-                ? const Center(
+          sliver: selectedMeetings.isEmpty
+              ? const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
                     child: AppEmptyState(
                       message: 'Tidak ada meeting pada tanggal ini.',
                     ),
-                  )
-                : ListView.separated(
-                    padding: const EdgeInsets.only(bottom: 96),
-                    itemCount: selectedMeetings.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: AppSpacing.sm),
-                    itemBuilder: (context, index) {
-                      final meeting = selectedMeetings[index];
-                      return MeetingCard(
-                        meeting: meeting,
-                        onTap: () => onOpenMeeting(meeting),
-                      );
-                    },
                   ),
-          ),
-        ],
-      ),
+                )
+              : SliverList.separated(
+                  itemCount: selectedMeetings.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: AppSpacing.sm),
+                  itemBuilder: (context, index) {
+                    final meeting = selectedMeetings[index];
+                    return MeetingCard(
+                      meeting: meeting,
+                      onTap: () => onOpenMeeting(meeting),
+                    );
+                  },
+                ),
+        ),
+      ],
     );
   }
 }

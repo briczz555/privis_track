@@ -26,6 +26,7 @@ manual di Word.
 | 6 | Generate ulang mengganti file lama (dengan konfirmasi di app) dan dicatat di audit. |
 | 7 | Meeting `cancelled` tidak bisa dibuatkan MoM; MoM lama tetap bisa diunduh. |
 | 8 | Tanggal/jam ditampilkan dalam WIB (UTC+7). |
+| 9 | Pimpinan Rapat diisi dari PIC klien (`contactName`), bukan organizer internal. |
 
 ## 3. Pemetaan template
 
@@ -39,7 +40,7 @@ Template memiliki 7 placeholder di Bagian 1 (masing-masing satu paragraf):
 | `[hh/bb/tttt]` | `start_at` → WIB `dd/MM/yyyy` | 20/11/2026 |
 | `[00.00 – 00.00 WIB]` | `start_at`–`end_at` → WIB `HH.mm – HH.mm WIB` | 09.00 – 10.30 WIB |
 | `[Lokasi / Google Meet / Zoom]` | Onsite: `location`; Online: `Online - <meeting_url>` | Online - https://meet.google.com/… |
-| `[Nama]` | `organizer.name` | Rina Kusuma |
+| `[Nama]` | `project.client.contactName` (PIC klien) atau `-` | Budi Santoso |
 
 Bagian lain **tidak disentuh**: tabel peserta (5 baris kosong), `[Agenda 1..3]`,
 tabel pembahasan (8 baris kosong), dan blok tanda tangan tetap seperti template.

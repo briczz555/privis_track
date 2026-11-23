@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/branding/app_assets.dart';
-import '../../../../core/theme/app_shapes.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/app_logo.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -16,15 +15,7 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.xl),
-              child: Image.asset(
-                AppAssets.appIcon,
-                width: 76,
-                height: 76,
-                fit: BoxFit.cover,
-              ),
-            ),
+            const AppLogo(size: 96),
             const SizedBox(height: AppSpacing.md),
             Text(
               'PriVis Track',

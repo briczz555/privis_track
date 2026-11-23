@@ -6,6 +6,7 @@ import '../../../../core/navigation/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_shapes.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/app_logo.dart';
 import '../providers/onboarding_provider.dart';
 
 /// Onboarding singkat saat aplikasi pertama kali dibuka setelah instalasi.
@@ -91,6 +92,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         child: SafeArea(
           child: Column(
             children: [
+              const Padding(
+                padding: EdgeInsets.only(top: AppSpacing.md),
+                child: AppLogo(size: 46),
+              ),
               Expanded(
                 child: PageView.builder(
                   controller: _controller,

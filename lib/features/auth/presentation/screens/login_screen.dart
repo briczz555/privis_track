@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_shapes.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/error_message.dart';
+import '../../../../core/widgets/app_logo.dart';
 import '../providers/auth_controller.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -190,26 +191,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 class _BrandMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 72,
-        height: 72,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.primary, AppColors.info],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(AppRadius.xl),
-        ),
-        child: const Icon(
-          Icons.track_changes_rounded,
-          color: Colors.white,
-          size: 38,
-        ),
-      ),
-    );
+    return const Center(child: AppLogo(size: 84));
   }
 }
 

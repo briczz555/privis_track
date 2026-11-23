@@ -6,6 +6,7 @@ import 'package:privis_track/core/theme/app_theme.dart';
 import 'package:privis_track/features/auth/presentation/providers/auth_controller.dart';
 import 'package:privis_track/features/auth/presentation/screens/login_screen.dart';
 import 'package:privis_track/features/dashboard/presentation/providers/dashboard_provider.dart';
+import 'package:privis_track/features/meeting_calendar/presentation/providers/meeting_provider.dart';
 import 'package:privis_track/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:privis_track/features/project_tracking/presentation/providers/project_tracking_provider.dart';
 import 'package:privis_track/main.dart';
@@ -71,6 +72,12 @@ void main() {
             (ref) => FakeProjectTrackingRepository(testTracking),
           ),
           cacheStoreProvider.overrideWith((ref) => MemorySnapshotCache()),
+          meetingRepositoryProvider.overrideWith(
+            (ref) => FakeMeetingRepository(
+              meetings: [testMeeting],
+              userOptions: testMeetingUsers,
+            ),
+          ),
           initialOnboardingSeenProvider.overrideWithValue(true),
         ],
         child: const PriVisApp(),

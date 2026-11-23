@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/branding/app_assets.dart';
 import '../../../../core/theme/app_shapes.dart';
 import '../../../../core/theme/app_spacing.dart';
 
@@ -16,22 +16,13 @@ class SplashScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 64,
-              height: 64,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppColors.primary, AppColors.info],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(AppRadius.xl),
-              ),
-              child: const Icon(
-                Icons.track_changes_rounded,
-                color: Colors.white,
-                size: 34,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppRadius.xl),
+              child: Image.asset(
+                AppAssets.appIcon,
+                width: 76,
+                height: 76,
+                fit: BoxFit.cover,
               ),
             ),
             const SizedBox(height: AppSpacing.md),

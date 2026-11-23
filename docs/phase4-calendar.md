@@ -497,3 +497,28 @@ Total kasar: **4–6 hari kerja**.
 - [ ] Validasi end > start dan field wajib berjalan.
 - [ ] Test backend + Flutter lulus; APK ter-build.
 - [ ] Dokumentasi kontrak/OpenAPI/PRD diperbarui saat implementasi.
+
+## 18. Pengingat meeting (v1.1, implementasi lokal)
+
+Keputusan #5 diperbarui: pengingat memakai **notifikasi lokal**, tanpa push
+server dan tanpa pekerjaan backend.
+
+- Setiap meeting yang belum dibatalkan dijadwalkan notifikasi **30 menit**
+  sebelum `start_at`.
+- Isi notifikasi: `09.00–10.00 WIB · Judul meeting · PRJ-001`.
+- Mengetuk notifikasi membuka detail meeting terkait.
+- Jadwal disinkronkan ulang setiap kali rentang kalender (42 hari) selesai
+  dimuat: semua pengingat lama dibatalkan lalu dijadwalkan ulang, sehingga
+  tidak ada duplikat walau data di-refresh berkali-kali.
+- Izin `POST_NOTIFICATIONS` (Android 13+) diminta sekali saat sinkronisasi
+  pertama. Android memakai `inexactAllowWhileIdle`, jadi tidak perlu izin
+  exact alarm.
+- Setelah HP restart/aplikasi diperbarui, receiver
+  `ScheduledNotificationBootReceiver` menjadwalkan ulang notifikasi.
+- Batasan v1.1: jadwal hanya tersinkron setelah pengguna membuka kalender
+  (di situlah daftar meeting tersedia). Notifikasi di luar rentang 42 hari
+  belum dijadwalkan.
+- Konfigurasi Android: `compileSdk 36`, core library desugaring
+  `desugar_jdk_libs 2.1.4`, permission `POST_NOTIFICATIONS` +
+  `RECEIVE_BOOT_COMPLETED`, dua receiver flutter_local_notifications.
+- iOS: delegate `UNUserNotificationCenter` dipasang di `AppDelegate`.

@@ -272,15 +272,290 @@ class CacheSnapshotsCompanion extends UpdateCompanion<CacheSnapshot> {
   }
 }
 
+class $CalendarEventLinksTable extends CalendarEventLinks
+    with TableInfo<$CalendarEventLinksTable, CalendarEventLink> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CalendarEventLinksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _meetingIdMeta = const VerificationMeta(
+    'meetingId',
+  );
+  @override
+  late final GeneratedColumn<String> meetingId = GeneratedColumn<String>(
+    'meeting_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _eventIdMeta = const VerificationMeta(
+    'eventId',
+  );
+  @override
+  late final GeneratedColumn<String> eventId = GeneratedColumn<String>(
+    'event_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [meetingId, eventId, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'calendar_event_links';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CalendarEventLink> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('meeting_id')) {
+      context.handle(
+        _meetingIdMeta,
+        meetingId.isAcceptableOrUnknown(data['meeting_id']!, _meetingIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_meetingIdMeta);
+    }
+    if (data.containsKey('event_id')) {
+      context.handle(
+        _eventIdMeta,
+        eventId.isAcceptableOrUnknown(data['event_id']!, _eventIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_eventIdMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {meetingId};
+  @override
+  CalendarEventLink map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CalendarEventLink(
+      meetingId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}meeting_id'],
+      )!,
+      eventId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}event_id'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CalendarEventLinksTable createAlias(String alias) {
+    return $CalendarEventLinksTable(attachedDatabase, alias);
+  }
+}
+
+class CalendarEventLink extends DataClass
+    implements Insertable<CalendarEventLink> {
+  final String meetingId;
+  final String eventId;
+  final DateTime updatedAt;
+  const CalendarEventLink({
+    required this.meetingId,
+    required this.eventId,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['meeting_id'] = Variable<String>(meetingId);
+    map['event_id'] = Variable<String>(eventId);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CalendarEventLinksCompanion toCompanion(bool nullToAbsent) {
+    return CalendarEventLinksCompanion(
+      meetingId: Value(meetingId),
+      eventId: Value(eventId),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CalendarEventLink.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CalendarEventLink(
+      meetingId: serializer.fromJson<String>(json['meetingId']),
+      eventId: serializer.fromJson<String>(json['eventId']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'meetingId': serializer.toJson<String>(meetingId),
+      'eventId': serializer.toJson<String>(eventId),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CalendarEventLink copyWith({
+    String? meetingId,
+    String? eventId,
+    DateTime? updatedAt,
+  }) => CalendarEventLink(
+    meetingId: meetingId ?? this.meetingId,
+    eventId: eventId ?? this.eventId,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CalendarEventLink copyWithCompanion(CalendarEventLinksCompanion data) {
+    return CalendarEventLink(
+      meetingId: data.meetingId.present ? data.meetingId.value : this.meetingId,
+      eventId: data.eventId.present ? data.eventId.value : this.eventId,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CalendarEventLink(')
+          ..write('meetingId: $meetingId, ')
+          ..write('eventId: $eventId, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(meetingId, eventId, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CalendarEventLink &&
+          other.meetingId == this.meetingId &&
+          other.eventId == this.eventId &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CalendarEventLinksCompanion extends UpdateCompanion<CalendarEventLink> {
+  final Value<String> meetingId;
+  final Value<String> eventId;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const CalendarEventLinksCompanion({
+    this.meetingId = const Value.absent(),
+    this.eventId = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CalendarEventLinksCompanion.insert({
+    required String meetingId,
+    required String eventId,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : meetingId = Value(meetingId),
+       eventId = Value(eventId),
+       updatedAt = Value(updatedAt);
+  static Insertable<CalendarEventLink> custom({
+    Expression<String>? meetingId,
+    Expression<String>? eventId,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (meetingId != null) 'meeting_id': meetingId,
+      if (eventId != null) 'event_id': eventId,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CalendarEventLinksCompanion copyWith({
+    Value<String>? meetingId,
+    Value<String>? eventId,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return CalendarEventLinksCompanion(
+      meetingId: meetingId ?? this.meetingId,
+      eventId: eventId ?? this.eventId,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (meetingId.present) {
+      map['meeting_id'] = Variable<String>(meetingId.value);
+    }
+    if (eventId.present) {
+      map['event_id'] = Variable<String>(eventId.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CalendarEventLinksCompanion(')
+          ..write('meetingId: $meetingId, ')
+          ..write('eventId: $eventId, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $CacheSnapshotsTable cacheSnapshots = $CacheSnapshotsTable(this);
+  late final $CalendarEventLinksTable calendarEventLinks =
+      $CalendarEventLinksTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [cacheSnapshots];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    cacheSnapshots,
+    calendarEventLinks,
+  ];
 }
 
 typedef $$CacheSnapshotsTableCreateCompanionBuilder =
@@ -456,12 +731,200 @@ typedef $$CacheSnapshotsTableProcessedTableManager =
       CacheSnapshot,
       PrefetchHooks Function()
     >;
+typedef $$CalendarEventLinksTableCreateCompanionBuilder =
+    CalendarEventLinksCompanion Function({
+      required String meetingId,
+      required String eventId,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$CalendarEventLinksTableUpdateCompanionBuilder =
+    CalendarEventLinksCompanion Function({
+      Value<String> meetingId,
+      Value<String> eventId,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$CalendarEventLinksTableFilterComposer
+    extends Composer<_$AppDatabase, $CalendarEventLinksTable> {
+  $$CalendarEventLinksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get meetingId => $composableBuilder(
+    column: $table.meetingId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CalendarEventLinksTableOrderingComposer
+    extends Composer<_$AppDatabase, $CalendarEventLinksTable> {
+  $$CalendarEventLinksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get meetingId => $composableBuilder(
+    column: $table.meetingId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get eventId => $composableBuilder(
+    column: $table.eventId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CalendarEventLinksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CalendarEventLinksTable> {
+  $$CalendarEventLinksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get meetingId =>
+      $composableBuilder(column: $table.meetingId, builder: (column) => column);
+
+  GeneratedColumn<String> get eventId =>
+      $composableBuilder(column: $table.eventId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CalendarEventLinksTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CalendarEventLinksTable,
+          CalendarEventLink,
+          $$CalendarEventLinksTableFilterComposer,
+          $$CalendarEventLinksTableOrderingComposer,
+          $$CalendarEventLinksTableAnnotationComposer,
+          $$CalendarEventLinksTableCreateCompanionBuilder,
+          $$CalendarEventLinksTableUpdateCompanionBuilder,
+          (
+            CalendarEventLink,
+            BaseReferences<
+              _$AppDatabase,
+              $CalendarEventLinksTable,
+              CalendarEventLink
+            >,
+          ),
+          CalendarEventLink,
+          PrefetchHooks Function()
+        > {
+  $$CalendarEventLinksTableTableManager(
+    _$AppDatabase db,
+    $CalendarEventLinksTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CalendarEventLinksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CalendarEventLinksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CalendarEventLinksTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> meetingId = const Value.absent(),
+                Value<String> eventId = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CalendarEventLinksCompanion(
+                meetingId: meetingId,
+                eventId: eventId,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String meetingId,
+                required String eventId,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CalendarEventLinksCompanion.insert(
+                meetingId: meetingId,
+                eventId: eventId,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$CalendarEventLinksTable, CalendarEventLink>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $CalendarEventLinksTable,
+                    CalendarEventLink
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CalendarEventLinksTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CalendarEventLinksTable,
+      CalendarEventLink,
+      $$CalendarEventLinksTableFilterComposer,
+      $$CalendarEventLinksTableOrderingComposer,
+      $$CalendarEventLinksTableAnnotationComposer,
+      $$CalendarEventLinksTableCreateCompanionBuilder,
+      $$CalendarEventLinksTableUpdateCompanionBuilder,
+      (
+        CalendarEventLink,
+        BaseReferences<
+          _$AppDatabase,
+          $CalendarEventLinksTable,
+          CalendarEventLink
+        >,
+      ),
+      CalendarEventLink,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
   $$CacheSnapshotsTableTableManager get cacheSnapshots =>
       $$CacheSnapshotsTableTableManager(_db, _db.cacheSnapshots);
+  $$CalendarEventLinksTableTableManager get calendarEventLinks =>
+      $$CalendarEventLinksTableTableManager(_db, _db.calendarEventLinks);
 }
 
 // **************************************************************************

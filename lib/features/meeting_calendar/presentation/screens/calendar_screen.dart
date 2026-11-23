@@ -13,7 +13,7 @@ import '../../../../core/widgets/app_error_state.dart';
 import '../../../../core/widgets/app_loading_state.dart';
 import '../../domain/entities/meeting_entity.dart';
 import '../providers/meeting_provider.dart';
-import '../meeting_reminder_sync.dart';
+import '../meeting_calendar_sync.dart';
 import '../widgets/meeting_card.dart';
 import '../widgets/month_calendar_grid.dart';
 
@@ -28,7 +28,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   late DateTime _focusedMonth;
   late DateTime _selectedDate;
   String _scope = 'all';
-  bool _remindersSynced = false;
+  bool _calendarSynced = false;
 
   @override
   void initState() {
@@ -108,19 +108,19 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final meetings = ref.watch(meetingsProvider(_queryKey));
     final data = meetings.value;
 
-    // Jadwalkan ulang pengingat lokal setiap rentang kalender berubah/muat.
+    // Cerminkan meeting user ke kalender bawaan setiap rentang kalender berubah.
     ref.listen(meetingsProvider(_queryKey), (previous, next) {
       final rows = next.value;
       if (rows == null) return;
-      syncMeetingReminders(rows);
+      syncMeetingsToDeviceCalendar(ref: ref, meetings: rows);
     });
 
     // `ref.listen` tidak memicu nilai yang sudah ada; sinkronkan sekali saat
     // data pertama tersedia.
-    if (data != null && !_remindersSynced) {
-      _remindersSynced = true;
+    if (data != null && !_calendarSynced) {
+      _calendarSynced = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) syncMeetingReminders(data);
+        if (mounted) syncMeetingsToDeviceCalendar(ref: ref, meetings: data);
       });
     }
 

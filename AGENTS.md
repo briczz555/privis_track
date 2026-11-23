@@ -69,9 +69,10 @@ Aturan yang tidak boleh dilanggar:
 - `features/meeting_calendar/` — kalender meeting: grid bulanan, agenda harian,
   form online/onsite, peserta, filter Semua/Saya. Detail meeting punya section
   **Notulen (MoM)** untuk generate/unduh DOCX dari template resmi (hanya Bagian 1
-  yang terisi otomatis). Pengingat lokal 30 menit sebelum meeting dijadwalkan
-  ulang saat kalender dimuat (`core/notifications/`). Route: `/calendar`,
-  `/calendar/new`, `/calendar/:meetingId`, `/calendar/:meetingId/edit`.
+  yang terisi otomatis). Meeting milik user disinkronkan ke kalender bawaan HP
+  (event + pengingat 30 menit, `core/calendar/`) agar alarm tetap berbunyi walau
+  app force-stop. Route: `/calendar`, `/calendar/new`,
+  `/calendar/:meetingId`, `/calendar/:meetingId/edit`.
 - `features/project_management/` — form **Tambah/Edit Proyek** (admin/PM): nama,
   tanggal mulai/tenggat, pilih klien existing atau buat klien baru, edit kontak
   klien. Route: `/projects/new`, `/projects/:projectCode/edit`.
@@ -82,8 +83,8 @@ Helper lintas fitur di `core/`: `constants/project_status.dart`,
 `widgets/project_status_chip.dart`, `widgets/section_header.dart`,
 `widgets/app_loading_state.dart`, `widgets/app_error_state.dart`,
 `utils/date_formatter.dart`, `utils/error_message.dart`, `auth/auth_session_cache.dart`,
-`notifications/meeting_reminder_service.dart`, `storage/cache_store.dart`,
-`widgets/offline_banner.dart`.
+`calendar/device_calendar_sync.dart`, `storage/calendar_event_link_store.dart`,
+`storage/cache_store.dart`, `widgets/offline_banner.dart`.
 Jangan menduplikasi helper tersebut di dalam fitur.
 
 ## Konvensi verifikasi

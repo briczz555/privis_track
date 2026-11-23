@@ -26,6 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>PriVis Track menyinkronkan jadwal meeting Anda ke kalender agar pengingatnya tetap berbunyi.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>PriVis Track menyinkronkan jadwal meeting Anda ke kalender agar pengingatnya tetap berbunyi.</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>PriVis Track menambahkan jadwal meeting Anda ke kalender.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
